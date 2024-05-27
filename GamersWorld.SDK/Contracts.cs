@@ -1,6 +1,7 @@
 namespace GamersWorld.SDK;
 
-public interface IEventExecuter
+public interface IEventExecuter<TEvent>
+    where TEvent : IEvent
 {
-    void Execute(IEvent appEvent);
+    Task<int> Execute(TEvent appEvent);
 }

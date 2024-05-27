@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.SDK", "GamersWo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.AppEvents", "GamersWorld.AppEvents\GamersWorld.AppEvents.csproj", "{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.AppEventBusiness", "GamersWorld.AppEventBusiness\GamersWorld.AppEventBusiness.csproj", "{000D5101-CB24-44CC-B9FB-2239CD3DF739}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{000D5101-CB24-44CC-B9FB-2239CD3DF739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{000D5101-CB24-44CC-B9FB-2239CD3DF739}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{000D5101-CB24-44CC-B9FB-2239CD3DF739}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{000D5101-CB24-44CC-B9FB-2239CD3DF739}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
