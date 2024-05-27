@@ -17,6 +17,7 @@ public class GetReportDocument
 {
     public async Task<int> Execute(ReportReadyEvent appEvent)
     {
+        //TODO@buraksenyurt Must implement Get Report Document
         // appEvent üstünden doküman nosunu al
         // Reporting File Service'i Get ile çağır ve dokümanı çek
         // Dokümanı Local Storage'a(kuvvetle muhtemel bir tabloya) geçici olarak kaydet

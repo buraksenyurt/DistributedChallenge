@@ -14,6 +14,7 @@ public class UsePreparedReport
 {
     public async Task<int> Execute(ReportIsHereEvent appEvent)
     {
+        //TODO@buraksenyurt Must implement Use Report steps
         // Dokümanı Local Storage'dan oku
         // E-posta ile gönder
         // raporun hazırlandığına dair bir bilgilendirme olayı(ReportProcessCompleted) hazırlayıp fırlat

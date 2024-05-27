@@ -15,6 +15,8 @@ public class PostReportRequest
 {
     public async Task<int> Execute(ReportRequestedEvent appEvent)
     {
+        //TODO@buraksenyurt Must implement App Service Post request
+        
         // Reporting App Service'e bir POST talebi yapılır
         throw new NotImplementedException();
     }

@@ -8,6 +8,8 @@ public class DeleteReport
 {
     public async Task<int> Execute(ReportProcessCompletedEvent appEvent)
     {
+        //TODO@buraksenyurt Must implement Report Process Completed actions
+        
         // Dokümanı Local Storage'dan silme operasyonunu gerçekleştir
         throw new NotImplementedException();
     }
