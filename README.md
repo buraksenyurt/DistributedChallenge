@@ -48,6 +48,7 @@ Senaryodaki adımları da aşağıdaki gibi tarifleyelim.
 
 Yukarıda bahsedilen senaryoda sisteme dahil olan tüm uygulamaların aynı firmanın dahili ağı _(Internal Network)_ içerisinde yer aldığı varsayılmıştır. Senaryoyu zorlaştırmak için raporlamayı yapan uygulamanın/servisinin internet üzerinden erişilebilen bir 3rd Party servis sağlayacısına ait olduğunu düşünebilirsiniz.
 
-## Bazı Düşünceler
+## Bazı Düşünceler _(Some Thoughts)_
 
 - Rapor talebi yapılan ekranda girilen isteğin anlaşılarak bir SQL ifadesine dönüştürülmesinde Gen AI araçlarına ait bir API'den yararlanabiliriz. Örneğin metin kutusuna "Son bir yılda yapılan oyun satışlarından, en olumlu yorum sayısına sahip ilk 50sini getir" dediğimizde Gen AI API'si bunu anlayıp raporlama tarafından çalıştırılması istenen SQL ifadesini veya farklı bir script ifadeyi hazırlayıp Event mesajına bilgi olarak bırakabilir.
+- İsimlendirmeler konusu da önemli. Event olarak ifade ettiğimiz nesneler esasında process'lerde oluşturulup mesaj kuyruğuna bırakılan POCO'lar _(Plain Old CLR Objects)_ Bunları kullanan business nesnelerimiz de var. Yani bir olayla ilgili aksiyon alan _(bir eylem icra eden)_ sınıflar. Bunlar ortak sözleşmeleri _(interfaces)_ uygulamak durumundalar ki Dependency Injection Container çalışma zamanlarınca çalıştırılabilsinler. Tüm bunlarda proje, nesne, metot, değişken isimlendirmeleri kod okunurluğu ve başka programcıların kodu anlaması, neyi nereye koymaları gerektiğini kolayca bulması açısından mühim bir mesele.
