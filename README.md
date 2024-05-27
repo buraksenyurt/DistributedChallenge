@@ -14,7 +14,7 @@ Buradaki senaryonun çözümü noktasında oldukça basit ilerlemeye çalışaca
 
 Bu problemi aşağıdaki gibi çözmeye çalıştığımızı düşünelim.
 
-![image](https://github.com/buraksenyurt/DistributedChallange/assets/2705782/9c9439a4-ce29-49cb-84c7-d0c48ba2c11f)
+![Challange Solution Candidate](https://github.com/buraksenyurt/DistributedChallange/assets/2705782/9c9439a4-ce29-49cb-84c7-d0c48ba2c11f)
 
 Senaryodaki adımları da aşağıdaki gibi tarifleyelim.
 
@@ -31,6 +31,18 @@ Senaryodaki adımları da aşağıdaki gibi tarifleyelim.
 11. Kendi process'i içinde çalışan **Report Trace Service** isimli servis uygulaması **ReportIsHereEvent** olayını dinler.
 12. Report Trace Service hizmeti, **ReportIsHereEvent** isimli bir olay yakaladığında **Local Storage**'a gider ve ilgili PDF'i çeker.
 13. Rapor artık hazırdır. Rapor e-posta ile CEO'ya gönderilir ve Local Storage ortamlarında gerekli temizlikler yapılır.
+
+## Solution için Aday Uygulama Türleri
+
+- Rapor formu girilen arabirim basit bir Asp.Net MVC uygulaması olabilir.
+- Rapor taleplerine ait olayları oluşturup gönderen Event Trigger Asp.Net Web Api olabilir.
+- Asenkron mesaj kuyruğu için RabbitMQ kullanılabilir. İşi kolaylaştırmak adına RabbitMQ bir Docker Container ile işletilebilir.
+- Event Consumer/Publisher Service tarafı esas itibariyle rapor talebi, rapor alında ve rapor hazır gibi aksiyonları sürekli dinleyen ve farklı aksiyonları tetikleyen bir ara katman gibi duruyor. Sürekli çalışır konumda olan bir process olması ve farklı gerçekleşen aksiyonlar için başka bağımlılıkları tetikleyebilecek bir yapıda tasarlanması iyi olabilir. Bu anlamda sürekli çalışan dinleyici ve aksiyonları gerçekleştiren bir kütüphane topluluğuna ihtiyaç duyabiliriz. Yani host uygulamanın hangi olay gerçekleştiğinde hangi aksiyonları alacağını belki bir DI Container üstünden çözümleyerek çalışıyor olması gerekebilir. Bu durumda üzerinde durduğumuz bu Challange içerisindeki başka bir Challange olarak karşımıza çıkıyor.
+- External Reader Service aslında Reporting App Service'in tüketimesi için açılmış bir Endpoint sağlayıcı rolünde. Onu da ayrı bir Web API hizmeti olarak tasarlayabiliriz.
+- Reporting App Service ve Reporting File Service birer Web API hizmeti olarak tasarlanabilirler. Local Storage olarak senaryoyu kolayca uygulayabilmek adına fiziki dosya sistemini kullanacaklarını düşünebiliriz. Yani hazırlanması bir süre alacak PDF içeriğini fiziki diske kaydetip buradan okuyarak External Reader Service'e iletebilirler.
+- Report Trace Service uygulaması da esasında sürekli ayakta olması ve ReportIsHere olayını dinlemesi gereken bir konumadır. Bu anlamda sürekli çalışan bir Console uygulaması olarak da tasarlanabilir.
+
+  **Not:** Dikkat edileceği üzere Event Consumer/Publisher olarak araya koyduğumuz katman bazı olaylar ile ilgili olarak bir takım aksiyonlar alıyor. Örneğin ReportRequestEvent gerçekleştiğinde POST ile bir dış servise talep gönderiyor ve ReportIsHereEvent gerçekleştiğinde de GET Report ile PDF çekip Back Office tarafındaki Local Storage'a kaydediyor. Dolayısıyla bir event karşılığında bir takım aksiyonlar icra ediyor. Bunları A event'i için şu Interface implementasyonunu çağır şeklinde başka bir katmana alarak runtime'da çözümlenebilir bağımlılıkar haline getirebilir ve böylece runtime çalışıyorken yeni event-aksiyon bağımlılıklarını sisteme dahil edebiliriz belki de. Dolayısıyla aradaki Event Consumer/Publisher'ın tasarımı oldukça önemli. 
 
 ## Zorluk Seviyesini Artırma
 
