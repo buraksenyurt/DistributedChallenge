@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.AppEventBusines
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventHost", "GamersWorld.EventHost\GamersWorld.EventHost.csproj", "{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.ReportingService", "Kahin.ReportingService\Kahin.ReportingService.csproj", "{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
