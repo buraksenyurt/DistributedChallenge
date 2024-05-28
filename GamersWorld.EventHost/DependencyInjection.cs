@@ -13,6 +13,7 @@ public static class DependencyInjection
         services.AddTransient<IEventExecuter<ReportReadyEvent>, GetReportDocument>();
         services.AddTransient<IEventExecuter<ReportIsHereEvent>, UsePreparedReport>();
         services.AddTransient<IEventExecuter<ReportProcessCompletedEvent>, DeleteReport>();
+        services.AddTransient<IEventExecuter<InvalidExpressionEvent>, InvalidExpression>();
         services.AddSingleton<EventExecuterFactory>();
         return services;
     }
