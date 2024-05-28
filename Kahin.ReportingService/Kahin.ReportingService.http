@@ -7,7 +7,67 @@ Accept: application/json
 {
   "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
   "Title": "Popular Game Sales Reports",
-  "Expression": "SELECT * FROM Reports"
+  "Expression": "SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc"
+}
+
+###
+
+POST {{Kahin.ReportingService_HostAddress}}/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "TraceId": "000-0000",
+  "Title": "Popular Game Sales Reports",
+  "Expression": "SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc"
+}
+
+###
+
+POST {{Kahin.ReportingService_HostAddress}}/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "Title": "",
+  "Expression": "SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc"
+}
+
+###
+
+POST {{Kahin.ReportingService_HostAddress}}/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "Title": "Report Title",
+  "Expression": "SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc"
+}
+
+###
+
+POST {{Kahin.ReportingService_HostAddress}}/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "Title": "Popular Game Sales Reports",
+  "Expression": ""
+}
+
+###
+
+POST {{Kahin.ReportingService_HostAddress}}/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "Title": "Popular Game Sales Reports",
+  "Expression": "SELECT * FROM"
 }
 
 ###
