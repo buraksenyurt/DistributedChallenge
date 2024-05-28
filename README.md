@@ -14,7 +14,7 @@ Buradaki senaryonun çözümü noktasında oldukça basit ilerlemeye çalışaca
 
 Bu problemi aşağıdaki gibi çözmeye çalıştığımızı düşünelim.
 
-![Challange Solution Candidate](https://github.com/buraksenyurt/DistributedChallange/assets/2705782/9c9439a4-ce29-49cb-84c7-d0c48ba2c11f)
+![Challange Solution Candidate](https://github.com/buraksenyurt/DistributedChallange/assets/2705782/8847063a-e698-43c7-9499-9dfe60393d7c)
 
 Senaryodaki adımları da aşağıdaki gibi tarifleyelim.
 
@@ -50,5 +50,6 @@ Yukarıda bahsedilen senaryoda sisteme dahil olan tüm uygulamaların aynı firm
 
 ## Bazı Düşünceler _(Some Thoughts)_
 
+- Senaryoda farklı sistemler olduğunu düşünmeliyiz. System ABC raporlama tarafını üstleniyor. Gelen rapor ifadesini anlamlı bir betiğe dönüştürmek, işletmek, pdf gibi çıktısını hazırlamak ve hazır olduğuna dair System 123' ü bilgilendirmek görevleri arasında. Kendi içerisindeki süreçlerin yönetiminde de Event bazlı bir yaklaşıma gidebilir. Söz gelimi ifadenin bir Gen AI ile anlamlı hale dönüştürülmesi birkaç saniye sürebilecek bir iş olabilir. Dönüştürme işi başarısız ise bununla ilgili olarak da System 123'ü bilgilendirmesi gerekebilir. Dolayısıyla bu da yeni bir olayın üretilmesi, System 123'e aktarılması ve System 123 tarafında bu hatanın ele alınmasını gerektirecektir _(Çizelgede e1 ile ifade edilen kısım)_ Tüm çözümü zorlaştırmamak adına belki bu kısım şimdilik atlanabilir.
 - Rapor talebi yapılan ekranda girilen isteğin anlaşılarak bir SQL ifadesine dönüştürülmesinde Gen AI araçlarına ait bir API'den yararlanabiliriz. Örneğin metin kutusuna "Son bir yılda yapılan oyun satışlarından, en olumlu yorum sayısına sahip ilk 50sini getir" dediğimizde Gen AI API'si bunu anlayıp raporlama tarafından çalıştırılması istenen SQL ifadesini veya farklı bir script ifadeyi hazırlayıp Event mesajına bilgi olarak bırakabilir.
 - İsimlendirmeler konusu da önemli. Event olarak ifade ettiğimiz nesneler esasında process'lerde oluşturulup mesaj kuyruğuna bırakılan POCO'lar _(Plain Old CLR Objects)_ Bunları kullanan business nesnelerimiz de var. Yani bir olayla ilgili aksiyon alan _(bir eylem icra eden)_ sınıflar. Bunlar ortak sözleşmeleri _(interfaces)_ uygulamak durumundalar ki Dependency Injection Container çalışma zamanlarınca çalıştırılabilsinler. Tüm bunlarda proje, nesne, metot, değişken isimlendirmeleri kod okunurluğu ve başka programcıların kodu anlaması, neyi nereye koymaları gerektiğini kolayca bulması açısından mühim bir mesele.
