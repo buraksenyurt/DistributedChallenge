@@ -1,5 +1,6 @@
 ﻿using GamersWorld.AppEvents;
 using GamersWorld.SDK;
+using GamersWorld.SDK.Enums;
 using GamersWorld.SDK.Messages;
 using Microsoft.Extensions.Logging;
 
@@ -26,6 +27,10 @@ public class PostReportRequest
         //TODO@buraksenyurt Must implement App Service Post request
 
         // Reporting App Service'e bir POST talebi yapılır
-        throw new NotImplementedException();
+        return new BusinessResponse
+        {
+            Message = "Rapor talebi gönderildi",
+            StatusCode = StatusCode.Success,
+        };
     }
 }

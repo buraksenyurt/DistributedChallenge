@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    environment:
+      RABBITMQ_DEFAULT_USER: scothtiger
+      RABBITMQ_DEFAULT_PASS: P@ssw0rd
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
+  webapi:
+    build:
+      context: ./Kahin.ReportingService
+      dockerfile: Dockerfile
+    ports:
+      - "5218:80"
+    environment:
+      ASPNETCORE_URLS: http://+:80

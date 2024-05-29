@@ -36,7 +36,7 @@ public class EventConsumer
         {
             var body = args.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
-            var eventType = args.BasicProperties.Type;
+            var eventType = args.BasicProperties.Type; // Publish edilecek mesajı type property değerinden yakalayabiliriz
 
             // Kuyruktan yakalanan mesaj değerlendirilmek üzere Handle operasyonuna gönderilir
             await Handle(eventType, message);
@@ -63,7 +63,7 @@ public class EventConsumer
 
         switch (eventName)
         {
-            case nameof(ReportRequestedEvent):
+            case nameof(ReportRequestedEvent):               
                 var reportRequestedEvent = JsonSerializer.Deserialize<ReportRequestedEvent>(eventMessage);
                 await factory.ExecuteEvent(reportRequestedEvent);
                 break;
