@@ -23,7 +23,7 @@ public class UsePreparedReport
     {
         //TODO@buraksenyurt Must implement Use Report steps
 
-        _logger.LogInformation($"{appEvent.TraceId}, {appEvent.CreatedReportId}");
+        _logger.LogInformation("{}, {}", appEvent.TraceId, appEvent.CreatedReportId);
 
         // Dokümanı Local Storage'dan oku
         // E-posta ile gönder

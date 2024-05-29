@@ -21,20 +21,25 @@ public class EventConsumer
         _logger = logger;
     }
 
-    public void Start()
+    public void Run()
     {
+        // RabitMq bağlantısı tesis edilir ve bir kanal oluşturulur
         using var connection = _connectionFactory.CreateConnection();
         using var channel = connection.CreateModel();
+        // reports_event_queue isimli bir kuyruk tanımlanır
         channel.QueueDeclare(queue: "report_events_queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
         var consumer = new EventingBasicConsumer(channel);
+        // Gelen mesajların yakalandığı olay metodu
+        // Lambda operatörü üzerinden anonymous function olarak event handler temsilcisini bağlanır
         consumer.Received += async (model, args) =>
         {
             var body = args.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             var eventType = args.BasicProperties.Type;
 
-            await HandleEvent(eventType, message);
+            // Kuyruktan yakalanan mesaj değerlendirilmek üzere Handle operasyonuna gönderilir
+            await Handle(eventType, message);
         };
 
         channel.BasicConsume(queue: "report_events_queue", autoAck: true, consumer: consumer);
@@ -43,33 +48,39 @@ public class EventConsumer
         Console.ReadLine();
     }
 
-    private async Task HandleEvent(string eventType, string message)
+    private async Task Handle(string eventName, string eventMessage)
     {
-        _logger.LogInformation($"Event: #{eventType} , Message: {message}");
+        _logger.LogInformation("Event: #{} , Message: {}", eventName, eventMessage);
 
         using var scope = _serviceProvider.CreateScope();
         var factory = scope.ServiceProvider.GetRequiredService<EventHandlerFactory>();
 
-        switch (eventType)
+        // Kuyruktan yakalanan Event ve mesaj içeriği burada değerlendirlir
+        // eventType türüne göre JSON formatından döndürülen mesaj içeriği
+        // factory nesnesi üzerinden uygun business nesnesinin execute fonksiyonuna kadar gönderilir
+        //TODO@buraksenyurt Yeni Event-Business Object eşleşmeleri geldikçe buradaki switch bloğu büyümeye devam edecek.
+        // Belki bir Dictionary ve Reflection ile konfigurasyon dosyası gibi bir yerden bu execution işini yönetebiliriz.
+
+        switch (eventName)
         {
             case nameof(ReportRequestedEvent):
-                var reportRequestedEvent = JsonSerializer.Deserialize<ReportRequestedEvent>(message);
+                var reportRequestedEvent = JsonSerializer.Deserialize<ReportRequestedEvent>(eventMessage);
                 await factory.ExecuteEvent(reportRequestedEvent);
                 break;
             case nameof(ReportReadyEvent):
-                var reportReadyEvent = JsonSerializer.Deserialize<ReportReadyEvent>(message);
+                var reportReadyEvent = JsonSerializer.Deserialize<ReportReadyEvent>(eventMessage);
                 await factory.ExecuteEvent(reportReadyEvent);
                 break;
             case nameof(ReportIsHereEvent):
-                var reportIsHereEvent = JsonSerializer.Deserialize<ReportIsHereEvent>(message);
+                var reportIsHereEvent = JsonSerializer.Deserialize<ReportIsHereEvent>(eventMessage);
                 await factory.ExecuteEvent(reportIsHereEvent);
                 break;
             case nameof(ReportProcessCompletedEvent):
-                var reportProcessCompletedEvent = JsonSerializer.Deserialize<ReportProcessCompletedEvent>(message);
+                var reportProcessCompletedEvent = JsonSerializer.Deserialize<ReportProcessCompletedEvent>(eventMessage);
                 await factory.ExecuteEvent(reportProcessCompletedEvent);
                 break;
             case nameof(InvalidExpressionEvent):
-                var invalidExpressionEvent = JsonSerializer.Deserialize<InvalidExpressionEvent>(message);
+                var invalidExpressionEvent = JsonSerializer.Deserialize<InvalidExpressionEvent>(eventMessage);
                 await factory.ExecuteEvent(invalidExpressionEvent);
                 break;
             default:

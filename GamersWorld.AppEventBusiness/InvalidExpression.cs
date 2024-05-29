@@ -22,7 +22,7 @@ public class InvalidExpression
     public async Task<BusinessResponse> Execute(InvalidExpressionEvent appEvent)
     {
         //TODO@buraksenyurt Must implement alert and warning mechanism
-        _logger.LogWarning($"{appEvent.Expression}, Reason: {appEvent.Reason}");
+        _logger.LogWarning("{}, Reason: {}", appEvent.Expression, appEvent.Reason);
 
         throw new NotImplementedException();
     }

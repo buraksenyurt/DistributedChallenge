@@ -22,7 +22,7 @@ public class PostReportRequest
     }
     public async Task<BusinessResponse> Execute(ReportRequestedEvent appEvent)
     {
-        _logger.LogInformation($"{appEvent.TraceId}, {appEvent.Title}, {appEvent.Expression}");
+        _logger.LogInformation("{}, {}, {}", appEvent.TraceId, appEvent.Title, appEvent.Expression);
         //TODO@buraksenyurt Must implement App Service Post request
 
         // Reporting App Service'e bir POST talebi yapılır

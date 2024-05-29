@@ -25,7 +25,7 @@ public class GetReportDocument
     public async Task<BusinessResponse> Execute(ReportReadyEvent appEvent)
     {
         //TODO@buraksenyurt Must implement Get Report Document
-        _logger.LogInformation($"{appEvent.TraceId}, Ref Doc: {appEvent.CreatedReportId}");
+        _logger.LogInformation("{}, Ref Doc: {}", appEvent.TraceId, appEvent.CreatedReportId);
         // appEvent üstünden doküman nosunu al
         // Reporting File Service'i Get ile çağır ve dokümanı çek
         // Dokümanı Local Storage'a(kuvvetle muhtemel bir tabloya) geçici olarak kaydet
