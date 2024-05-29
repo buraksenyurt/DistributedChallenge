@@ -1,5 +1,6 @@
 ﻿using GamersWorld.AppEvents;
 using GamersWorld.SDK;
+using GamersWorld.SDK.Messages;
 
 namespace GamersWorld.AppEventBusiness;
 
@@ -12,7 +13,7 @@ namespace GamersWorld.AppEventBusiness;
 public class UsePreparedReport
     : IEventExecuter<ReportIsHereEvent>
 {
-    public async Task<int> Execute(ReportIsHereEvent appEvent)
+    public async Task<BusinessResponse> Execute(ReportIsHereEvent appEvent)
     {
         //TODO@buraksenyurt Must implement Use Report steps
         // Dokümanı Local Storage'dan oku

@@ -1,5 +1,6 @@
 ﻿using GamersWorld.AppEvents;
 using GamersWorld.SDK;
+using GamersWorld.SDK.Messages;
 
 namespace GamersWorld.AppEventBusiness;
 
@@ -12,7 +13,7 @@ namespace GamersWorld.AppEventBusiness;
 public class InvalidExpression
     : IEventExecuter<InvalidExpressionEvent>
 {
-    public async Task<int> Execute(InvalidExpressionEvent appEvent)
+    public async Task<BusinessResponse> Execute(InvalidExpressionEvent appEvent)
     {
         //TODO@buraksenyurt Must implement alert and warning mechanism
 

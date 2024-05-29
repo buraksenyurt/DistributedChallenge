@@ -1,5 +1,6 @@
 ﻿using GamersWorld.AppEvents;
 using GamersWorld.SDK;
+using GamersWorld.SDK.Messages;
 
 namespace GamersWorld.AppEventBusiness;
 
@@ -15,7 +16,7 @@ namespace GamersWorld.AppEventBusiness;
 public class GetReportDocument
     : IEventExecuter<ReportReadyEvent>
 {
-    public async Task<int> Execute(ReportReadyEvent appEvent)
+    public async Task<BusinessResponse> Execute(ReportReadyEvent appEvent)
     {
         //TODO@buraksenyurt Must implement Get Report Document
         // appEvent üstünden doküman nosunu al

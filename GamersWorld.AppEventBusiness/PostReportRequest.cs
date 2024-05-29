@@ -1,5 +1,6 @@
 ﻿using GamersWorld.AppEvents;
 using GamersWorld.SDK;
+using GamersWorld.SDK.Messages;
 
 namespace GamersWorld.AppEventBusiness;
 
@@ -13,10 +14,10 @@ namespace GamersWorld.AppEventBusiness;
 public class PostReportRequest
     : IEventExecuter<ReportRequestedEvent>
 {
-    public async Task<int> Execute(ReportRequestedEvent appEvent)
+    public async Task<BusinessResponse> Execute(ReportRequestedEvent appEvent)
     {
         //TODO@buraksenyurt Must implement App Service Post request
-        
+
         // Reporting App Service'e bir POST talebi yapılır
         throw new NotImplementedException();
     }

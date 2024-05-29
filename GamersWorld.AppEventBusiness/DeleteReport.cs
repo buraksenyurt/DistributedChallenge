@@ -1,12 +1,13 @@
 ﻿using GamersWorld.AppEvents;
 using GamersWorld.SDK;
+using GamersWorld.SDK.Messages;
 
 namespace GamersWorld.AppEventBusiness;
 
 public class DeleteReport
     : IEventExecuter<ReportProcessCompletedEvent>
 {
-    public async Task<int> Execute(ReportProcessCompletedEvent appEvent)
+    public async Task<BusinessResponse> Execute(ReportProcessCompletedEvent appEvent)
     {
         //TODO@buraksenyurt Must implement Report Process Completed actions
         
