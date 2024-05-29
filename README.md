@@ -44,7 +44,38 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 - Reporting App Service ve Reporting File Service birer Web API hizmeti olarak tasarlanabilirler. Local Storage olarak senaryoyu kolayca uygulayabilmek adına fiziki dosya sistemini kullanacaklarını düşünebiliriz. Yani hazırlanması bir süre alacak PDF içeriğini fiziki diske kaydetip buradan okuyarak External Reader Service'e iletebilirler.
 - Report Trace Service uygulaması da esasında sürekli ayakta olması ve ReportIsHere olayını dinlemesi gereken bir konumadır. Bu anlamda sürekli çalışan bir Console uygulaması olarak da tasarlanabilir.
 
-  **Not:** Dikkat edileceği üzere Event Consumer/Publisher olarak araya koyduğumuz katman bazı olaylar ile ilgili olarak bir takım aksiyonlar alıyor. Örneğin ReportRequestEvent gerçekleştiğinde POST ile bir dış servise talep gönderiyor ve ReportIsHereEvent gerçekleştiğinde de GET Report ile PDF çekip Back Office tarafındaki Local Storage'a kaydediyor. Dolayısıyla bir event karşılığında bir takım aksiyonlar icra ediyor. Bunları A event'i için şu Interface implementasyonunu çağır şeklinde başka bir katmana alarak runtime'da çözümlenebilir bağımlılıkar haline getirebilir ve böylece runtime çalışıyorken yeni event-aksiyon bağımlılıklarını sisteme dahil edebiliriz belki de. Dolayısıyla aradaki Event Consumer/Publisher'ın tasarımı oldukça önemli. 
+  **Not:** Dikkat edileceği üzere Event Consumer/Publisher olarak araya koyduğumuz katman bazı olaylar ile ilgili olarak bir takım aksiyonlar alıyor. Örneğin ReportRequestEvent gerçekleştiğinde POST ile bir dış servise talep gönderiyor ve ReportIsHereEvent gerçekleştiğinde de GET Report ile PDF çekip Back Office tarafındaki Local Storage'a kaydediyor. Dolayısıyla bir event karşılığında bir takım aksiyonlar icra ediyor. Bunları A event'i için şu Interface implementasyonunu çağır şeklinde başka bir katmana alarak runtime'da çözümlenebilir bağımlılıkar haline getirebilir ve böylece runtime çalışıyorken yeni event-aksiyon bağımlılıklarını sisteme dahil edebiliriz belki de. Dolayısıyla aradaki Event Consumer/Publisher'ın tasarımı oldukça önemli.
+
+## Runtime
+
+Nihai senaryonun işletilmesinde birçok servisin aynı anda ayağa kalkması gereken durumlar söz konusu olacak. Örneğin System ABC tarafındaki raporlama hizmetleri ile System 123 tarafındaki bazı hizmetler birer REST servisi gibi konuşlanabilirler. Asenkron mesajlaşma kuyruğu içinse RabbitMQ kullanmak oldukça mantılı görünüyor. Event'leri dinleyen Consumer tarafın da bir Console uygulaması. Tüm bunların aynı anda çalıştırılması noktasında Docker Compose' dan yararlanılabilir. Docker-Compose'a dahil olacak her projede birer Dockerfile yer alıyor.
+
+```bash
+# Docker-Compose'u sistemde build edip çalıştırmak için
+docker-compose up --build
+
+# Uygulama loglarını görmek için
+docker-compose logs -f
+
+# Container'ları durdurmak için
+docker-compose down
+```
+
+## İlk Temas (First Contact - 29 Mayıs 2024, 21:00 suları)
+
+Sistemde RabbitMq'yu ayağa kaldırdıktan sonra GamersWorld.EventHost uygulamasını başlattım. İlk mesaj gönderimini test etmek için localhost:15672 portundan ulaştığım RabbitMQ client arabirimini kullandım. Burada Queues and Streams kısmında report_events_queue otomatik olarak oluştu. Publish Message kısmında type özelliğine ReportRequestedEvent değerini verip örnek bir Payload hazırladım.
+
+```json
+{
+  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "Title": "Popular Game Sales Reports",
+  "Expression": "SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc"
+}
+```
+
+Mesajı Publish ettikten sonra host uygulama tarafından otomatik olarak yakalandığını düşen loglardan anlamayı başardım.
+
+![First Test](/images/first_test.png)
 
 ## Zorluk Seviyesini Artırma
 
@@ -55,3 +86,4 @@ Yukarıda bahsedilen senaryoda sisteme dahil olan tüm uygulamaların aynı firm
 - Senaryoda farklı sistemler olduğunu düşünmeliyiz. System ABC raporlama tarafını üstleniyor. Gelen rapor ifadesini anlamlı bir betiğe dönüştürmek, işletmek, pdf gibi çıktısını hazırlamak ve hazır olduğuna dair System 123' ü bilgilendirmek görevleri arasında. Kendi içerisindeki süreçlerin yönetiminde de Event bazlı bir yaklaşıma gidebilir. Söz gelimi ifadenin bir Gen AI ile anlamlı hale dönüştürülmesi birkaç saniye sürebilecek bir iş olabilir. Dönüştürme işi başarısız ise bununla ilgili olarak da System 123'ü bilgilendirmesi gerekebilir. Dolayısıyla bu da yeni bir olayın üretilmesi, System 123'e aktarılması ve System 123 tarafında bu hatanın ele alınmasını gerektirecektir _(Çizelgede e1 ile ifade edilen kısım)_ Tüm çözümü zorlaştırmamak adına belki bu kısım şimdilik atlanabilir.
 - Rapor talebi yapılan ekranda girilen isteğin anlaşılarak bir SQL ifadesine dönüştürülmesinde Gen AI araçlarına ait bir API'den yararlanabiliriz. Örneğin metin kutusuna "Son bir yılda yapılan oyun satışlarından, en olumlu yorum sayısına sahip ilk 50sini getir" dediğimizde Gen AI API'si bunu anlayıp raporlama tarafından çalıştırılması istenen SQL ifadesini veya farklı bir script ifadeyi hazırlayıp Event mesajına bilgi olarak bırakabilir.
 - İsimlendirmeler konusu da önemli. Event olarak ifade ettiğimiz nesneler esasında process'lerde oluşturulup mesaj kuyruğuna bırakılan POCO'lar _(Plain Old CLR Objects)_ Bunları kullanan business nesnelerimiz de var. Yani bir olayla ilgili aksiyon alan _(bir eylem icra eden)_ sınıflar. Bunlar ortak sözleşmeleri _(interfaces)_ uygulamak durumundalar ki Dependency Injection Container çalışma zamanlarınca çalıştırılabilsinler. Tüm bunlarda proje, nesne, metot, değişken isimlendirmeleri kod okunurluğu ve başka programcıların kodu anlaması, neyi nereye koymaları gerektiğini kolayca bulması açısından mühim bir mesele.
+- Sistem içerisinde koşan servislerden bazılarını REST tabanlı tasarlamak yerine gRPC gibi de tasarlayabiliriz. System ABC ile System 123'ün aralarında Internet olduğunu düşünürsek buradaki haberleşme kanalları pekala REST Api'ler ile tesis edilebilir.
