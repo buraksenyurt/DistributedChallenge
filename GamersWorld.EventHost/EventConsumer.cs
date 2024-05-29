@@ -3,6 +3,7 @@ using System.Text.Json;
 using GamersWorld.AppEvents;
 using GamersWorld.EventHost.Factory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -11,11 +12,13 @@ public class EventConsumer
 {
     private readonly IConnectionFactory _connectionFactory;
     private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<EventConsumer> _logger;
 
-    public EventConsumer(IConnectionFactory connectionFactory, IServiceProvider serviceProvider)
+    public EventConsumer(IConnectionFactory connectionFactory, IServiceProvider serviceProvider, ILogger<EventConsumer> logger)
     {
         _connectionFactory = connectionFactory;
         _serviceProvider = serviceProvider;
+        _logger = logger;
     }
 
     public void Start()
@@ -42,6 +45,8 @@ public class EventConsumer
 
     private async Task HandleEvent(string eventType, string message)
     {
+        _logger.LogInformation($"Event: #{eventType} , Message: {message}");
+
         using var scope = _serviceProvider.CreateScope();
         var factory = scope.ServiceProvider.GetRequiredService<EventHandlerFactory>();
 
@@ -68,7 +73,7 @@ public class EventConsumer
                 await factory.ExecuteEvent(invalidExpressionEvent);
                 break;
             default:
-                Console.WriteLine("Event çözümlenemedi.");
+                _logger.LogError("Event çözümlenemedi.");
                 break;
         }
     }

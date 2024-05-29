@@ -1,6 +1,7 @@
 ﻿using GamersWorld.AppEvents;
 using GamersWorld.SDK;
 using GamersWorld.SDK.Messages;
+using Microsoft.Extensions.Logging;
 
 namespace GamersWorld.AppEventBusiness;
 
@@ -16,9 +17,15 @@ namespace GamersWorld.AppEventBusiness;
 public class GetReportDocument
     : IEventDriver<ReportReadyEvent>
 {
+    private readonly ILogger<GetReportDocument> _logger;
+    public GetReportDocument(ILogger<GetReportDocument> logger)
+    {
+        _logger = logger;
+    }
     public async Task<BusinessResponse> Execute(ReportReadyEvent appEvent)
     {
         //TODO@buraksenyurt Must implement Get Report Document
+        _logger.LogInformation($"{appEvent.TraceId}, Ref Doc: {appEvent.CreatedReportId}");
         // appEvent üstünden doküman nosunu al
         // Reporting File Service'i Get ile çağır ve dokümanı çek
         // Dokümanı Local Storage'a(kuvvetle muhtemel bir tabloya) geçici olarak kaydet

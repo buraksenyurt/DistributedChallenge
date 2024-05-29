@@ -1,6 +1,7 @@
 ﻿using GamersWorld.AppEvents;
 using GamersWorld.SDK;
 using GamersWorld.SDK.Messages;
+using Microsoft.Extensions.Logging;
 
 namespace GamersWorld.AppEventBusiness;
 
@@ -13,9 +14,15 @@ namespace GamersWorld.AppEventBusiness;
 public class InvalidExpression
     : IEventDriver<InvalidExpressionEvent>
 {
+    private readonly ILogger<InvalidExpression> _logger;
+    public InvalidExpression(ILogger<InvalidExpression> logger)
+    {
+        _logger = logger;
+    }
     public async Task<BusinessResponse> Execute(InvalidExpressionEvent appEvent)
     {
         //TODO@buraksenyurt Must implement alert and warning mechanism
+        _logger.LogWarning($"{appEvent.Expression}, Reason: {appEvent.Reason}");
 
         throw new NotImplementedException();
     }

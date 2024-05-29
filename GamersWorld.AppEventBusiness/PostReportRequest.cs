@@ -1,6 +1,7 @@
 ﻿using GamersWorld.AppEvents;
 using GamersWorld.SDK;
 using GamersWorld.SDK.Messages;
+using Microsoft.Extensions.Logging;
 
 namespace GamersWorld.AppEventBusiness;
 
@@ -14,8 +15,14 @@ namespace GamersWorld.AppEventBusiness;
 public class PostReportRequest
     : IEventDriver<ReportRequestedEvent>
 {
+    private readonly ILogger<PostReportRequest> _logger;
+    public PostReportRequest(ILogger<PostReportRequest> logger)
+    {
+        _logger = logger;
+    }
     public async Task<BusinessResponse> Execute(ReportRequestedEvent appEvent)
     {
+        _logger.LogInformation($"{appEvent.TraceId}, {appEvent.Title}, {appEvent.Expression}");
         //TODO@buraksenyurt Must implement App Service Post request
 
         // Reporting App Service'e bir POST talebi yapılır
