@@ -14,7 +14,7 @@ Buradaki senaryonun çözümü noktasında oldukça basit ilerlemeye çalışaca
 
 Bu problemi aşağıdaki gibi çözmeye çalıştığımızı düşünelim.
 
-![Challange Solution Candidate](https://github.com/buraksenyurt/DistributedChallange/assets/2705782/8847063a-e698-43c7-9499-9dfe60393d7c)
+![Challange Solution Candidate](https://github.com/buraksenyurt/DistributedChallange/assets/2705782/08b49b9b-6154-41d5-a0af-4a4c29e8f24f)
 
 Senaryodaki adımları da aşağıdaki gibi tarifleyelim.
 
@@ -27,10 +27,12 @@ Senaryodaki adımları da aşağıdaki gibi tarifleyelim.
 7. **External Reader Service**, raporun hazır olduğuna dair **ReportReadyEvent** isimli yeni bir olay mesajı hazırlar ve bunu kuyruğa bırakır.
 8. **Event Consumer/Publisher** tarafındaki Process **ReportReadyEvent** isimli olayları dinler.
 9. **Event Consumer/Publisher** tarafında **ReportReadyEvent** yakalandığında yine farklı bir process'te çalışan **Reporting File Service** hizmeti **GET** ile çağrılır ve üretilen rapora ait PDF çıktısı çekilir.
-10. Servisten çekilen PDF içeriği bu sefer **Back Office** uygulamasının bulunduğu ağ tarafındaki **local storage**'e aktarılır. Aynı anda bu sefer ReportIsHereEvent isimli bir başka olay mesajı kuyruğa bırakılır.
-11. Kendi process'i içinde çalışan **Report Trace Service** isimli servis uygulaması **ReportIsHereEvent** olayını dinler.
+10. Servisten çekilen PDF içeriği bu sefer **Back Office** uygulamasının bulunduğu ağ tarafındaki **local storage**'e aktarılır. Aynı anda bu sefer **ReportIsHereEvent** isimli bir başka olay mesajı kuyruğa bırakılır.
+11. Kendi process'i içinde çalışan **Report Trace Service** isimli servis uygulaması **ReportIsHereEvent** olayını dinler. _(Bunu da belki Event Consumer/Publisher isimli Host uygulamasında ele alabiliriz)_
 12. Report Trace Service hizmeti, **ReportIsHereEvent** isimli bir olay yakaladığında **Local Storage**'a gider ve ilgili PDF'i çeker.
 13. Rapor artık hazırdır. Rapor e-posta ile CEO'ya gönderilir ve Local Storage ortamlarında gerekli temizlikler yapılır.
+
+Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin Form uygulamasından girilen rapor talebindeki ifade geçersiz olabilir. Sistemden bilgi sızdırmaya yönelik güvensiz ifadeler içerebilir vs. Bu gibi bir durumda System ABC'nin geçersiz bir mesaj olduğuna dair System 123'ü bilgilendirmesi de gerekir. System ABC'nin kendi içinde ele alıp detay loglarla değerlendirdiği bu durum System 123'e bir Event olarak girer ve buna karşılık da bir süreç başlayabilir. Resimde görülen soru işaret kısmı dikkat edileceği üzere hata durumu yakalandıktan sonra ne yapılacağına dairdir. Rapor talebi sahibinin bilgilendirilmesi için e-posta gönderimi, sistem loglarına bilgi düşülmesi, form uygulamasında popup ile bilgilendirme yapılmas vs gibi bir işler bütünü başlatılabilir.
 
 ## Solution için Aday Uygulama Türleri
 
