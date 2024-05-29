@@ -22,18 +22,15 @@ public static class DependencyInjection
     }
     public static IServiceCollection AddRabbitMq(this IServiceCollection services, IConfiguration configuration)
     {
-        var rabbitMqSettings = configuration.GetSection("RabbitMQ");
-        var hostName = rabbitMqSettings["HostName"];
-        var username = rabbitMqSettings["Username"];
-        var password = rabbitMqSettings["Password"];
-        int.TryParse(rabbitMqSettings["Port"], out int port);
+        var rabbitMqSettings = new RabbitMqSettings();
+        configuration.GetSection("RabbitMqSettings").Bind(rabbitMqSettings);
 
         services.AddSingleton<IConnectionFactory>(c => new ConnectionFactory()
         {
-            HostName = hostName,
-            UserName = username,
-            Password = password,
-            Port = port
+            HostName = rabbitMqSettings.HostName,
+            UserName = rabbitMqSettings.Username,
+            Password = rabbitMqSettings.Password,
+            Port = rabbitMqSettings.Port
         });
         services.AddSingleton<EventConsumer>();
         return services;
