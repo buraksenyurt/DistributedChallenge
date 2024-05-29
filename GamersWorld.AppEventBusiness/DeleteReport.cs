@@ -5,7 +5,7 @@ using GamersWorld.SDK.Messages;
 namespace GamersWorld.AppEventBusiness;
 
 public class DeleteReport
-    : IEventExecuter<ReportProcessCompletedEvent>
+    : IEventDriver<ReportProcessCompletedEvent>
 {
     public async Task<BusinessResponse> Execute(ReportProcessCompletedEvent appEvent)
     {

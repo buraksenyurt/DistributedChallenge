@@ -1,13 +1,18 @@
 ﻿using GamersWorld.EventHost;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appSettings.json", reloadOnChange: true, optional: false)
+    .Build();
+
 var services = new ServiceCollection();
-services.AddEventExecutors();
+services.AddSingleton<IConfiguration>(configuration);
+services.AddEventDrivers();
+services.AddRabbitMq(configuration);
 
 var serviceProvider = services.BuildServiceProvider();
-var factory = serviceProvider.GetService<EventExecuterFactory>();
+var eventConsumer = serviceProvider.GetService<EventConsumer>();
 
-//TODO@buraksenyurt Buraya RabbitMQ implementasyonu gelmeli.
-
-Console.WriteLine("Message listener is ready. Press [enter] to exit.");
-Console.ReadLine();
+eventConsumer.Start();

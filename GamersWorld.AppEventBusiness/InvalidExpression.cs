@@ -11,7 +11,7 @@ namespace GamersWorld.AppEventBusiness;
     Buna karşılık işletilecek fonksiyon aşağıdaki gibi.
 */
 public class InvalidExpression
-    : IEventExecuter<InvalidExpressionEvent>
+    : IEventDriver<InvalidExpressionEvent>
 {
     public async Task<BusinessResponse> Execute(InvalidExpressionEvent appEvent)
     {

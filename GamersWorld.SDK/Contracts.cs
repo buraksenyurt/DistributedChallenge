@@ -2,7 +2,7 @@ using GamersWorld.SDK.Messages;
 
 namespace GamersWorld.SDK;
 
-public interface IEventExecuter<TEvent>
+public interface IEventDriver<TEvent>
     where TEvent : IEvent
 {
     Task<BusinessResponse> Execute(TEvent appEvent);

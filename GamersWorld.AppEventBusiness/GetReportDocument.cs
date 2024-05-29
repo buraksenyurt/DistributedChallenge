@@ -14,7 +14,7 @@ namespace GamersWorld.AppEventBusiness;
     Execute içerisindeki işlemler yapılır.
 */
 public class GetReportDocument
-    : IEventExecuter<ReportReadyEvent>
+    : IEventDriver<ReportReadyEvent>
 {
     public async Task<BusinessResponse> Execute(ReportReadyEvent appEvent)
     {

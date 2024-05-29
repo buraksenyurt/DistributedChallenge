@@ -11,7 +11,7 @@ namespace GamersWorld.AppEventBusiness;
     Bu olay yakalanırsa aşağıdaki nesne fonksiyonundaki işlemler yapılacak.
 */
 public class UsePreparedReport
-    : IEventExecuter<ReportIsHereEvent>
+    : IEventDriver<ReportIsHereEvent>
 {
     public async Task<BusinessResponse> Execute(ReportIsHereEvent appEvent)
     {

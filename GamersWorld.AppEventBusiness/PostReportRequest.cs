@@ -12,7 +12,7 @@ namespace GamersWorld.AppEventBusiness;
     aşağıdaki nesnenin Execute metodunu icra edip buradaki işlemleri yapmalıdır.
 */
 public class PostReportRequest
-    : IEventExecuter<ReportRequestedEvent>
+    : IEventDriver<ReportRequestedEvent>
 {
     public async Task<BusinessResponse> Execute(ReportRequestedEvent appEvent)
     {
