@@ -43,7 +43,7 @@ app.MapPost("/", (CreateReportRequest request) =>
     {
         Head = 1001,
         Source = 23,
-        Stamp = Guid.Parse(request.TraceId)
+        Stamp = Guid.NewGuid(),
     };
 
     // Bu sistem kendi için rapor hazırlama işini başlatıyor şeklinde düşünelim.
