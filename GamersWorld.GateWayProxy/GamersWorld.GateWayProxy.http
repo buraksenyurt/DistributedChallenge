@@ -1,6 +1,29 @@
 @GamersWorld.GateWayProxy_HostAddress = http://localhost:5102
 
-GET {{GamersWorld.GateWayProxy_HostAddress}}/weatherforecast/
+POST {{Kahin.GateWayProxy_HostAddress}}/
+Content-Type: application/json
 Accept: application/json
+
+{
+  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "DocumentId": "200-10-edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "StatusCode": 200,
+  "StatusMessage": "Report is ready and live for 60 minutes",
+  "Detail": ""
+}
+
+###
+
+POST {{Kahin.GateWayProxy_HostAddress}}/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "DocumentId": "",
+  "StatusCode": 400,
+  "StatusMessage": "ExpressionNotValid",
+  "Detail": "There is a suspicious activities in expression."
+}
 
 ###

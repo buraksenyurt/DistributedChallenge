@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 var rabbitMqSettings = builder.Configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
 builder.Services.AddSingleton(sp => new RabbitMqService(rabbitMqSettings));
@@ -32,7 +34,7 @@ app.UseHttpsRedirection();
 
 */
 
-app.MapPost("/", (ReportStatusRequest request, RabbitMqService rabbitMQService) =>
+app.MapPost("/", (ReportStatusRequest request, RabbitMqService rabbitMQService, ILogger<Program> logger) =>
 {
     if (request.StatusCode == (int)StatusCode.ReportReady)
     {
@@ -44,6 +46,9 @@ app.MapPost("/", (ReportStatusRequest request, RabbitMqService rabbitMQService) 
         };
 
         rabbitMQService.PublishEvent(reportReadyEvent);
+        logger.LogInformation(
+            "ReporReadyEvent gönderildi. TraceId: {TraceId}, DocumentId: {DocumentId}"
+            , request.TraceId, request.DocumentId);
     }
     else if (request.StatusCode == (int)StatusCode.InvalidExpression)
     {
@@ -55,6 +60,9 @@ app.MapPost("/", (ReportStatusRequest request, RabbitMqService rabbitMQService) 
             Time = DateTime.Now,
         };
         rabbitMQService.PublishEvent(invalidExpressionEvent);
+        logger.LogError(
+            "InvalidExpressionEvent gönderildi. TraceId: {TraceId}, Expression: {Expression}, Reason: {Reason}"
+            , request.TraceId, request.Detail, request.StatusMessage);
     }
 
     return Results.Ok();

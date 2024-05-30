@@ -1,4 +1,5 @@
 ﻿using GamersWorld.AppEvents;
+using GamersWorld.Common.Enums;
 using GamersWorld.Common.Messages.Responses;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;
@@ -24,6 +25,10 @@ public class InvalidExpression
         //TODO@buraksenyurt Must implement alert and warning mechanism
         _logger.LogWarning("{}, Reason: {}", appEvent.Expression, appEvent.Reason);
 
-        throw new NotImplementedException();
+        return new BusinessResponse
+        {
+            Message = "Rapor için kullanılan sorgu ifadesi doğrulanamadı",
+            StatusCode = StatusCode.InvalidExpression
+        };
     }
 }

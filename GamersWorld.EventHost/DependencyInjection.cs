@@ -16,7 +16,7 @@ public static class DependencyInjection
     public static IServiceCollection AddEventDrivers(this IServiceCollection services)
     {
         services.AddTransient<IEventDriver<ReportRequestedEvent>, PostReportRequest>();
-        services.AddTransient<IEventDriver<ReportReadyEvent>, GetReportDocument>();
+        services.AddTransient<IEventDriver<ReportReadyEvent>, ReportDocumentAvailable>();
         services.AddTransient<IEventDriver<ReportIsHereEvent>, UsePreparedReport>();
         services.AddTransient<IEventDriver<ReportProcessCompletedEvent>, DeleteReport>();
         services.AddTransient<IEventDriver<InvalidExpressionEvent>, InvalidExpression>();
