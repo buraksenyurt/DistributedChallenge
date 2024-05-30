@@ -1,5 +1,6 @@
 using GamersWorld.AppEventBusiness;
 using GamersWorld.AppEvents;
+using GamersWorld.Common.Settings;
 using GamersWorld.EventHost.Factory;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Configuration;

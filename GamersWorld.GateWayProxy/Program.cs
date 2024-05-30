@@ -1,5 +1,7 @@
 using GamersWorld.AppEvents;
-using GamersWorld.GateWayProxy;
+using GamersWorld.Common.Enums;
+using GamersWorld.Common.Messages.Requests;
+using GamersWorld.Common.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,18 +63,3 @@ app.MapPost("/", (ReportStatusRequest request, RabbitMqService rabbitMQService) 
 .WithOpenApi();
 
 app.Run();
-
-class ReportStatusRequest
-{
-    public string TraceId { get; set; }
-    public string DocumentId { get; set; }
-    public int StatusCode { get; set; }
-    public string StatusMessage { get; set; }
-    public string Detail { get; set; }
-}
-
-enum StatusCode
-{
-    ReportReady = 200,
-    InvalidExpression = 400
-}

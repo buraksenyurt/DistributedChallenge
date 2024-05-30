@@ -1,7 +1,7 @@
 ﻿using GamersWorld.AppEvents;
+using GamersWorld.Common.Enums;
+using GamersWorld.Common.Messages.Responses;
 using GamersWorld.SDK;
-using GamersWorld.SDK.Enums;
-using GamersWorld.SDK.Messages;
 using Microsoft.Extensions.Logging;
 
 namespace GamersWorld.AppEventBusiness;

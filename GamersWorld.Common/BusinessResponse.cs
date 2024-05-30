@@ -1,6 +1,6 @@
-using GamersWorld.SDK.Enums;
+using GamersWorld.Common.Enums;
 
-namespace GamersWorld.SDK.Messages;
+namespace GamersWorld.Common.Messages.Responses;
 
 public class BusinessResponse
 {

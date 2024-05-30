@@ -1,4 +1,4 @@
-namespace GamersWorld.EventHost;
+namespace GamersWorld.Common.Settings;
 public class RabbitMqSettings
 {
     public string HostName { get; set; } = "localhost";

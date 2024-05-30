@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.ReportingService", "K
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.GateWayProxy", "GamersWorld.GateWayProxy\GamersWorld.GateWayProxy.csproj", "{4B566CB1-6CAD-44A9-871B-7E9464184CF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Common", "GamersWorld.Common\GamersWorld.Common.csproj", "{C28DFA91-3E85-4576-84AC-243015666538}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{4B566CB1-6CAD-44A9-871B-7E9464184CF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B566CB1-6CAD-44A9-871B-7E9464184CF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B566CB1-6CAD-44A9-871B-7E9464184CF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C28DFA91-3E85-4576-84AC-243015666538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28DFA91-3E85-4576-84AC-243015666538}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28DFA91-3E85-4576-84AC-243015666538}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28DFA91-3E85-4576-84AC-243015666538}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,4 @@
-using GamersWorld.GateWayProxy;
+using GamersWorld.Common.Settings;
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
