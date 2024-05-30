@@ -77,6 +77,38 @@ Mesajı Publish ettikten sonra host uygulama tarafından otomatik olarak yakalan
 
 ![First Test](/images/first_test.png)
 
+## İkinci Temas (30 Mayıs 2024, 22:00 suları)
+
+System 123'te System ABC'nin bilgilendirme amaçlı olarak kullanacağı _(Rapor hazır, rapor ifadesinde hata var vb durumlar için)_ GateWayProxy isimli bir Web Api yer alıyor. Bu serviste kendisine gelen mesajlara göre ReportReadyEvent veya InvalidExpressionEvent gibi olayları üretiyor. Dolayısıyla rabbit mq kuyruğunu kullanan bir servis söz konusu. Bu servise aşağıdaki gibi örnek talepler gönderebildim.
+
+Rapor hazır taklidi yapan bir mesaj.
+
+```json
+{
+  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "DocumentId": "200-10-edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "StatusCode": 200,
+  "StatusMessage": "Report is ready and live for 60 minutes",
+  "Detail": ""
+}
+```
+
+Rapordaki ifadede ihlal var taklidi yapan bir mesaj.
+
+```json
+{
+  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
+  "DocumentId": "",
+  "StatusCode": 400,
+  "StatusMessage": "ExpressionNotValid",
+  "Detail": "There is a suspicious activities in expression."
+}
+```
+
+Örnek çalışma zamanı görüntüsü ise şöyle oluştu...
+
+![Second Test](/images/second_test.png)
+
 ## Zorluk Seviyesini Artırma
 
 Yukarıda bahsedilen senaryoda sisteme dahil olan tüm uygulamaların aynı firmanın dahili ağı _(Internal Network)_ içerisinde yer aldığı varsayılmıştır. Senaryoyu zorlaştırmak için raporlamayı yapan uygulamanın/servisinin internet üzerinden erişilebilen bir 3rd Party servis sağlayacısına ait olduğunu düşünebilirsiniz.
@@ -87,3 +119,4 @@ Yukarıda bahsedilen senaryoda sisteme dahil olan tüm uygulamaların aynı firm
 - Rapor talebi yapılan ekranda girilen isteğin anlaşılarak bir SQL ifadesine dönüştürülmesinde Gen AI araçlarına ait bir API'den yararlanabiliriz. Örneğin metin kutusuna "Son bir yılda yapılan oyun satışlarından, en olumlu yorum sayısına sahip ilk 50sini getir" dediğimizde Gen AI API'si bunu anlayıp raporlama tarafından çalıştırılması istenen SQL ifadesini veya farklı bir script ifadeyi hazırlayıp Event mesajına bilgi olarak bırakabilir.
 - İsimlendirmeler konusu da önemli. Event olarak ifade ettiğimiz nesneler esasında process'lerde oluşturulup mesaj kuyruğuna bırakılan POCO'lar _(Plain Old CLR Objects)_ Bunları kullanan business nesnelerimiz de var. Yani bir olayla ilgili aksiyon alan _(bir eylem icra eden)_ sınıflar. Bunlar ortak sözleşmeleri _(interfaces)_ uygulamak durumundalar ki Dependency Injection Container çalışma zamanlarınca çalıştırılabilsinler. Tüm bunlarda proje, nesne, metot, değişken isimlendirmeleri kod okunurluğu ve başka programcıların kodu anlaması, neyi nereye koymaları gerektiğini kolayca bulması açısından mühim bir mesele.
 - Sistem içerisinde koşan servislerden bazılarını REST tabanlı tasarlamak yerine gRPC gibi de tasarlayabiliriz. System ABC ile System 123'ün aralarında Internet olduğunu düşünürsek buradaki haberleşme kanalları pekala REST Api'ler ile tesis edilebilir.
+- Resilience Durumları : Her iki sistemde de ağ üzerinden HTTP protokolleri ile erişilen servisler söz konusu. Bu servislere erişilememe, beklenen sürede cevap alamama gibi durumlar oluşabilir. Dağıtık mimarilerin doğası gereği bunlar olası. Dolayısıyla Resilience stratejilerini de işin içerisine katmak gerekebilir. Bu sürecin ilerki aşamalarında değerlendirebileceğim bir mevzu.
