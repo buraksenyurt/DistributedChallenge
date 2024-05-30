@@ -18,7 +18,7 @@ app.UseHttpsRedirection();
 
 app.MapPost("/", (CreateReportRequest request) =>
 {
-var validationResults = new List<ValidationResult>();
+    var validationResults = new List<ValidationResult>();
     var validationContext = new ValidationContext(request);
 
     if (!Validator.TryValidateObject(request, validationContext, validationResults, true))

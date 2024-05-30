@@ -1,0 +1,6 @@
+@GamersWorld.GateWayProxy_HostAddress = http://localhost:5102
+
+GET {{GamersWorld.GateWayProxy_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
