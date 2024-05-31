@@ -48,7 +48,7 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 
 ## Runtime
 
-Nihai senaryonun işletilmesinde birçok servisin aynı anda ayağa kalkması gereken durumlar söz konusu olacak. Örneğin System ABC tarafındaki raporlama hizmetleri ile System 123 tarafındaki bazı hizmetler birer REST servisi gibi konuşlanabilirler. Asenkron mesajlaşma kuyruğu içinse RabbitMQ kullanmak oldukça mantılı görünüyor. Event'leri dinleyen Consumer tarafın da bir Console uygulaması. Tüm bunların aynı anda çalıştırılması noktasında Docker Compose' dan yararlanılabilir. Docker-Compose'a dahil olacak her projede birer Dockerfile yer alıyor.
+Nihai senaryonun işletilmesinde birçok servisin aynı anda ayağa kalkması gereken durumlar söz konusu olacak. Örneğin System ABC tarafındaki raporlama hizmetleri ile System 123 tarafındaki bazı hizmetler birer REST servisi gibi konuşlanabilirler. Asenkron mesajlaşma kuyruğu içinse RabbitMQ kullanmak oldukça mantıklı görünüyor. Event'leri dinleyen Consumer tarafın da bir Console uygulaması. Tüm bunların aynı anda çalıştırılması noktasında Docker Compose' dan yararlanılabilir. Docker-Compose'a dahil olacak her projede birer Dockerfile yer alıyor.
 
 ```bash
 # Docker-Compose'u sistemde build edip çalıştırmak için
