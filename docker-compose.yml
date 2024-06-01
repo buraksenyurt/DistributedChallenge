@@ -10,9 +10,9 @@ services:
       - "5672:5672"
       - "15672:15672"
   
-  webapi:
+  repgateway:
     build:
-      context: ./Kahin.ReportingService
+      context: ./Kahin.ReportingGateway
       dockerfile: Dockerfile
     ports:
       - "5218:80"
