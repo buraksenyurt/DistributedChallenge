@@ -1,0 +1,48 @@
+﻿@model GamersWorld.WebApp.Models.ReportRequestModel
+
+<h2>Submit Report</h2>
+
+<form asp-action="SubmitReport" method="post" class="needs-validation" novalidate>
+    <div class="mb-3">
+        <label asp-for="Owner.FullName" class="form-label"></label>
+        <input asp-for="Owner.FullName" class="form-control" required />
+        <div class="invalid-feedback">
+            Rapor talep sahibi adı girilmeli
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Owner.Title" class="form-label"></label>
+        <input asp-for="Owner.Title" class="form-control" required />
+        <div class="invalid-feedback">
+            Rapor talep sahibi ünvanı girilmeli
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Expression" class="form-label"></label>
+        <input asp-for="Expression" class="form-control" required />
+        <div class="invalid-feedback">
+            İstenilen raporu yazınız
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Gönder</button>
+</form>
+
+<script>
+    (function () {
+        'use strict'
+
+        var forms = document.querySelectorAll('.needs-validation')
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>

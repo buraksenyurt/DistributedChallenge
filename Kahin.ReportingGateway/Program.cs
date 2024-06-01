@@ -38,11 +38,12 @@ app.MapPost("/", (CreateReportRequest request) =>
         return Results.BadRequest(new { error = "TraceId must be a valid GUID." });
     }
 
+    Random rnd = new Random();
     // Gelen talepteki bilgilere göre rapor talebini benzersiz bir veri modeli ile damgalamak istiyoruz
     var refDocId = new ReferenceDocumentId
     {
-        Head = 1001,
-        Source = 23,
+        Head = rnd.Next(1000, 1100),
+        Source = rnd.Next(1, 10),
         Stamp = Guid.NewGuid(),
     };
 
@@ -73,7 +74,7 @@ class CreateReportRequest
     public string Title { get; set; }
 
     [Required(ErrorMessage = "Expression must be filled.")]
-    [StringLength(100, MinimumLength = 30, ErrorMessage = "Title length must be between 30 and 100 characters.")]
+    [StringLength(100, MinimumLength = 30, ErrorMessage = "Expression length must be between 30 and 100 characters.")]
     public string Expression { get; set; }
 }
 
