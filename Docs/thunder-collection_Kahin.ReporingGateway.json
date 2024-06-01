@@ -1,0 +1,113 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Kahin.ReporingGateway",
+    "collectionId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+    "dateExported": "2024-06-01T09:07:53.788Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "cbcf8308-bc4e-4a07-a189-29fbc745b9e7",
+            "colId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+            "containerId": "",
+            "name": "New Report Request",
+            "url": "http://localhost:5218",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-06-01T09:02:11.501Z",
+            "modified": "2024-06-01T09:02:11.501Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n  \"TraceId\": \"edd4e07d-2391-47c1-bf6f-96a96c447585\",\r\n  \"Title\": \"Popular Game Sales Reports\",\r\n  \"Expression\": \"SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc\"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "7db36155-98aa-4125-9bf2-900bd7b512eb",
+            "colId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+            "containerId": "",
+            "name": "Invalid TraceId Request",
+            "url": "http://localhost:5218",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-06-01T09:02:58.476Z",
+            "modified": "2024-06-01T09:02:58.476Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"TraceId\": \"000-0000\",\n  \"Title\": \"Popular Game Sales Reports\",\n  \"Expression\": \"SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "a361fed6-56e8-4f2e-93a5-36afff9f8d1c",
+            "colId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+            "containerId": "",
+            "name": "Title Required Request",
+            "url": "http://localhost:5218",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-06-01T09:03:29.130Z",
+            "modified": "2024-06-01T09:03:43.243Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"TraceId\": \"edd4e07d-2391-47c1-bf6f-96a96c447585\",\n  \"Title\": \"\",\n  \"Expression\": \"SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "dfaabb24-cf94-4a08-a397-0b953cff04ce",
+            "colId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+            "containerId": "",
+            "name": "Invalid Title Length Request",
+            "url": "http://localhost:5218",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-06-01T09:04:06.367Z",
+            "modified": "2024-06-01T09:04:19.728Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"TraceId\": \"edd4e07d-2391-47c1-bf6f-96a96c447585\",\n  \"Title\": \"Report Title\",\n  \"Expression\": \"SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "044a94ee-4af3-4301-a46c-0d79a77c0368",
+            "colId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+            "containerId": "",
+            "name": "Empty Expression Request",
+            "url": "http://localhost:5218",
+            "method": "POST",
+            "sortNum": 50000,
+            "created": "2024-06-01T09:04:53.524Z",
+            "modified": "2024-06-01T09:05:04.529Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n  \"TraceId\": \"edd4e07d-2391-47c1-bf6f-96a96c447585\",\r\n  \"Title\": \"Popular Game Sales Reports\",\r\n  \"Expression\": \"\"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "6d9bb2c2-ecec-4583-a3af-4bfd265916b5",
+            "colId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+            "containerId": "",
+            "name": "Invalid expression length",
+            "url": "http://localhost:5218",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2024-06-01T09:05:35.422Z",
+            "modified": "2024-06-01T09:05:38.719Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"TraceId\": \"edd4e07d-2391-47c1-bf6f-96a96c447585\",\n  \"Title\": \"Popular Game Sales Reports\",\n  \"Expression\": \"SELECT * FROM\"\n}",
+                "form": []
+            }
+        }
+    ],
+    "ref": "RCX4fpkZ_kmQtUJ46lqaN3HDu0Rp2-ZQspFx8zyvYjXwoM7qz5MXVZnoG6HZSHlkOfcn7q7awN5V2VEBHVo_fw"
+}
