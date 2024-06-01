@@ -3,6 +3,8 @@ using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
 
+namespace GamersWorld.MQ;
+
 /*
     RabbitMq tarafına mesaj göndermek için kullanılan servis sınıfı
 */

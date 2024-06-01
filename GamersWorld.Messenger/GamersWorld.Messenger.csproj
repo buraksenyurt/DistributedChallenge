@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GamersWorld.Common\GamersWorld.Common.csproj" />
     <ProjectReference Include="..\GamersWorld.AppEvents\GamersWorld.AppEvents.csproj" />
+    <ProjectReference Include="..\GamersWorld.MQ\GamersWorld.MQ.csproj" />
   </ItemGroup>
 
 </Project>

@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Common", "Gamer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.WebApp", "GamersWorld.WebApp\GamersWorld.WebApp.csproj", "{BC847687-F59A-42B3-8C56-57E1CF34D0FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Messenger", "GamersWorld.Messenger\GamersWorld.Messenger.csproj", "{51B22735-0CE9-4F1F-939B-7618FE9CDF39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.MQ", "GamersWorld.MQ\GamersWorld.MQ.csproj", "{75DADA2D-7137-403D-85C1-936BE7A7959D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +64,13 @@ Global
 		{BC847687-F59A-42B3-8C56-57E1CF34D0FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC847687-F59A-42B3-8C56-57E1CF34D0FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC847687-F59A-42B3-8C56-57E1CF34D0FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51B22735-0CE9-4F1F-939B-7618FE9CDF39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B22735-0CE9-4F1F-939B-7618FE9CDF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B22735-0CE9-4F1F-939B-7618FE9CDF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B22735-0CE9-4F1F-939B-7618FE9CDF39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 using GamersWorld.Common.Messages.Requests;
 using GamersWorld.Common.Messages.Responses;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Settings;
 using GamersWorld.AppEvents;
+using GamersWorld.MQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,13 +45,13 @@ app.MapPost("/", (NewReportRequest request, RabbitMqService rabbitMQService, ILo
 
     var reportRequestedEvent = new ReportRequestedEvent
     {
-        TraceId = Guid.new(),
+        TraceId = Guid.NewGuid(),
         Title = request.Title,
         Expression = request.Expression,
-        DateTime = DateTime.Now,
+        Time = DateTime.Now,
     };
 
-    //rabbitMQService.PublishEvent(reportRequestedEvent);
+    rabbitMQService.PublishEvent(reportRequestedEvent);
     logger.LogInformation(
         "ReportRequestedEvent gönderildi. TraceId: {TraceId}, Expression: {Expression}"
         , reportRequestedEvent.TraceId, reportRequestedEvent.Expression);

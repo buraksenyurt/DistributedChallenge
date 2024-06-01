@@ -2,6 +2,7 @@ using GamersWorld.AppEvents;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Messages.Requests;
 using GamersWorld.Common.Settings;
+using GamersWorld.MQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
