@@ -1,7 +1,6 @@
-using System.Text;
 using System.Text.Json;
-using GamersWorld.AppEvents;
 using GamersWorld.EventHost.Factory;
+using GamersWorld.SDK;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
@@ -61,34 +60,16 @@ public class EventConsumer
         // Kuyruktan yakalanan Event ve mesaj içeriği burada değerlendirlir
         // eventType türüne göre JSON formatından döndürülen mesaj içeriği
         // factory nesnesi üzerinden uygun business nesnesinin execute fonksiyonuna kadar gönderilir
-        //TODO@buraksenyurt Yeni Event-Business Object eşleşmeleri geldikçe buradaki switch bloğu büyümeye devam edecek.
-        // Belki bir Dictionary ve Reflection ile konfigurasyon dosyası gibi bir yerden bu execution işini yönetebiliriz.
-
-        switch (eventType)
+        
+        var type = Type.GetType(eventType);
+        var obj = JsonSerializer.Deserialize(eventMessage, type);
+        if (obj is IEvent eventObj)
         {
-            case nameof(ReportRequestedEvent):
-                var reportRequestedEvent = JsonSerializer.Deserialize<ReportRequestedEvent>(eventMessage);
-                await factory.ExecuteEvent(reportRequestedEvent);
-                break;
-            case nameof(ReportReadyEvent):
-                var reportReadyEvent = JsonSerializer.Deserialize<ReportReadyEvent>(eventMessage);
-                await factory.ExecuteEvent(reportReadyEvent);
-                break;
-            case nameof(ReportIsHereEvent):
-                var reportIsHereEvent = JsonSerializer.Deserialize<ReportIsHereEvent>(eventMessage);
-                await factory.ExecuteEvent(reportIsHereEvent);
-                break;
-            case nameof(ReportProcessCompletedEvent):
-                var reportProcessCompletedEvent = JsonSerializer.Deserialize<ReportProcessCompletedEvent>(eventMessage);
-                await factory.ExecuteEvent(reportProcessCompletedEvent);
-                break;
-            case nameof(InvalidExpressionEvent):
-                var invalidExpressionEvent = JsonSerializer.Deserialize<InvalidExpressionEvent>(eventMessage);
-                await factory.ExecuteEvent(invalidExpressionEvent);
-                break;
-            default:
-                _logger.LogError("Event çözümlenemedi.");
-                break;
+            await factory.ExecuteEvent(eventObj);
+        }
+        else
+        {
+            _logger.LogError("Event çözümlenemedi.");
         }
     }
 }
