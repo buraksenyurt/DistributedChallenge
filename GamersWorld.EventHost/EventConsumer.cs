@@ -1,6 +1,7 @@
 using System.Text.Json;
 using GamersWorld.AppEvents;
 using GamersWorld.EventHost.Factory;
+using GamersWorld.EventHost.Reflection;
 using GamersWorld.SDK;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -62,48 +63,8 @@ public class EventConsumer
         // eventType türüne göre JSON formatından döndürülen mesaj içeriği
         // factory nesnesi üzerinden uygun business nesnesinin execute fonksiyonuna kadar gönderilir
 
-        // _logger.LogWarning("{}", nameof(ReportRequestedEvent));
-        // _logger.LogWarning("{}", nameof(ReportReadyEvent));
-        // _logger.LogWarning("eventType: {}", eventType);
-
-
-        //TODO Runtime da ArgumentNullException söz konusu. Baklıması lazım.
-        // var type = Type.GetType(eventType);
-        // var obj = JsonSerializer.Deserialize(eventMessage, type);
-        // if (obj is IEvent eventObj)
-        // {
-        //     await factory.ExecuteEvent(eventObj);
-        // }
-        // else
-        // {
-        //     _logger.LogError("Event çözümlenemedi.");
-        // }
-
-        switch (eventType)
-        {
-            case nameof(ReportRequestedEvent):
-                var reportRequestedEvent = JsonSerializer.Deserialize<ReportRequestedEvent>(eventMessage);
-                await factory.ExecuteEvent(reportRequestedEvent);
-                break;
-            case nameof(ReportReadyEvent):
-                var reportReadyEvent = JsonSerializer.Deserialize<ReportReadyEvent>(eventMessage);
-                await factory.ExecuteEvent(reportReadyEvent);
-                break;
-            case nameof(ReportIsHereEvent):
-                var reportIsHereEvent = JsonSerializer.Deserialize<ReportIsHereEvent>(eventMessage);
-                await factory.ExecuteEvent(reportIsHereEvent);
-                break;
-            case nameof(ReportProcessCompletedEvent):
-                var reportProcessCompletedEvent = JsonSerializer.Deserialize<ReportProcessCompletedEvent>(eventMessage);
-                await factory.ExecuteEvent(reportProcessCompletedEvent);
-                break;
-            case nameof(InvalidExpressionEvent):
-                var invalidExpressionEvent = JsonSerializer.Deserialize<InvalidExpressionEvent>(eventMessage);
-                await factory.ExecuteEvent(invalidExpressionEvent);
-                break;
-            default:
-                _logger.LogError("Event çözümlenemedi.");
-                break;
-        }
+        var type = EventTypeLoader.ReflectionLoad(eventType);
+        var obj = JsonSerializer.Deserialize(eventMessage, type);
+        await factory.ReflectionInvoke(type, obj);
     }
 }

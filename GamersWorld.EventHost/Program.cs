@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 // RabbitMq ayarlarını da ele alacağımız için appSettings konfigurasyonu için bir builder nesnesi örnekledik
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appSettings.json", reloadOnChange: true, optional: false)
+    .AddJsonFile("appsettings.json", reloadOnChange: true, optional: false)
     .Build();
 
 var services = new ServiceCollection();
