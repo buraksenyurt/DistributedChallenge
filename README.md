@@ -1,4 +1,4 @@
-# Distributed Challange
+# Distributed Challenge
 
 Bu repoda aslında asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problemi oluşturmaya ve bu problemin çözümünü uygulamaya çalışıyorum. Öncelikle vakanın temel senaryosu ile işe başlamak lazım. Hangi enstrümanları ve platformları kullanacağımıza sonrasında karar verebiliriz.
 
@@ -14,7 +14,7 @@ Buradaki senaryonun çözümü noktasında oldukça basit ilerlemeye çalışaca
 
 Bu problemi aşağıdaki gibi çözmeye çalıştığımızı düşünelim.
 
-![Challange Solution Candidate](./images/high_level_design.png)
+![Challenge Solution Candidate](./images/high_level_design.png)
 
 Senaryodaki adımları da aşağıdaki gibi tarifleyelim.
 
@@ -39,7 +39,7 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 - Rapor formu girilen arabirim basit bir Asp.Net MVC uygulaması olabilir.
 - Rapor taleplerine ait olayları oluşturup gönderen Event Trigger Asp.Net Web Api olabilir.
 - Asenkron mesaj kuyruğu için RabbitMQ kullanılabilir. İşi kolaylaştırmak adına RabbitMQ bir Docker Container ile işletilebilir.
-- Event Consumer/Publisher Service(Gamersworld.EventHost) tarafı esas itibariyle rapor talebi, rapor alındı ve rapor hazır gibi aksiyonları sürekli dinleyen ve farklı aksiyonları tetikleyen bir ara katman gibi duruyor. Sürekli çalışır konumda olan bir process olması ve farklı gerçekleşen aksiyonlar için başka bağımlılıkları tetikleyebilecek bir yapıda tasarlanması iyi olabilir. Bu anlamda sürekli çalışan dinleyici ve aksiyonları gerçekleştiren bir kütüphane topluluğuna ihtiyaç duyabiliriz. Yani host uygulamanın hangi olay gerçekleştiğinde hangi aksiyonları alacağını belki bir DI Container üstünden çözümleyerek çalışıyor olması gerekebilir. Bu durumda üzerinde durduğumuz bu Challange içerisindeki başka bir Challange olarak karşımıza çıkıyor.
+- Event Consumer/Publisher Service(Gamersworld.EventHost) tarafı esas itibariyle rapor talebi, rapor alındı ve rapor hazır gibi aksiyonları sürekli dinleyen ve farklı aksiyonları tetikleyen bir ara katman gibi duruyor. Sürekli çalışır konumda olan bir process olması ve farklı gerçekleşen aksiyonlar için başka bağımlılıkları tetikleyebilecek bir yapıda tasarlanması iyi olabilir. Bu anlamda sürekli çalışan dinleyici ve aksiyonları gerçekleştiren bir kütüphane topluluğuna ihtiyaç duyabiliriz. Yani host uygulamanın hangi olay gerçekleştiğinde hangi aksiyonları alacağını belki bir DI Container üstünden çözümleyerek çalışıyor olması gerekebilir. Bu durumda üzerinde durduğumuz bu Challenge içerisindeki başka bir Challenge olarak karşımıza çıkıyor.
 - External Reader Service(GamersWorld.Gateway) aslında Reporting App Service(Kahin.Gateway)'in tüketilmesi için açılmış bir Endpoint sağlayıcı rolünde. Onu da ayrı bir Web API hizmeti olarak tasarlayabiliriz.
 - Reporting App Service(Kahin.Gateway) ve Reporting File Service birer Web API hizmeti olarak tasarlanabilirler. Local Storage olarak senaryoyu kolayca uygulayabilmek adına fiziki dosya sistemini kullanacaklarını düşünebiliriz. Yani hazırlanması bir süre alacak PDF içeriğini fiziki diske kaydetip buradan okuyarak External Reader Service(GamersWorld.Gateway)'e iletebilirler.
 - Report Trace Service uygulaması da esasında sürekli ayakta olması ve ReportIsHere olayını dinlemesi gereken bir konumadır. Bu anlamda sürekli çalışan bir Console uygulaması olarak da tasarlanabilir.
