@@ -18,6 +18,13 @@
         </div>
     </div>
     <div class="mb-3">
+        <label asp-for="ReportTitle" class="form-label"></label>
+        <input asp-for="ReportTitle" class="form-control" required />
+        <div class="invalid-feedback">
+            Raporu tanımlayan kısa bir tanımlama gerekli
+        </div>
+    </div>
+    <div class="mb-3">
         <label asp-for="Expression" class="form-label"></label>
         <input asp-for="Expression" class="form-control" required />
         <div class="invalid-feedback">
