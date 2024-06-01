@@ -2,6 +2,16 @@
 
 Bu repoda aslında asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problemi oluşturmaya ve bu problemin çözümünü uygulamaya çalışıyorum. Öncelikle vakanın temel senaryosu ile işe başlamak lazım. Hangi enstrümanları ve platformları kullanacağımıza sonrasında karar verebiliriz.
 
+## Yapılacaklar Listesi _(ToDo List)_
+
+- [ ] Solution yapısı ve proje isimlendirmeleri gözden geçirilebilir.
+- [ ] Solution için Sonarqube entegrasyonu yapılıp kod kalite metrikleri ölçümlenebilir.
+- [ ] Bazı kütüphaneler için birim testler _(Unit Tests)_ yazılarak Code Coverage değerleri yükseltilebilir.
+- [ ] Kahin _(System ABC)_ sistemindeki projeler için bir Solution açılabilir.
+- [ ] Loglama altyapısı Elasticsearch'e alınabilir.
+- [ ] Messenger servisi gRPC türüne evrilebilir.
+- [ ] ...
+
 ## Vaka Senaryosu
 
 Kullanıcılarına oyun kiralayan bir internet şirketi olduğunu düşünelim. Şirketin son kullanıcılara _(End Users)_ sunduğu web ve mobile bazlı uygulamalar dışında şirket genel merkezinde kullanılan Back Office tadında farklı bir uygulamaları daha var. Bu uygulamada yer alan ekranlardan birisi de raporlama talepleri için kullanılıyor. Şirketin sahip olduğu veri miktarı ve rapor taleplerinin belli bir onay sürecinden geçip içeriklerini farklı alanlardan toplaması nedeniyle bir raporun çekilmesi bazen birkaç dakikayı bulabiliyor. Her ne kadar şirket içerisinde bu işleri üstelenen bir raporlama ekibi bulunsa da personelin kullandığı web sayfalarında bu şekilde belirsiz süreyle beklenmeleri istenmiyor. Çözüm olarak rapor talebinin girildiği bir formun tasarlanması ve talebin raporlama ekibine ait uygulamalara ulaştırılıp hazır hale geldikten sonra personelin bilgilendirilmesi şeklinde bir yol izlenmesine karar veriliyor. Tüm bu sürecin tamamen sistem tarafından gerçekleştirilmesi ve otomatize edilmesi isteniyor.
