@@ -36,8 +36,7 @@ public class RabbitMqService
                              autoDelete: false,
                              arguments: null);
 
-        var message = JsonSerializer.Serialize(eventMessage);
-        var body = Encoding.UTF8.GetBytes(message);
+        var body = JsonSerializer.SerializeToUtf8Bytes(eventMessage);
 
         var properties = _channel.CreateBasicProperties();
         properties.Type = typeof(T).Name;
