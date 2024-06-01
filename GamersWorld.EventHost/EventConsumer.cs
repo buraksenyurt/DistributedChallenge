@@ -8,13 +8,15 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace GamersWorld.EventHost;
+
 public class EventConsumer
 {
     private readonly IConnectionFactory _connectionFactory;
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<EventConsumer> _logger;
 
-    public EventConsumer(IConnectionFactory connectionFactory, IServiceProvider serviceProvider, ILogger<EventConsumer> logger)
+    public EventConsumer(IConnectionFactory connectionFactory, IServiceProvider serviceProvider,
+        ILogger<EventConsumer> logger)
     {
         _connectionFactory = connectionFactory;
         _serviceProvider = serviceProvider;
@@ -27,16 +29,17 @@ public class EventConsumer
         using var connection = _connectionFactory.CreateConnection();
         using var channel = connection.CreateModel();
         // reports_event_queue isimli bir kuyruk tanımlanır
-        channel.QueueDeclare(queue: "report_events_queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
+        channel.QueueDeclare(queue: "report_events_queue", durable: false, exclusive: false, autoDelete: false,
+            arguments: null);
 
         var consumer = new EventingBasicConsumer(channel);
         // Gelen mesajların yakalandığı olay metodu
         // Lambda operatörü üzerinden anonymous function olarak event handler temsilcisini bağlanır
         consumer.Received += async (model, args) =>
         {
-            var body = args.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
-            var eventType = args.BasicProperties.Type; // Publish edilecek mesajı type property değerinden yakalayabiliriz
+            var message = args.Body.ToArray();
+            var eventType =
+                args.BasicProperties.Type; // Publish edilecek mesajı type property değerinden yakalayabiliriz
 
             // Kuyruktan yakalanan mesaj değerlendirilmek üzere Handle operasyonuna gönderilir
             await Handle(eventType, message);
@@ -48,9 +51,9 @@ public class EventConsumer
         Console.ReadLine();
     }
 
-    private async Task Handle(string eventName, string eventMessage)
+    private async Task Handle(string eventType, byte[] eventMessage)
     {
-        _logger.LogInformation("Event: #{} , Message: {}", eventName, eventMessage);
+        // _logger.LogInformation("Event: #{} , Message: {}", eventType, eventMessage);
 
         using var scope = _serviceProvider.CreateScope();
         var factory = scope.ServiceProvider.GetRequiredService<EventHandlerFactory>();
@@ -61,9 +64,9 @@ public class EventConsumer
         //TODO@buraksenyurt Yeni Event-Business Object eşleşmeleri geldikçe buradaki switch bloğu büyümeye devam edecek.
         // Belki bir Dictionary ve Reflection ile konfigurasyon dosyası gibi bir yerden bu execution işini yönetebiliriz.
 
-        switch (eventName)
+        switch (eventType)
         {
-            case nameof(ReportRequestedEvent):               
+            case nameof(ReportRequestedEvent):
                 var reportRequestedEvent = JsonSerializer.Deserialize<ReportRequestedEvent>(eventMessage);
                 await factory.ExecuteEvent(reportRequestedEvent);
                 break;
