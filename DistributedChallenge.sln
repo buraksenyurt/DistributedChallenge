@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Messenger", "Ga
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.MQ", "GamersWorld.MQ\GamersWorld.MQ.csproj", "{75DADA2D-7137-403D-85C1-936BE7A7959D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1637ED5C-ED57-47EE-9F92-3E5C9946D31B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.AppEventBusiness.Tests", "Test\GamersWorld.AppEventBusiness.Tests\GamersWorld.AppEventBusiness.Tests.csproj", "{AC152A8D-EA72-4159-872F-C97D2A37B9C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +76,12 @@ Global
 		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC152A8D-EA72-4159-872F-C97D2A37B9C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC152A8D-EA72-4159-872F-C97D2A37B9C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC152A8D-EA72-4159-872F-C97D2A37B9C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC152A8D-EA72-4159-872F-C97D2A37B9C2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AC152A8D-EA72-4159-872F-C97D2A37B9C2} = {1637ED5C-ED57-47EE-9F92-3E5C9946D31B}
 	EndGlobalSection
 EndGlobal
