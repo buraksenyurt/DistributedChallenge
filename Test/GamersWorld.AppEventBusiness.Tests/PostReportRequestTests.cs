@@ -13,17 +13,27 @@ namespace GamersWorld.AppEventBusiness.Tests;
 public class PostReportRequestTests
 {
     private readonly Mock<ILogger<PostReportRequest>> _loggerMock;
-    private readonly Mock<HttpMessageHandler> _httpClientMock;
+    private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
+    private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
+    private readonly HttpClient _httpClient;
     private readonly PostReportRequest _postReportRequest;
+
     public PostReportRequestTests()
     {
         _loggerMock = new Mock<ILogger<PostReportRequest>>();
-        _httpClientMock = new Mock<HttpMessageHandler>();
-        var httpClient = new HttpClient(_httpClientMock.Object)
+        _httpClientFactoryMock = new Mock<IHttpClientFactory>();
+        _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+
+        _httpClient = new HttpClient(_httpMessageHandlerMock.Object)
         {
             BaseAddress = new Uri("http://localhost:5218")
         };
-        _postReportRequest = new PostReportRequest(_loggerMock.Object, httpClient);
+
+        _httpClientFactoryMock
+            .Setup(factory => factory.CreateClient(It.IsAny<string>()))
+            .Returns(_httpClient);
+
+        _postReportRequest = new PostReportRequest(_loggerMock.Object, _httpClientFactoryMock.Object);
     }
 
     [Fact]
@@ -44,11 +54,12 @@ public class PostReportRequestTests
         };
 
         var responseContent = new StringContent(
-            JsonSerializer.Serialize(createReportResponse)
-            , Encoding.UTF8
-            , "application/json");
+            JsonSerializer.Serialize(createReportResponse),
+            Encoding.UTF8,
+            "application/json"
+        );
 
-        _httpClientMock.Protected()
+        _httpMessageHandlerMock.Protected()
             .Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
                 ItExpr.IsAny<HttpRequestMessage>(),
@@ -78,7 +89,7 @@ public class PostReportRequestTests
             Expression = "SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc"
         };
 
-        _httpClientMock.Protected()
+        _httpMessageHandlerMock.Protected()
             .Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
                 ItExpr.IsAny<HttpRequestMessage>(),
@@ -113,11 +124,12 @@ public class PostReportRequestTests
         };
 
         var responseContent = new StringContent(
-            JsonSerializer.Serialize(createReportResponse)
-            , Encoding.UTF8
-            , "application/json");
+            JsonSerializer.Serialize(createReportResponse),
+            Encoding.UTF8,
+            "application/json"
+        );
 
-        _httpClientMock.Protected()
+        _httpMessageHandlerMock.Protected()
             .Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
                 ItExpr.IsAny<HttpRequestMessage>(),
