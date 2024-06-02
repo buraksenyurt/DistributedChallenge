@@ -1,4 +1,5 @@
-﻿using GamersWorld.EventHost;
+﻿using GamersWorld.AppEventBusiness;
+using GamersWorld.EventHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,6 +19,12 @@ services.AddSingleton<IConfiguration>(configuration);
 services.AddEventDrivers();
 services.AddRabbitMq(configuration);
 services.AddLogging(cfg => cfg.AddConsole());
+services.AddHttpClient<PostReportRequest>(
+    client =>
+    {
+        client.BaseAddress = new Uri(configuration["Kahin:ReportingService_HostAddress"]);
+    });
+
 
 var serviceProvider = services.BuildServiceProvider();
 // Mesaj kuyruğunu dinleyecek nesne örneklenir

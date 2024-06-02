@@ -55,7 +55,8 @@ app.MapPost("/", (CreateReportRequest request) =>
     var response = new CreateReportResponse
     {
         Status = StatusCode.Success,
-        DocumentId = refDocId.ToString()
+        DocumentId = refDocId.ToString(),
+        Explanation = "Rapor talebi başarılı bir şekilde alındı"
     };
     return Results.Json(response);
 })
@@ -104,4 +105,5 @@ class CreateReportResponse
     public ReferenceDocumentId ReferenceDocumentId { get; set; }
 
     public string DocumentId { get; set; }
+    public string Explanation { get; set; }
 }

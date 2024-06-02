@@ -1,4 +1,7 @@
-﻿using GamersWorld.AppEvents;
+﻿using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using GamersWorld.AppEvents;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Messages.Responses;
 using GamersWorld.SDK;
@@ -17,20 +20,56 @@ public class PostReportRequest
     : IEventDriver<ReportRequestedEvent>
 {
     private readonly ILogger<PostReportRequest> _logger;
-    public PostReportRequest(ILogger<PostReportRequest> logger)
+    private readonly HttpClient _httpClient;
+    public PostReportRequest(ILogger<PostReportRequest> logger, HttpClient httpClient)
     {
         _logger = logger;
+        _httpClient = httpClient;
     }
     public async Task<BusinessResponse> Execute(ReportRequestedEvent appEvent)
     {
         _logger.LogInformation("{}, {}, {}", appEvent.TraceId, appEvent.Title, appEvent.Expression);
-        //TODO@buraksenyurt Must implement App Service Post request
 
-        // Reporting App Service'e bir POST talebi yapılır
-        return new BusinessResponse
+        var payload = new
         {
-            Message = "Rapor talebi gönderildi",
-            StatusCode = StatusCode.Success,
+            appEvent.TraceId,
+            appEvent.Title,
+            appEvent.Expression
         };
+        var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+        var response = await _httpClient.PostAsync("/", content);
+        if (response.IsSuccessStatusCode)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var createReportResponse = JsonSerializer.Deserialize<CreateReportResponse>(responseContent);
+
+            if (createReportResponse != null && createReportResponse.Status == StatusCode.Success)
+            {
+                _logger.LogInformation("{}", createReportResponse);
+                return new BusinessResponse
+                {
+                    Message = $"Rapor talebi iletildi. DocumentId: {createReportResponse.DocumentId}",                
+                    StatusCode = StatusCode.Success,
+                };
+            }
+            else
+            {
+                _logger.LogError("Rapor talebi başarısız oldu");
+                return new BusinessResponse
+                {
+                    Message = createReportResponse.Explanation,
+                    StatusCode = StatusCode.Fail,
+                };
+            }
+        }
+        else
+        {
+
+            return new BusinessResponse
+            {
+                Message = "Rapor talebi gönderimi başarısız",
+                StatusCode = StatusCode.Fail,
+            };
+        }
     }
 }
