@@ -121,6 +121,34 @@ Rapordaki ifadede ihlal var taklidi yapan bir mesaj.
 
 ![Second Test](/images/second_test.png)
 
+## SonarQube Genişletmesi
+
+Projenin teknik borçlanma değerlerini ölçümlemek ve kod kalitesini iyileştirmek için Sonarqube aracını kullanmaya karar verdim. Local ortamda Sonarqube kurulumu için Docker imajından yararlanılabilir. Öncelikle sistemde aşağıdaki gibi bir kurulum yapılır.
+
+```bash
+sudo docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
+```
+
+Kurulum sonrası http://localhost:9000 adresine gidilir ve standart kullanıcı adı ve şifre ile giriş yapılır _(admin,admin)_ Sistem ilk girişte şifre değişikliği istenebilir. Sonrasında bir proje oluşturulur. Bende DistributedChallengeProject isimli bir proje oluşturdum ve .Net Core taraması yapması için gerekli adımları işlettim. SQ, proje için bir key üretecektir. Bu key değerinden yararlanılarak tarama aşağıdaki terminal komutları ile başlatılabilir. Zaten anahtar değer üretimi sonrası SQ hangi komutları çalıştıracağınızı dokümanda gösterir.
+
+```bash
+# Sistem yüklü olması gereken araçlardan birisi
+dotnet tool install --global dotnet-sonarscanner
+
+# Tarama başlatma komutu
+dotnet sonarscanner begin /k:"DistirbutedChallengeRadar" /d:sonar.host.url="http://localhost:9000"  /d:sonar.token="sqp_6be82d1ead44e1675b09dc6f39456909a6f48ad8"
+
+# Solution için build operasyonu
+dotnet build
+
+# Tarama durdurma komutu
+dotnet sonarscanner end /d:sonar.token="sqp_6be82d1ead44e1675b09dc6f39456909a6f48ad8"
+```
+
+İlk tarama sonuçlarına göre projenin şu anki skor kartı aşağıdaki ekran görüntüsündeki gibidir.
+
+![Sonar Scanner Day 1](./images/sonar_scanner_day_1.png)
+
 ## Zorluk Seviyesini Artırma
 
 Yukarıda bahsedilen senaryoda sisteme dahil olan tüm uygulamaların aynı firmanın dahili ağı _(Internal Network)_ içerisinde yer aldığı varsayılmıştır. Senaryoyu zorlaştırmak için raporlamayı yapan uygulamanın/servisinin internet üzerinden erişilebilen bir 3ncü taraf servis _(3rd Party Vendor Service)_ sağlayacısına ait olduğunu düşünebilirsiniz.
