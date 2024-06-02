@@ -49,6 +49,12 @@ public class RabbitMqService
 
     public void Dispose()
     {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
         _channel?.Close();
         _connection?.Close();
     }

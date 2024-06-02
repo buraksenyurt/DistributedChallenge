@@ -45,31 +45,29 @@ public class PostReportRequest
 
             if (createReportResponse != null && createReportResponse.Status == StatusCode.Success)
             {
-                _logger.LogInformation("{}", createReportResponse);
+                _logger.LogInformation("{Response}", createReportResponse);
                 return new BusinessResponse
                 {
-                    Message = $"Rapor talebi iletildi. DocumentId: {createReportResponse.DocumentId}",                
+                    Message = $"Rapor talebi iletildi. DocumentId: {createReportResponse.DocumentId}",
                     StatusCode = StatusCode.Success,
                 };
             }
-            else
+            else if (createReportResponse != null)
             {
                 _logger.LogError("Rapor talebi başarısız oldu");
                 return new BusinessResponse
                 {
-                    Message = createReportResponse.Explanation,
+                    Message = !string.IsNullOrEmpty(createReportResponse.Explanation) ? createReportResponse.Explanation : "Eksik açıklama",
                     StatusCode = StatusCode.Fail,
                 };
             }
         }
-        else
-        {
 
-            return new BusinessResponse
-            {
-                Message = "Rapor talebi gönderimi başarısız",
-                StatusCode = StatusCode.Fail,
-            };
-        }
+
+        return new BusinessResponse
+        {
+            Message = "Rapor talebi gönderimi başarısız",
+            StatusCode = StatusCode.Fail,
+        };
     }
 }

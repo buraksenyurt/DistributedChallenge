@@ -10,6 +10,12 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appSettings.json", reloadOnChange: true, optional: false)
     .Build();
 
+var reportingServiceHostAddress = configuration["Kahin:ReportingService_HostAddress"];
+if (string.IsNullOrEmpty(reportingServiceHostAddress))
+{
+    throw new ArgumentNullException("Kahing Reporting adres bilgisi kontrol edilmeli!");
+}
+
 var services = new ServiceCollection();
 
 // DI Servis eklemeleri
@@ -22,7 +28,7 @@ services.AddLogging(cfg => cfg.AddConsole());
 services.AddHttpClient<PostReportRequest>(
     client =>
     {
-        client.BaseAddress = new Uri(configuration["Kahin:ReportingService_HostAddress"]);
+        client.BaseAddress = new Uri(reportingServiceHostAddress);
     });
 
 
