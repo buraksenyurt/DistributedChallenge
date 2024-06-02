@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using GamersWorld.AppEvents;
 using GamersWorld.Common.Enums;
@@ -20,14 +19,15 @@ public class PostReportRequest
     : IEventDriver<ReportRequestedEvent>
 {
     private readonly ILogger<PostReportRequest> _logger;
-    private readonly HttpClient _httpClient;
-    public PostReportRequest(ILogger<PostReportRequest> logger, HttpClient httpClient)
+    private readonly IHttpClientFactory _httpClientFactory;
+    public PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
     }
     public async Task<BusinessResponse> Execute(ReportRequestedEvent appEvent)
     {
+        var client = _httpClientFactory.CreateClient("KahinGateway");
         _logger.LogInformation("{}, {}, {}", appEvent.TraceId, appEvent.Title, appEvent.Expression);
 
         var payload = new
@@ -37,7 +37,8 @@ public class PostReportRequest
             appEvent.Expression
         };
         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync("/", content);
+        _logger.LogInformation("Service Uri : {ServiceUri}", client.BaseAddress);
+        var response = await client.PostAsync("/", content);
         if (response.IsSuccessStatusCode)
         {
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -45,7 +46,7 @@ public class PostReportRequest
 
             if (createReportResponse != null && createReportResponse.Status == StatusCode.Success)
             {
-                _logger.LogInformation("{Response}", createReportResponse);
+                _logger.LogInformation("Gelen mesaj : {Response}", responseContent);
                 return new BusinessResponse
                 {
                     Message = $"Rapor talebi iletildi. DocumentId: {createReportResponse.DocumentId}",
@@ -62,7 +63,6 @@ public class PostReportRequest
                 };
             }
         }
-
 
         return new BusinessResponse
         {

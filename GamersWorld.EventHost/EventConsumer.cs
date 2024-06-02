@@ -1,7 +1,6 @@
 using System.Text.Json;
 using GamersWorld.AppEvents;
 using GamersWorld.EventHost.Factory;
-using GamersWorld.SDK;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;

@@ -5,6 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 var app = builder.Build();
 
@@ -16,8 +18,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/", (CreateReportRequest request) =>
+app.MapPost("/", (CreateReportRequest request, ILogger<Program> logger) =>
 {
+    logger.LogInformation("{TraceId}, {Title}, {Expression}", request.TraceId, request.Title, request.Expression);
     var validationResults = new List<ValidationResult>();
     var validationContext = new ValidationContext(request);
 
@@ -35,10 +38,11 @@ app.MapPost("/", (CreateReportRequest request) =>
 
     if (!Guid.TryParse(request.TraceId, out var traceId))
     {
+        logger.LogWarning("TraceId must be a valid GUID.");
         return Results.BadRequest(new { error = "TraceId must be a valid GUID." });
     }
 
-    Random rnd = new Random();
+    Random rnd = new();
     // Gelen talepteki bilgilere göre rapor talebini benzersiz bir veri modeli ile damgalamak istiyoruz
     var refDocId = new ReferenceDocumentId
     {
@@ -46,6 +50,8 @@ app.MapPost("/", (CreateReportRequest request) =>
         Source = rnd.Next(1, 10),
         Stamp = Guid.NewGuid(),
     };
+
+    logger.LogInformation("Created Referenced Document Id: {RefDocumentId}", refDocId.ToString());
 
     // Bu sistem kendi için rapor hazırlama işini başlatıyor şeklinde düşünelim.
     // Request üzerinden gelen Expression içeriğinin de Gen AI tarzı bir API ile bu sistemde 
@@ -82,8 +88,10 @@ class CreateReportRequest
 
 enum StatusCode
 {
-    Success = 200,
-    Error = 400
+    Success = 1,
+    ReportReady = 200,
+    InvalidExpression = 400,
+    Fail = 500
 }
 
 struct ReferenceDocumentId
