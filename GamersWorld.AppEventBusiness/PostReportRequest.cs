@@ -1,4 +1,5 @@
-﻿using System.Text;
+using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using GamersWorld.AppEvents;
 using GamersWorld.Common.Enums;
@@ -36,17 +37,19 @@ public class PostReportRequest
             appEvent.Title,
             appEvent.Expression
         };
-        var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+        
         _logger.LogInformation("Service Uri : {ServiceUri}", client.BaseAddress);
-        var response = await client.PostAsync("/", content);
+        var response = await client.PostAsJsonAsync("/", payload);
+        
         if (response.IsSuccessStatusCode)
         {
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var createReportResponse = JsonSerializer.Deserialize<CreateReportResponse>(responseContent);
+            var createReportResponse = await response.Content.ReadFromJsonAsync<CreateReportResponse>();
 
             if (createReportResponse != null && createReportResponse.Status == StatusCode.Success)
             {
-                _logger.LogInformation("Gelen mesaj : {Response}", responseContent);
+                // Enable log if needed via JsonSerialize.Serialize(createReportResponse)
+                // _logger.LogInformation("Gelen mesaj : {Response}", responseContent);
+                
                 return new BusinessResponse
                 {
                     Message = $"Rapor talebi iletildi. DocumentId: {createReportResponse.DocumentId}",
