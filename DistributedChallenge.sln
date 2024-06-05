@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.AppEventBusines
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.Common", "Kahin.Common\Kahin.Common.csproj", "{4D90FFA4-F212-48F8-ABDF-B9515963D5AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.Comon.Tests", "Test\Kahin.Comon.Tests\Kahin.Comon.Tests.csproj", "{B14122BB-A5EE-453F-A8B2-7260BAA2C430}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,8 +88,13 @@ Global
 		{4D90FFA4-F212-48F8-ABDF-B9515963D5AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D90FFA4-F212-48F8-ABDF-B9515963D5AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D90FFA4-F212-48F8-ABDF-B9515963D5AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B14122BB-A5EE-453F-A8B2-7260BAA2C430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B14122BB-A5EE-453F-A8B2-7260BAA2C430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B14122BB-A5EE-453F-A8B2-7260BAA2C430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B14122BB-A5EE-453F-A8B2-7260BAA2C430}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AC152A8D-EA72-4159-872F-C97D2A37B9C2} = {1637ED5C-ED57-47EE-9F92-3E5C9946D31B}
+		{B14122BB-A5EE-453F-A8B2-7260BAA2C430} = {1637ED5C-ED57-47EE-9F92-3E5C9946D31B}
 	EndGlobalSection
 EndGlobal

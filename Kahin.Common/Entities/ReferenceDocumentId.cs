@@ -17,7 +17,7 @@ public struct ReferenceDocumentId
         }
 
         var parts = input.Split('-');
-        if (parts.Length != 3)
+        if (parts.Length < 3)
         {
             throw new FormatException("Input string must be in the format 'Head-Source-Stamp'.");
         }
@@ -32,7 +32,8 @@ public struct ReferenceDocumentId
             throw new FormatException("Source part must be a valid integer.");
         }
 
-        if (!Guid.TryParse(parts[2], out Guid stamp))
+        string guidPart = string.Join('-', parts, 2, parts.Length - 2);
+        if (!Guid.TryParse(guidPart, out Guid stamp))
         {
             throw new FormatException("Stamp part must be a valid GUID.");
         }
