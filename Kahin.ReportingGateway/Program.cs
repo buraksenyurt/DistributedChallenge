@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using Kahin.Common.Entities;
+using Kahin.Common.Enums;
+using Kahin.Common.Requests;
+using Kahin.Common.Responses;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -101,97 +104,3 @@ app.MapPost("/", (CreateReportRequest request, ILogger<Program> logger) =>
 .WithOpenApi();
 
 app.Run();
-
-class CreateReportRequest
-{
-    [Required]
-    public string? TraceId { get; set; }
-
-    [Required]
-    [StringLength(30, MinimumLength = 20, ErrorMessage = "Title length must be between 20 and 30 characters.")]
-    public string? Title { get; set; }
-
-    [Required(ErrorMessage = "Expression must be filled.")]
-    [StringLength(100, MinimumLength = 30, ErrorMessage = "Expression length must be between 30 and 100 characters.")]
-    public string? Expression { get; set; }
-}
-
-
-enum StatusCode
-{
-    Success = 1,
-    ReportReady = 200,
-    InvalidExpression = 400,
-    Fail = 500
-}
-
-struct ReferenceDocumentId
-{
-    public int Head { get; set; }
-    public int Source { get; set; }
-    public Guid Stamp { get; set; }
-    public override readonly string ToString()
-    {
-        return $"{Head}-{Source}-{Stamp}";
-    }
-    public static ReferenceDocumentId Parse(string input)
-    {
-        if (string.IsNullOrWhiteSpace(input))
-        {
-            throw new ArgumentNullException(nameof(input), "Input string cannot be null or empty.");
-        }
-
-        var parts = input.Split('-');
-        if (parts.Length != 3)
-        {
-            throw new FormatException("Input string must be in the format 'Head-Source-Stamp'.");
-        }
-
-        if (!int.TryParse(parts[0], out int head))
-        {
-            throw new FormatException("Head part must be a valid integer.");
-        }
-
-        if (!int.TryParse(parts[1], out int source))
-        {
-            throw new FormatException("Source part must be a valid integer.");
-        }
-
-        if (!Guid.TryParse(parts[2], out Guid stamp))
-        {
-            throw new FormatException("Stamp part must be a valid GUID.");
-        }
-
-        return new ReferenceDocumentId
-        {
-            Head = head,
-            Source = source,
-            Stamp = stamp
-        };
-    }
-}
-
-class CreateReportResponse
-{
-    public StatusCode Status { get; set; }
-
-    [JsonIgnore]
-    public ReferenceDocumentId ReferenceDocumentId { get; set; }
-
-    public string? DocumentId { get; set; }
-    public string? Explanation { get; set; }
-}
-
-class GetReportRequest
-{
-    [Required]
-    public string DocumentId { get; set; }
-}
-
-class GetReportResponse
-{
-    public StatusCode StatusCode { get; set; }
-    public string DocumentId { get; set; }
-    public byte[] Document { get; set; }
-    public string Exception { get; set; }
-}
