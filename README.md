@@ -2,15 +2,9 @@
 
 Bu repoda aslında asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problemi oluşturmaya ve bu problemin çözümünü uygulamaya çalışıyorum. Öncelikle vakanın temel senaryosu ile işe başlamak lazım. Hangi enstrümanları ve platformları kullanacağımıza sonrasında karar verebiliriz.
 
-## Yapılacaklar Listesi _(ToDo List)_
+## Katkı Vermek İçin
 
-- [ ] Solution yapısı ve proje isimlendirmeleri gözden geçirilebilir.
-- [ ] Solution için Sonarqube entegrasyonu yapılıp kod kalite metrikleri ölçümlenebilir.
-- [ ] Bazı kütüphaneler için birim testler _(Unit Tests)_ yazılarak Code Coverage değerleri yükseltilebilir.
-- [ ] Kahin _(System ABC)_ sistemindeki projeler için bir Solution açılabilir.
-- [ ] Loglama altyapısı Elasticsearch'e alınabilir.
-- [ ] Messenger servisi gRPC türüne evrilebilir.
-- [ ] ...
+Projeye katkı vermek isteyenler dev branch'inden yeni bir branch açıp ilerleyebilirler. Çalışma zamanı testlerinde bir sorun olmazsa açılan feature branch'ten dev branch'ine bir pull request açılarak ilerlenebilir.
 
 ## Vaka Senaryosu
 
@@ -56,7 +50,39 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 
   **Not:** Dikkat edileceği üzere Event Consumer/Publisher(Gamersworld.EventHost) olarak araya koyduğumuz katman bazı olaylar ile ilgili olarak bir takım aksiyonlar alıyor. Örneğin ReportRequestEvent gerçekleştiğinde POST ile bir dış servise talep gönderiyor ve ReportIsHereEvent gerçekleştiğinde de GET Report ile PDF çekip Back Office tarafındaki Local Storage'a kaydediyor. Dolayısıyla bir event karşılığında bir takım aksiyonlar icra ediyor. Bunları A event'i için şu Interface implementasyonunu çağır şeklinde başka bir katmana alarak runtime'da çözümlenebilir bağımlılıkar haline getirebilir ve böylece runtime çalışıyorken yeni event-aksiyon bağımlılıklarını sisteme dahil edebiliriz belki de. Dolayısıyla aradaki Event Consumer/Publisher(Gamersworld.EventHost)'ın tasarımı oldukça önemli.
 
-## Runtime
+## Yapılacaklar Listesi _(ToDo List)_
+
+- [ ] Solution yapısı ve proje isimlendirmeleri gözden geçirilebilir.
+- [x] Solution için Sonarqube entegrasyonu yapılıp kod kalite metrikleri ölçümlenebilir.
+- [ ] Bazı kütüphaneler için birim testler _(Unit Tests)_ yazılarak Code Coverage değerleri yükseltilebilir.
+- [ ] Kahin _(System ABC)_ sistemindeki projeler için ayrı bir Solution açılabilir.
+- [ ] Loglama altyapısı Elasticsearch'e alınabilir.
+- [ ] Messenger servisi gRPC türüne evrilebilir.
+- [ ] ...
+
+## Runtime _(Standart)_
+
+Çalışma zamanı yapılan geliştirmelerin test koşumları için önemlidir. Üzerinde çalıştığımız çözüm birden fazla proje ve çalışma zamanı içerdiğinden test koşumları ilk etapta manuel olarak tesis edilmiştir. Bu nedenle biraz zorlayıcı olabilir. Minik bir kontrol listesi işe yarayabilir.
+
+- [ ] RabbitMQ'nun çalışır olduğu kontrol edilir (localhost:15672)
+- [ ] System ABC'deki Kahin.ReportingGateway servisi çalıştırılır (localhost:5218)
+- [ ] System 123'de yer alan GamersWorld.Messenger servisi çalıştırılır. Web uygulaması bu servisi kullanır. (localhost:5234)
+- [ ] RabbitMQ event'lerini dinleyen GamersWorld.EventHost console uygulaması çalıştırılır
+- [ ] Rapor talebi girdisi yapılan GamersWorld.WebApp çalıştırılır (localhost:5093)
+
+Bu durumda web uygulamasından örnek bir raporu girilip gönderildiğinde diğer uygulamalarda aşağıdakine benzer log bilgilerinin oluşması beklenir.
+
+![Runtime_01](./images/runtime_01.png)
+
+![Runtime_02](./images/runtime_02.png)
+
+![Runtime_03](./images/runtime_03.png)
+
+![Runtime_04](./images/runtime_04.png)
+
+![Runtime_05](./images/runtime_05.png)
+
+## Runtime _(Docker Compose Senaryosu)_
 
 Nihai senaryonun işletilmesinde birçok servisin aynı anda ayağa kalkması gereken durumlar söz konusu olacak. Örneğin System ABC tarafındaki raporlama hizmetleri ile System 123 tarafındaki bazı hizmetler birer REST servisi gibi konuşlanabilirler. Asenkron mesajlaşma kuyruğu içinse RabbitMQ kullanmak oldukça mantıklı görünüyor. Event'leri dinleyen Consumer tarafı da bir Console uygulaması. Tüm bunların aynı anda çalıştırılması noktasında Docker Compose' dan yararlanılabilir. Docker-Compose'a dahil olacak her projede birer Dockerfile yer alıyor.
 
