@@ -53,22 +53,24 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 ## Yapılacaklar Listesi _(ToDo List)_
 
 - [ ] Solution yapısı ve proje isimlendirmeleri gözden geçirilebilir.
-- [x] Solution için Sonarqube entegrasyonu yapılıp kod kalite metrikleri ölçümlenebilir.
-- [ ] Bazı kütüphaneler için birim testler _(Unit Tests)_ yazılarak Code Coverage değerleri yükseltilebilir.
-- [ ] Kahin _(System ABC)_ sistemindeki projeler için ayrı bir Solution açılabilir.
-- [ ] Loglama altyapısı Elasticsearch'e alınabilir.
-- [ ] Messenger servisi gRPC türüne evrilebilir.
+- [x] Solution için **Sonarqube** entegrasyonu yapılıp kod kalite metrikleri ölçümlenebilir.
+- [ ] Bazı kütüphaneler için birim testler _(Unit Tests)_ yazılarak **Code Coverage** değerleri yükseltilebilir.
+- [ ] Kahin _(System ABC)_ sistemindeki projeler için ayrı bir **Solution** açılabilir.
+- [ ] Loglama altyapısı **Elasticsearch**'e alınabilir.
+- [ ] Messenger servisi **gRPC** türüne evrilebilir.
+- [ ] Bazı **Exception** durumları için **Custom Exception** sınıfları yazılabilir.
+- [ ] Daha önceden çekilmiş raporlar için tekrardan üretim sürecini başlatmak yerine **Redis** tabanlı bir caching sistemi kullanılabilir.
 - [ ] ...
 
 ## Runtime _(Standart)_
 
 Çalışma zamanı yapılan geliştirmelerin test koşumları için önemlidir. Üzerinde çalıştığımız çözüm birden fazla proje ve çalışma zamanı içerdiğinden test koşumları ilk etapta manuel olarak tesis edilmiştir. Bu nedenle biraz zorlayıcı olabilir. Minik bir kontrol listesi işe yarayabilir.
 
-- [ ] RabbitMQ'nun çalışır olduğu kontrol edilir (localhost:15672)
-- [ ] System ABC'deki Kahin.ReportingGateway servisi çalıştırılır (localhost:5218)
-- [ ] System 123'de yer alan GamersWorld.Messenger servisi çalıştırılır. Web uygulaması bu servisi kullanır. (localhost:5234)
-- [ ] RabbitMQ event'lerini dinleyen GamersWorld.EventHost console uygulaması çalıştırılır
-- [ ] Rapor talebi girdisi yapılan GamersWorld.WebApp çalıştırılır (localhost:5093)
+- [ ] **RabbitMQ**'nun çalışır olduğu kontrol edilir (localhost:15672)
+- [ ] System ABC'deki **Kahin.ReportingGateway** servisi çalıştırılır (localhost:5218)
+- [ ] System 123'de yer alan **GamersWorld.Messenger** servisi çalıştırılır. Web uygulaması bu servisi kullanır. (localhost:5234)
+- [ ] RabbitMQ event'lerini dinleyen **GamersWorld.EventHost** console uygulaması çalıştırılır
+- [ ] Rapor talebi girdisi yapılan **GamersWorld.WebApp** çalıştırılır (localhost:5093)
 
 Bu durumda web uygulamasından örnek bir raporu girilip gönderildiğinde diğer uygulamalarda aşağıdakine benzer log bilgilerinin oluşması beklenir.
 
