@@ -70,6 +70,8 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 
 Çalışma zamanı yapılan geliştirmelerin test koşumları için önemlidir. Üzerinde çalıştığımız çözüm birden fazla proje ve çalışma zamanı içerdiğinden test koşumları ilk etapta manuel olarak tesis edilmiştir. Bu nedenle biraz zorlayıcı olabilir. Minik bir kontrol listesi işe yarayabilir.
 
+**Not: Buradaki ve çözüme sonradan eklenecek uygulamaları tek seferde çalıştırmak için bir shell script dosyamız var. run_all.sh isimli dosyayı bu amaçla kullanabilirsiniz.**
+
 - [ ] **RabbitMQ**'nun çalışır halde olduğu kontrol edilir. (localhost:15672)
 - [ ] System ABC'deki **Kahin.ReportingGateway** servisi çalıştırılır. (localhost:5218)
 - [ ] System 123'de yer alan **GamersWorld.Messenger** servisi çalıştırılır. Web uygulaması bu servisi kullanır. (localhost:5234)
