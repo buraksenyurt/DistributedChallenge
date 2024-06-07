@@ -60,17 +60,22 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 - [ ] Messenger servisi **gRPC** türüne evrilebilir.
 - [ ] Bazı **Exception** durumları için **Custom Exception** sınıfları yazılabilir.
 - [ ] Daha önceden çekilmiş raporlar için tekrardan üretim sürecini başlatmak yerine **Redis** tabanlı bir caching sistemi kullanılabilir.
+- [ ] Tüm servisler **HTTPS** protokolünde çalışacak hale getirilebilir.
+- [ ] Uçtan uca testi otomatik olarak yapacak bir **RPA _(Robotik Process Automation)_** eklentisi konulabilir. Belki otomatij **UI** testleri için **Playwright** aracından yararlanılabilir.
+- [ ] Bazı servislerin ayakta olup olmadıklarını kontrol etmek için bu servislere **HealthCheck** fonksiyonları eklenebilir.
+- [ ] URL adresleri, RabbitMQ ortam bilgileri **(Development, Test, Pre-Production, Production)** gibi alanlar için daha güvenli bir ortamdan **(Secure Vault)** tedarik edilecek şekilde genel bir düzenlemeye gidilebilir.
 - [ ] ...
 
 ## Runtime _(Standart)_
 
 Çalışma zamanı yapılan geliştirmelerin test koşumları için önemlidir. Üzerinde çalıştığımız çözüm birden fazla proje ve çalışma zamanı içerdiğinden test koşumları ilk etapta manuel olarak tesis edilmiştir. Bu nedenle biraz zorlayıcı olabilir. Minik bir kontrol listesi işe yarayabilir.
 
-- [ ] **RabbitMQ**'nun çalışır olduğu kontrol edilir (localhost:15672)
-- [ ] System ABC'deki **Kahin.ReportingGateway** servisi çalıştırılır (localhost:5218)
+- [ ] **RabbitMQ**'nun çalışır halde olduğu kontrol edilir. (localhost:15672)
+- [ ] System ABC'deki **Kahin.ReportingGateway** servisi çalıştırılır. (localhost:5218)
 - [ ] System 123'de yer alan **GamersWorld.Messenger** servisi çalıştırılır. Web uygulaması bu servisi kullanır. (localhost:5234)
-- [ ] RabbitMQ event'lerini dinleyen **GamersWorld.EventHost** console uygulaması çalıştırılır
-- [ ] Rapor talebi girdisi yapılan **GamersWorld.WebApp** çalıştırılır (localhost:5093)
+- [ ] RabbitMQ event'lerini dinleyen **GamersWorld.EventHost** console uygulaması çalıştırılır. Console uygulamasıdır.
+- [ ] Rapor ifadesini denetleyen **Eval.Api** servisi çalıştırılır. (localhost:5147)
+- [ ] Rapor talebi girdisi yapılan **GamersWorld.WebApp** çalıştırılır. (localhost:5093)
 
 Bu durumda web uygulamasından örnek bir raporu girilip gönderildiğinde diğer uygulamalarda aşağıdakine benzer log bilgilerinin oluşması beklenir.
 
