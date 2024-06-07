@@ -1,3 +1,5 @@
+namespace GamersWorld.WebApp.Utility;
+
 using GamersWorld.Common.Messages.Requests;
 using GamersWorld.Common.Messages.Responses;
 
@@ -22,7 +24,7 @@ public class MessengerServiceClient
         }
         else
         {
-            _logger.LogError("Rapor talebi gönderiminde hata: {}", response.ReasonPhrase);
+            _logger.LogError("Rapor talebi gönderiminde hata: {ReasonePhrase}", response.ReasonPhrase);
             throw new HttpRequestException($"Rapor talebi gönderiminde hata: {response.ReasonPhrase}");
         }
     }

@@ -10,5 +10,5 @@ public class CreateReportResponse
     [JsonIgnore]
     public ReferenceDocumentId ReferenceDocumentId { get; set; }
     public string? DocumentId { get; set; }
-    public string Explanation { get; set; }
+    public string? Explanation { get; set; }
 }

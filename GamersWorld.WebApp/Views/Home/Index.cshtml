@@ -5,28 +5,28 @@
 <form asp-action="SubmitReport" method="post" class="needs-validation" novalidate>
     <div class="mb-3">
         <label asp-for="Owner.FullName" class="form-label"></label>
-        <input asp-for="Owner.FullName" class="form-control" required />
+        <input asp-for="Owner.FullName" class="form-control" id="Owner_FullName" required />
         <div class="invalid-feedback">
             Rapor talep sahibi adı girilmeli
         </div>
     </div>
     <div class="mb-3">
         <label asp-for="Owner.Title" class="form-label"></label>
-        <input asp-for="Owner.Title" class="form-control" required />
+        <input asp-for="Owner.Title" class="form-control" id="Owner_Title" required />
         <div class="invalid-feedback">
             Rapor talep sahibi ünvanı girilmeli
         </div>
     </div>
     <div class="mb-3">
         <label asp-for="ReportTitle" class="form-label"></label>
-        <input asp-for="ReportTitle" class="form-control" required />
+        <input asp-for="ReportTitle" class="form-control" id="ReportTitle" required />
         <div class="invalid-feedback">
             Raporu tanımlayan kısa bir tanımlama gerekli
         </div>
     </div>
     <div class="mb-3">
         <label asp-for="Expression" class="form-label"></label>
-        <input asp-for="Expression" class="form-control" required />
+        <input asp-for="Expression" class="form-control" id="Expression" required />
         <div class="invalid-feedback">
             İstenilen raporu yazınız
         </div>

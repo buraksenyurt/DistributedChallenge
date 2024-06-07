@@ -16,7 +16,7 @@ public class DeleteReport
     public async Task<BusinessResponse> Execute(ReportProcessCompletedEvent appEvent)
     {
         //TODO@buraksenyurt Must implement Report Process Completed actions
-        _logger.LogWarning("{} is deleting from system",appEvent.CreatedReportId);
+        _logger.LogWarning("{CreatedReportId} is deleting from system",appEvent.CreatedReportId);
 
         // Dokümanı Local Storage'dan silme operasyonunu gerçekleştir
         throw new NotImplementedException();

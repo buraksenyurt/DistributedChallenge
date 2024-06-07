@@ -1,6 +1,4 @@
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 using GamersWorld.AppEvents;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Messages.Responses;
@@ -29,7 +27,7 @@ public class PostReportRequest
     public async Task<BusinessResponse> Execute(ReportRequestedEvent appEvent)
     {
         var client = _httpClientFactory.CreateClient("KahinGateway");
-        _logger.LogInformation("{}, {}, {}", appEvent.TraceId, appEvent.Title, appEvent.Expression);
+        _logger.LogInformation("{TraceId}, {Title}, {Expression}", appEvent.TraceId, appEvent.Title, appEvent.Expression);
 
         var payload = new
         {
@@ -37,19 +35,16 @@ public class PostReportRequest
             appEvent.Title,
             appEvent.Expression
         };
-        
+
         _logger.LogInformation("Service Uri : {ServiceUri}", client.BaseAddress);
         var response = await client.PostAsJsonAsync("/", payload);
-        
+
         if (response.IsSuccessStatusCode)
         {
             var createReportResponse = await response.Content.ReadFromJsonAsync<CreateReportResponse>();
 
             if (createReportResponse != null && createReportResponse.Status == StatusCode.Success)
             {
-                // Enable log if needed via JsonSerialize.Serialize(createReportResponse)
-                // _logger.LogInformation("Gelen mesaj : {Response}", responseContent);
-                
                 return new BusinessResponse
                 {
                     Message = $"Rapor talebi iletildi. DocumentId: {createReportResponse.DocumentId}",

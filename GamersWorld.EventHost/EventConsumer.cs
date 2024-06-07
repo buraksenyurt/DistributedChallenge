@@ -52,7 +52,7 @@ public class EventConsumer
 
     private async Task Handle(string eventType, byte[] eventMessage)
     {
-        // _logger.LogInformation("Event: #{} , Message: {}", eventType, eventMessage);
+        _logger.LogInformation("Event: #{EvenType} , Message: {EventMessage}", eventType, eventMessage);
 
         using var scope = _serviceProvider.CreateScope();
         var factory = scope.ServiceProvider.GetRequiredService<EventHandlerFactory>();
@@ -60,23 +60,6 @@ public class EventConsumer
         // Kuyruktan yakalanan Event ve mesaj içeriği burada değerlendirlir
         // eventType türüne göre JSON formatından döndürülen mesaj içeriği
         // factory nesnesi üzerinden uygun business nesnesinin execute fonksiyonuna kadar gönderilir
-
-        // _logger.LogWarning("{}", nameof(ReportRequestedEvent));
-        // _logger.LogWarning("{}", nameof(ReportReadyEvent));
-        // _logger.LogWarning("eventType: {}", eventType);
-
-
-        //TODO Runtime da ArgumentNullException söz konusu. Baklıması lazım.
-        // var type = Type.GetType(eventType);
-        // var obj = JsonSerializer.Deserialize(eventMessage, type);
-        // if (obj is IEvent eventObj)
-        // {
-        //     await factory.ExecuteEvent(eventObj);
-        // }
-        // else
-        // {
-        //     _logger.LogError("Event çözümlenemedi.");
-        // }
 
         switch (eventType)
         {
@@ -101,7 +84,7 @@ public class EventConsumer
                 await factory.ExecuteEvent(invalidExpressionEvent);
                 break;
             default:
-                _logger.LogError("Event çözümlenemedi.");
+                _logger.LogError("Event anlaşılamadı.");
                 break;
         }
     }

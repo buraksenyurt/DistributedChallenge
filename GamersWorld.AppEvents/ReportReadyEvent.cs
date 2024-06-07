@@ -7,5 +7,5 @@ public class ReportReadyEvent
 {
     public Guid TraceId { get; set; }
     public DateTime Time { get; set; }
-    public string CreatedReportId { get; set; }
+    public string? CreatedReportId { get; set; }
 }

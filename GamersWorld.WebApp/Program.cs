@@ -1,3 +1,5 @@
+using GamersWorld.WebApp.Utility;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();

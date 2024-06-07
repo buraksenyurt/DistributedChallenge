@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using GamersWorld.WebApp.Models;
 using GamersWorld.Common.Messages.Requests;
+using GamersWorld.WebApp.Utility;
 
 namespace GamersWorld.WebApp.Controllers;
 
@@ -25,12 +26,12 @@ public class HomeController : Controller
     {
         if (ModelState.IsValid)
         {
-            _logger.LogInformation("{} bir rapor talebinde bulundu.", report.Owner.ToString());
+            _logger.LogInformation("{ReportOwner} bir rapor talebinde bulundu.", report.Owner.ToString());
 
             var payload = new NewReportRequest
             {
-                Title = report.ReportTitle,
-                Expression = report.Expression,
+                Title = report.ReportTitle ?? "None",
+                Expression = report.Expression ?? "None",
             };
 
             var response = await _messengerServiceClient.SendNewReportRequestAsync(payload);

@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using Eval.Api.Requests;
+using Eval.Api.Responses;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,18 +57,3 @@ app.MapPost("/api", (ExpressionCheckRequest request, ILogger<Program> logger) =>
 .WithOpenApi();
 
 app.Run();
-
-class ExpressionCheckResponse
-{
-    public bool IsValid { get; set; }
-}
-
-class ExpressionCheckRequest
-{
-    [Required(ErrorMessage = "Expression must be filled.")]
-    [StringLength(100, MinimumLength = 30, ErrorMessage = "Expression length must be between 30 and 100 characters.")]
-    public string? Expression { get; set; }
-    [Required(ErrorMessage = "Source must be filled")]
-    public string? Source { get; set; }
-}
-
