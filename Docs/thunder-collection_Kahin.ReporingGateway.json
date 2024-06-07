@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Kahin.ReporingGateway",
     "collectionId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
-    "dateExported": "2024-06-01T09:07:53.788Z",
+    "dateExported": "2024-06-07T14:46:52.610Z",
     "version": "1.2",
     "folders": [],
     "requests": [
@@ -15,11 +15,11 @@
             "method": "POST",
             "sortNum": 10000,
             "created": "2024-06-01T09:02:11.501Z",
-            "modified": "2024-06-01T09:02:11.501Z",
+            "modified": "2024-06-01T09:14:06.068Z",
             "headers": [],
             "body": {
                 "type": "json",
-                "raw": "{\r\n  \"TraceId\": \"edd4e07d-2391-47c1-bf6f-96a96c447585\",\r\n  \"Title\": \"Popular Game Sales Reports\",\r\n  \"Expression\": \"SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc\"\r\n}",
+                "raw": "{\n  \"TraceId\": \"edd4e07d-2391-47c1-bf6f-96a96c447585\",\n  \"Title\": \"Popular Game Sales Reports\",\n  \"Expression\": \"SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc\"\n}",
                 "form": []
             }
         },
@@ -107,7 +107,75 @@
                 "raw": "{\n  \"TraceId\": \"edd4e07d-2391-47c1-bf6f-96a96c447585\",\n  \"Title\": \"Popular Game Sales Reports\",\n  \"Expression\": \"SELECT * FROM\"\n}",
                 "form": []
             }
+        },
+        {
+            "_id": "dfc56326-ccea-4b2b-9f34-d4c11e315524",
+            "colId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+            "containerId": "",
+            "name": "Get Report By Document Id",
+            "url": "http://localhost:5218/getReport",
+            "method": "POST",
+            "sortNum": 70000,
+            "created": "2024-06-07T07:21:08.899Z",
+            "modified": "2024-06-07T07:25:46.508Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"DocumentId\": \"1001-23-789e06c8-6b4e-4db9-9db2-9876543210ab\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "b257d7b4-d8cc-4d1b-85d2-bcaf682e9dd1",
+            "colId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+            "containerId": "",
+            "name": "Invalid Head ",
+            "url": "http://localhost:5218/getReport",
+            "method": "POST",
+            "sortNum": 80000,
+            "created": "2024-06-07T07:25:10.552Z",
+            "modified": "2024-06-07T07:27:31.520Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"DocumentId\": \"1001-abc-789e06c8-6b4e-4db9-9db2-9876543210ab\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "84af532e-aa08-448c-a2c1-fa0878c4f621",
+            "colId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+            "containerId": "",
+            "name": "Invalid Source",
+            "url": "http://localhost:5218/getReport",
+            "method": "POST",
+            "sortNum": 90000,
+            "created": "2024-06-07T07:27:18.270Z",
+            "modified": "2024-06-07T07:27:18.270Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"DocumentId\": \"abc-23-789e06c8-6b4e-4db9-9db2-9876543210ab\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "3f8871ab-695c-440c-9dda-6c2d84ae26d5",
+            "colId": "804c6a1b-1ea1-4dd2-8918-349b55d263db",
+            "containerId": "",
+            "name": "Invalid Stamp",
+            "url": "http://localhost:5218/getReport",
+            "method": "POST",
+            "sortNum": 100000,
+            "created": "2024-06-07T07:28:03.532Z",
+            "modified": "2024-06-07T07:28:18.276Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"DocumentId\": \"1901-23-8-6b4e-4db9-9db2-9876543210ab\"\n}",
+                "form": []
+            }
         }
     ],
-    "ref": "RCX4fpkZ_kmQtUJ46lqaN3HDu0Rp2-ZQspFx8zyvYjXwoM7qz5MXVZnoG6HZSHlkOfcn7q7awN5V2VEBHVo_fw"
+    "ref": "RCX4fpkZ_kmQtUJ46lqaN78Uj9pIeEdlE9ZBOWOaNyrPieyqjDcYrxNsmkdxdbYzpVHBHR9vXDyDmban4IYjEw"
 }

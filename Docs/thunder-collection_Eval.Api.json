@@ -1,0 +1,62 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Eval.Api",
+    "collectionId": "30d6857a-6bf5-44f6-9e4b-9d91da561251",
+    "dateExported": "2024-06-07T15:01:46.750Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "0fcf539e-6df5-4505-8c6b-360dc25df338",
+            "colId": "30d6857a-6bf5-44f6-9e4b-9d91da561251",
+            "containerId": "",
+            "name": "Check Expression",
+            "url": "http://localhost:5147/api",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-06-07T14:42:27.429Z",
+            "modified": "2024-06-07T14:45:20.185Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Source\": \"KahinDomain\",\n  \"Expression\": \"Geçen yıl en iyi yorum alan ilk 10 oyunun yıllık satış ciroları\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "399eae0c-2cda-4b11-9db4-02320ee8974a",
+            "colId": "30d6857a-6bf5-44f6-9e4b-9d91da561251",
+            "containerId": "",
+            "name": "Invalid Source",
+            "url": "http://localhost:5147/api",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-06-07T15:00:50.957Z",
+            "modified": "2024-06-07T15:00:59.452Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Source\": \"\",\n  \"Expression\": \"Geçen yıl en iyi yorum alan ilk 10 oyunun yıllık satış ciroları\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "e996d830-6008-4be0-b3b4-87370d8e9fd3",
+            "colId": "30d6857a-6bf5-44f6-9e4b-9d91da561251",
+            "containerId": "",
+            "name": "Invalid Expression",
+            "url": "http://localhost:5147/api",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-06-07T15:01:16.217Z",
+            "modified": "2024-06-07T15:01:38.271Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"Source\": \"KahinDomain\",\n  \"Expression\": \"\"\n}",
+                "form": []
+            }
+        }
+    ],
+    "ref": "07jJzCt3Tjs-LLLSphnImnQcKY3YgkfbBqslY0eecG6m74N5DktkiEcy1RS_ILTE_UuiH_Vuq4oxS5tRAYufZw"
+}
