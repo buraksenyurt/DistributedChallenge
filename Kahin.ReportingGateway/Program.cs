@@ -21,19 +21,21 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", (GetReportRequest request, ILogger<Program> logger) =>
+app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logger) =>
 {
     var response = new GetReportResponse();
     try
     {
         var documentId = ReferenceDocumentId.Parse(request.DocumentId);
         logger.LogWarning("{DocumentId} nolu rapor verilecek", request.DocumentId);
-        // Sonrasında önceden hazırlanmış raporlar için Redis tabanlı bir caching konulabilir
-        // Sistemden bu numaraya ait rapor dokümanının çekildiğini düşünelim
+        // Önceden hazırlanmış raporlar için Redis tabanlı bir caching konulabilir
+        
+        var reportContent=await File.ReadAllBytesAsync("SampleReport.dat");
+
         response = new GetReportResponse
         {
             DocumentId = documentId.ToString(),
-            Document = new byte[1024],
+            Document = reportContent,
             StatusCode = StatusCode.ReportReady,
         };
     }

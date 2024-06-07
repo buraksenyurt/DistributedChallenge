@@ -71,3 +71,43 @@ Accept: application/json
 }
 
 ###
+
+POST {{Kahin.ReportingService_HostAddress}}/getReport
+Content-Type: application/json
+Accept: application/json
+
+{
+  "DocumentId": "1001-23-789e06c8-6b4e-4db9-9db2-9876543210ab"
+}
+
+###
+
+POST {{Kahin.ReportingService_HostAddress}}/getReport
+Content-Type: application/json
+Accept: application/json
+
+{
+  "DocumentId": "abc-23-789e06c8-6b4e-4db9-9db2-9876543210ab"
+}
+
+###
+
+POST {{Kahin.ReportingService_HostAddress}}/getReport
+Content-Type: application/json
+Accept: application/json
+
+{
+  "DocumentId": "1001-abc-789e06c8-6b4e-4db9-9db2-9876543210ab"
+}
+
+###
+
+POST {{Kahin.ReportingService_HostAddress}}/getReport
+Content-Type: application/json
+Accept: application/json
+
+{
+  "DocumentId": "1001-23-8-6b4e-4db9-9db2-9876543210ab"
+}
+
+###
