@@ -1,0 +1,28 @@
+@Eval.Api_HostAddress = http://localhost:5147
+
+POST {{Eval.Api_HostAddress}}//api
+Accept: application/json
+{
+    Source : "KahinDomain",
+    Expression : "Geçen yıl en iyi yorum alan ilk 10 oyunun yıllık satış ciroları"
+}
+
+###
+
+POST {{Eval.Api_HostAddress}}//api
+Accept: application/json
+{
+    Source : "",
+    Expression : "Geçen yıl en iyi yorum alan ilk 10 oyunun yıllık satış ciroları"
+}
+
+###
+
+POST {{Eval.Api_HostAddress}}//api
+Accept: application/json
+{
+    Source : "KahinDomain",
+    Expression : ""
+}
+
+###
