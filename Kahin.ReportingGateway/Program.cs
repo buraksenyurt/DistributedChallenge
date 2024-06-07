@@ -3,11 +3,13 @@ using Kahin.Common.Entities;
 using Kahin.Common.Enums;
 using Kahin.Common.Requests;
 using Kahin.Common.Responses;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -21,6 +23,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapHealthChecks("/health");
+
 app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logger) =>
 {
     var response = new GetReportResponse();
@@ -29,8 +33,8 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
         var documentId = ReferenceDocumentId.Parse(request.DocumentId);
         logger.LogWarning("{DocumentId} nolu rapor verilecek", request.DocumentId);
         // Önceden hazırlanmış raporlar için Redis tabanlı bir caching konulabilir
-        
-        var reportContent=await File.ReadAllBytesAsync("SampleReport.dat");
+
+        var reportContent = await File.ReadAllBytesAsync("SampleReport.dat");
 
         response = new GetReportResponse
         {

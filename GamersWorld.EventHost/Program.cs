@@ -1,5 +1,4 @@
-﻿using GamersWorld.AppEventBusiness;
-using GamersWorld.EventHost;
+﻿using GamersWorld.EventHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -9,13 +8,6 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", reloadOnChange: true, optional: false)
     .Build();
-
-var reportingServiceHostAddress = configuration["Kahin:ReportingService_HostAddress"];
-if (string.IsNullOrEmpty(reportingServiceHostAddress))
-{
-    throw new ArgumentNullException("Kahin:ReportingService_HostAddress", "Kahin servis adresi bulunamadı.");
-}
-Console.WriteLine("{0}", reportingServiceHostAddress);
 
 var services = new ServiceCollection();
 
@@ -32,17 +24,34 @@ services.AddLogging(cfg =>
 });
 services.AddHttpClient("KahinGateway", client =>
 {
-    client.BaseAddress = new Uri(reportingServiceHostAddress);
+    var reportingServiceHostAddress = configuration["Kahin:ReportingService_HostAddress"];
+    client.BaseAddress = new Uri(reportingServiceHostAddress ?? "http://localhost:5218");
 });
 
 var serviceProvider = services.BuildServiceProvider();
-
-// Get the logger
 var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
-logger.LogInformation("Kahin Gateway Address: {HostAddress}", reportingServiceHostAddress);
+
+var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+var httpClient = httpClientFactory.CreateClient("KahinGateway");
+if (await ServiceController.IsReportingServiceAlive(httpClient, logger))
+{
+    logger.LogInformation("Reporting service ulaşılabilir durumda.");
+}
+else
+{
+    logger.LogError("Reporting service çalışmıyor görünüyor. Event dinleyici etkinleşebilir ama rapor iletimlerinde sorun olacaktır.");
+}
 
 // Mesaj kuyruğunu dinleyecek nesne örneklenir
 var eventConsumer = serviceProvider.GetService<EventConsumer>();
 
 // Dinleme fonksiyonu başlatılır
-eventConsumer.Run();
+if (eventConsumer != null)
+{
+    logger.LogInformation("Event dinleneyici aktif");
+    eventConsumer.Run();
+}
+else
+{
+    logger.LogError("EventConsumer başlatılamadı");
+}
