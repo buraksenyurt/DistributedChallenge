@@ -1,0 +1,34 @@
+﻿using GamersWorld.AppEvents;
+using GamersWorld.Common.Enums;
+using GamersWorld.Common.Messages.Responses;
+using GamersWorld.SDK;
+using Microsoft.Extensions.Logging;
+
+namespace GamersWorld.AppEventBusiness;
+
+/*
+    System 123'ten bir rapor talebi yapılırken o sisteme özgü betik dil ile bir ifade yollanıyor.
+    İfadenin geçersiz olması, belki sistemi indirmeye yönelik ifadeler içermesi vb durumlarda 
+    System ABC'den System 123'e bir bilgilendirme yapılmakta. 
+    Buna karşılık işletilecek fonksiyon aşağıdaki gibi.
+*/
+public class InvalidExpression
+    : IEventDriver<InvalidExpressionEvent>
+{
+    private readonly ILogger<InvalidExpression> _logger;
+    public InvalidExpression(ILogger<InvalidExpression> logger)
+    {
+        _logger = logger;
+    }
+    public async Task<BusinessResponse> Execute(InvalidExpressionEvent appEvent)
+    {
+        //TODO@buraksenyurt Must implement alert and warning mechanism
+        _logger.LogWarning("{Expression}, Reason: {Reason}", appEvent.Expression, appEvent.Reason);
+
+        return new BusinessResponse
+        {
+            Message = "Rapor için kullanılan sorgu ifadesi doğrulanamadı",
+            StatusCode = StatusCode.InvalidExpression
+        };
+    }
+}

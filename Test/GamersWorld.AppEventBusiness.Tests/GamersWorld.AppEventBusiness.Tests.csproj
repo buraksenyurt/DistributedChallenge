@@ -22,9 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GamersWorld.AppEvents\GamersWorld.AppEvents.csproj" />
-    <ProjectReference Include="..\..\GamersWorld.AppEventBusiness\GamersWorld.AppEventBusiness.csproj" />
-    <ProjectReference Include="..\..\GamersWorld.Common\GamersWorld.Common.csproj" />
+    <ProjectReference Include="..\..\SystemHome\GamersWorld.AppEvents\GamersWorld.AppEvents.csproj" />
+    <ProjectReference Include="..\..\SystemHome\GamersWorld.AppEventBusiness\GamersWorld.AppEventBusiness.csproj" />
+    <ProjectReference Include="..\..\SystemHome\GamersWorld.Common\GamersWorld.Common.csproj" />
   </ItemGroup>
 
 </Project>
