@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using Eval.Api.Requests;
-using Eval.Api.Responses;
+using Eval.AuditApi.Requests;
+using Eval.AuditApi.Responses;
 
 var builder = WebApplication.CreateBuilder(args);
 

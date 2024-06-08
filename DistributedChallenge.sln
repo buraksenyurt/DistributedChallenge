@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.Common", "Kahin.Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.Comon.Tests", "Test\Kahin.Comon.Tests\Kahin.Comon.Tests.csproj", "{B14122BB-A5EE-453F-A8B2-7260BAA2C430}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eval.Api", "Eval.Api\Eval.Api.csproj", "{9963C2D0-671F-496C-89F8-79579C3DFB91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eval.AuditApi", "Eval.AuditApi\Eval.AuditApi.csproj", "{9963C2D0-671F-496C-89F8-79579C3DFB91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
