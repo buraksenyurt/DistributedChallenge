@@ -3,13 +3,25 @@ using Kahin.Common.Entities;
 using Kahin.Common.Enums;
 using Kahin.Common.Requests;
 using Kahin.Common.Responses;
+using Kahin.Common.Validation;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", reloadOnChange: true, optional: false)
+    .Build();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
+builder.Services.AddHttpClient("EvalApi", client =>
+{
+    var reportingServiceHostAddress = configuration["EvalServiceApi:Address"];
+    client.BaseAddress = new Uri(reportingServiceHostAddress ?? "http://localhost:5147/api");
+});
+builder.Services.AddTransient<ValidatorClient>();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -32,6 +44,7 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
     {
         var documentId = ReferenceDocumentId.Parse(request.DocumentId);
         logger.LogWarning("{DocumentId} nolu rapor verilecek", request.DocumentId);
+        
         // Önceden hazırlanmış raporlar için Redis tabanlı bir caching konulabilir
 
         var reportContent = await File.ReadAllBytesAsync("SampleReport.dat");
@@ -58,7 +71,7 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
 .WithName("GetReport")
 .WithOpenApi();
 
-app.MapPost("/", (CreateReportRequest request, ILogger<Program> logger) =>
+app.MapPost("/", async (CreateReportRequest request, ILogger<Program> logger, ValidatorClient validatorClient) =>
 {
     logger.LogInformation("{TraceId}, {Title}, {Expression}", request.TraceId, request.Title, request.Expression);
     var validationResults = new List<ValidationResult>();
@@ -76,6 +89,18 @@ app.MapPost("/", (CreateReportRequest request, ILogger<Program> logger) =>
         return Results.ValidationProblem(errors);
     }
 
+    var expressionState = await validatorClient.ValidateExpression(request);
+    if (!expressionState)
+    {
+        logger.LogError("'{Expression}' geçerli değil", request.Expression);
+        return Results.Json(new CreateReportResponse
+        {
+            Status = StatusCode.InvalidExpression,
+            DocumentId = string.Empty,
+            Explanation = "Rapor ifadesi geçersiz"
+        });
+    }
+
     if (!Guid.TryParse(request.TraceId, out var traceId))
     {
         logger.LogWarning("TraceId must be a valid GUID.");
@@ -83,7 +108,6 @@ app.MapPost("/", (CreateReportRequest request, ILogger<Program> logger) =>
     }
 
     Random rnd = new();
-    // Gelen talepteki bilgilere göre rapor talebini benzersiz bir veri modeli ile damgalamak istiyoruz
     var refDocId = new ReferenceDocumentId
     {
         Head = rnd.Next(1000, 1100),
@@ -92,11 +116,6 @@ app.MapPost("/", (CreateReportRequest request, ILogger<Program> logger) =>
     };
 
     logger.LogInformation("Created Referenced Document Id: {RefDocumentId}", refDocId.ToString());
-
-    // Bu sistem kendi için rapor hazırlama işini başlatıyor şeklinde düşünelim.
-    // Request üzerinden gelen Expression içeriğinin de Gen AI tarzı bir API ile bu sistemde 
-    // anlamlı ve işletilebilir bir ifadeye dönüştürüldüğünü düşünelim.
-    // Şu an için test amaçlı sabit bir response döndürmesi yeterli
 
     var response = new CreateReportResponse
     {
