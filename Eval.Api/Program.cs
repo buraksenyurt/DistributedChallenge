@@ -36,7 +36,7 @@ app.MapPost("/api", (ExpressionCheckRequest request, ILogger<Program> logger) =>
 
     if (!Validator.TryValidateObject(request, validationContext, validationResults, true))
     {
-        logger.LogError("There is some validation errors");
+        logger.LogError("Doğrulama hataları söz konusu.");
         var errors = validationResults
             .GroupBy(e => e.MemberNames.FirstOrDefault() ?? string.Empty)
             .ToDictionary(

@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Kahin.Common.Requests;
 using Kahin.Common.Responses;
 using Kahin.Common.Validation;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 
@@ -13,6 +14,7 @@ public class ValidatorClientTests
     private readonly Mock<IHttpClientFactory> _mockHttpClientFactory;
     private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
     private readonly HttpClient _mockHttpClient;
+    private readonly Mock<ILogger<ValidatorClient>> _mockLogger;
 
     public ValidatorClientTests()
     {
@@ -23,6 +25,7 @@ public class ValidatorClientTests
         };
         _mockHttpClientFactory = new Mock<IHttpClientFactory>();
         _mockHttpClientFactory.Setup(_mock => _mock.CreateClient(It.IsAny<string>())).Returns(_mockHttpClient);
+        _mockLogger = new Mock<ILogger<ValidatorClient>>();
     }
 
     [Fact]
@@ -47,7 +50,7 @@ public class ValidatorClientTests
             )
             .ReturnsAsync(httpResponseMessage);
 
-        var validatorClient = new ValidatorClient(_mockHttpClientFactory.Object);
+        var validatorClient = new ValidatorClient(_mockHttpClientFactory.Object, _mockLogger.Object);
 
         // Act
         var result = await validatorClient.ValidateExpression(request);
@@ -78,7 +81,7 @@ public class ValidatorClientTests
             )
             .ReturnsAsync(httpResponseMessage);
 
-        var validatorClient = new ValidatorClient(_mockHttpClientFactory.Object);
+        var validatorClient = new ValidatorClient(_mockHttpClientFactory.Object, _mockLogger.Object);
 
         // Act
         var result = await validatorClient.ValidateExpression(request);
@@ -105,7 +108,7 @@ public class ValidatorClientTests
             )
             .ReturnsAsync(httpResponseMessage);
 
-        var validatorClient = new ValidatorClient(_mockHttpClientFactory.Object);
+        var validatorClient = new ValidatorClient(_mockHttpClientFactory.Object, _mockLogger.Object);
 
         // Act
         var result = await validatorClient.ValidateExpression(request);

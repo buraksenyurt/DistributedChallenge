@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace GamersWorld.WebApp.Models;
-public struct OwnerModel
+public class OwnerModel
 {
     [Required]
     public string? FullName { get; set; }
