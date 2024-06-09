@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kahin.Common\Kahin.Common.csproj" />
+    <ProjectReference Include="..\Kahin.MQ\Kahin.MQ.csproj" />
   </ItemGroup>
 
 </Project>

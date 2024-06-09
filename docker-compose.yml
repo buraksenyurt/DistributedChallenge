@@ -9,12 +9,8 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  
-  # repgateway:
-  #   build:
-  #     context: ./Kahin.ReportingGateway
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5218:80"
-  #   environment:
-  #     ASPNETCORE_URLS: http://+:80
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"

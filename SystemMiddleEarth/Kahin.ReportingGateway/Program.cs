@@ -4,6 +4,7 @@ using Kahin.Common.Enums;
 using Kahin.Common.Requests;
 using Kahin.Common.Responses;
 using Kahin.Common.Validation;
+using Kahin.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,11 @@ builder.Services.AddHttpClient("EvalApi", client =>
     client.BaseAddress = new Uri(reportingServiceHostAddress ?? "http://localhost:5147/api");
 });
 builder.Services.AddTransient<ValidatorClient>();
+builder.Services.AddSingleton<IRedisService>(sp =>
+{
+    var redisConnectionString = configuration["Redis:ConnectionString"];
+    return new RedisService(redisConnectionString ?? "localhost:6379");
+});
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -44,7 +50,7 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
     {
         var documentId = ReferenceDocumentId.Parse(request.DocumentId);
         logger.LogWarning("Referenced document id is '{DocumentId}'", request.DocumentId);
-        
+
         // Önceden hazırlanmış raporlar için Redis tabanlı bir caching konulabilir
 
         var reportContent = await File.ReadAllBytesAsync("SampleReport.dat");
@@ -71,7 +77,11 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
 .WithName("GetReport")
 .WithOpenApi();
 
-app.MapPost("/", async (CreateReportRequest request, ILogger<Program> logger, ValidatorClient validatorClient) =>
+app.MapPost("/", async (
+    CreateReportRequest request
+    , ILogger<Program> logger
+    , ValidatorClient validatorClient
+    , IRedisService redisService) =>
 {
     logger.LogInformation("{TraceId}, {Title}, {Expression}", request.TraceId, request.Title, request.Expression);
     var validationResults = new List<ValidationResult>();
@@ -116,6 +126,13 @@ app.MapPost("/", async (CreateReportRequest request, ILogger<Program> logger, Va
     };
 
     logger.LogInformation("Created Referenced Document Id: {RefDocumentId}", refDocId.ToString());
+
+    var payload = new RedisPayload
+    {
+        DocumentId = refDocId,
+        Expression = request.Expression
+    };
+    await redisService.AddReportPayloadAsync("reportStream", payload);
 
     var response = new CreateReportResponse
     {
