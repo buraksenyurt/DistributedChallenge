@@ -6,16 +6,12 @@ using GamersWorld.Common.Messages.Responses;
 
 namespace GamersWorld.WebApp.Controllers;
 
-public class HomeController : Controller
+public class HomeController(ILogger<HomeController> logger, MessengerServiceClient messengerServiceClient)
+    : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-    private readonly MessengerServiceClient _messengerServiceClient;
+    private readonly ILogger<HomeController> _logger = logger;
+    private readonly MessengerServiceClient _messengerServiceClient = messengerServiceClient;
 
-    public HomeController(ILogger<HomeController> logger, MessengerServiceClient messengerServiceClient)
-    {
-        _logger = logger;
-        _messengerServiceClient = messengerServiceClient;
-    }
 
     public IActionResult Index()
     {
@@ -44,9 +40,11 @@ public class HomeController : Controller
             else
             {
                 CheckValidations(response);
+
                 return View("RequestFailed", report);
             }
         }
+
         return View("Index", report);
     }
 

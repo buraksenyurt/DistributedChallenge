@@ -21,6 +21,7 @@ public static class DependencyInjection
         services.AddTransient<IEventDriver<ReportProcessCompletedEvent>, DeleteReport>();
         services.AddTransient<IEventDriver<InvalidExpressionEvent>, InvalidExpression>();
         services.AddSingleton<EventHandlerFactory>();
+
         return services;
     }
 
@@ -40,6 +41,7 @@ public static class DependencyInjection
             Port = rabbitMqSettings.Port
         });
         services.AddSingleton<EventConsumer>();
+
         return services;
     }
 }

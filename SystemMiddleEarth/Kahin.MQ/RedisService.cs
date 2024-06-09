@@ -27,8 +27,10 @@ public class RedisService : IRedisService
         if (entries.Length > 0)
         {
             var jsonPayload = entries[0].Values[0].Value;
+
             return JsonSerializer.Deserialize<RedisPayload>(jsonPayload);
         }
+
         return null;
     }
 }

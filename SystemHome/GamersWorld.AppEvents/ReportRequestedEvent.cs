@@ -2,8 +2,7 @@
 
 namespace GamersWorld.AppEvents;
 
-public class ReportRequestedEvent
-    : IEvent
+public class ReportRequestedEvent : IEvent
 {
     public Guid TraceId { get; set; }
     public string Title { get; set; } = "Default";

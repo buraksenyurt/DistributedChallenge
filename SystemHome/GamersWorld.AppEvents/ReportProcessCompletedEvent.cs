@@ -2,8 +2,7 @@
 
 namespace GamersWorld.AppEvents;
 
-public class ReportProcessCompletedEvent
-    : IEvent
+public class ReportProcessCompletedEvent : IEvent
 {
     public Guid TraceId { get; set; }
     public DateTime Time { get; set; }

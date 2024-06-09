@@ -14,16 +14,12 @@ namespace GamersWorld.AppEventBusiness;
     Kuyruğu dinleyen taraf bu event gerçekleştiğinde 
     aşağıdaki nesnenin Execute metodunu icra edip buradaki işlemleri yapmalıdır.
 */
-public class PostReportRequest
+public class PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFactory httpClientFactory)
     : IEventDriver<ReportRequestedEvent>
 {
-    private readonly ILogger<PostReportRequest> _logger;
-    private readonly IHttpClientFactory _httpClientFactory;
-    public PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFactory httpClientFactory)
-    {
-        _logger = logger;
-        _httpClientFactory = httpClientFactory;
-    }
+    private readonly ILogger<PostReportRequest> _logger = logger;
+    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
+
     public async Task<BusinessResponse> Execute(ReportRequestedEvent appEvent)
     {
         var client = _httpClientFactory.CreateClient("KahinGateway");
@@ -54,9 +50,10 @@ public class PostReportRequest
             else if (createReportResponse != null)
             {
                 _logger.LogError("Report request unsuccessful.");
+
                 return new BusinessResponse
                 {
-                    Message = !string.IsNullOrEmpty(createReportResponse.Explanation) ? createReportResponse.Explanation 
+                    Message = !string.IsNullOrEmpty(createReportResponse.Explanation) ? createReportResponse.Explanation
                     : "Empty explanation.",
                     StatusCode = StatusCode.Fail,
                 };

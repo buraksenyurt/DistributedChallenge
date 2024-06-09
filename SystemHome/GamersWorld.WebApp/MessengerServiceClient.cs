@@ -3,16 +3,10 @@ namespace GamersWorld.WebApp.Utility;
 using GamersWorld.Common.Messages.Requests;
 using GamersWorld.Common.Messages.Responses;
 
-public class MessengerServiceClient
+public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServiceClient> logger)
 {
-    private readonly HttpClient _httpClient;
-    private readonly ILogger<MessengerServiceClient> _logger;
-
-    public MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServiceClient> logger)
-    {
-        _httpClient = httpClient;
-        _logger = logger;
-    }
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly ILogger<MessengerServiceClient> _logger = logger;
 
     public async Task<BusinessResponse> SendNewReportRequestAsync(NewReportRequest request)
     {

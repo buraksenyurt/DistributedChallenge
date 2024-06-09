@@ -11,14 +11,10 @@ namespace GamersWorld.AppEventBusiness;
 
     Bu olay yakalanırsa aşağıdaki nesne fonksiyonundaki işlemler yapılacak.
 */
-public class UsePreparedReport
-    : IEventDriver<ReportIsHereEvent>
+public class UsePreparedReport(ILogger<UsePreparedReport> logger) : IEventDriver<ReportIsHereEvent>
 {
-    private readonly ILogger<UsePreparedReport> _logger;
-    public UsePreparedReport(ILogger<UsePreparedReport> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<UsePreparedReport> _logger = logger;
+
     public async Task<BusinessResponse> Execute(ReportIsHereEvent appEvent)
     {
         //TODO@buraksenyurt Must implement Use Report steps
