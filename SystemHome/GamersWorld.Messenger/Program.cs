@@ -33,6 +33,7 @@ app.MapPost("/", (NewReportRequest request, RabbitMqService rabbitMQService, ILo
 
     if (!Validator.TryValidateObject(request, validationContext, validationResults, true))
     {
+        logger.LogError("Doğrulama hataları var!");
         var errors = validationResults
             .GroupBy(e => e.MemberNames.FirstOrDefault() ?? string.Empty)
             .ToDictionary(
@@ -40,7 +41,14 @@ app.MapPost("/", (NewReportRequest request, RabbitMqService rabbitMQService, ILo
                 g => g.Select(e => e.ErrorMessage ?? string.Empty).ToArray()
             );
 
-        return Results.ValidationProblem(errors);
+        var errorResponse = new BusinessResponse
+        {
+            StatusCode = StatusCode.ValidationErrors,
+            Message = "Validation errors occurred.",
+            ValidationErrors = errors
+        };
+
+        return Results.Json(errorResponse, statusCode: 400);
     }
 
     var reportRequestedEvent = new ReportRequestedEvent

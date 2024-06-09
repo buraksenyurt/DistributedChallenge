@@ -24,8 +24,22 @@ public class MessengerServiceClient
         }
         else
         {
-            _logger.LogError("Rapor talebi gönderiminde hata: {ReasonePhrase}", response.ReasonPhrase);
-            throw new HttpRequestException($"Rapor talebi gönderiminde hata: {response.ReasonPhrase}");
+            var errorResponse = await response.Content.ReadFromJsonAsync<BusinessResponse>();
+            if (errorResponse != null && errorResponse.ValidationErrors != null)
+            {
+                _logger.LogError("Rapor talebi gönderiminde validasyon hataları: {ValidationErrors}",
+                    string.Join("; ", errorResponse.ValidationErrors.Select(e => $"{e.Key}: {string.Join(", ", e.Value)}")));
+            }
+            else
+            {
+                _logger.LogError("Rapor talebi gönderiminde hata: {ReasonPhrase}", response.ReasonPhrase);
+            }
+
+            return errorResponse ?? new BusinessResponse
+            {
+                StatusCode = Common.Enums.StatusCode.Fail,
+                Message = "Not OK(200)"
+            };
         }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using GamersWorld.WebApp.Models;
 using GamersWorld.Common.Messages.Requests;
 using GamersWorld.WebApp.Utility;
+using GamersWorld.Common.Messages.Responses;
 
 namespace GamersWorld.WebApp.Controllers;
 
@@ -35,19 +36,36 @@ public class HomeController : Controller
             };
 
             var response = await _messengerServiceClient.SendNewReportRequestAsync(payload);
-
+            _logger.LogInformation("Messenger servis cevabı {Response}", response);
             if (response.StatusCode == Common.Enums.StatusCode.Success)
             {
                 return RedirectToAction("RequestConfirmed");
             }
             else
             {
-                ModelState.AddModelError(string.Empty, response.Message);
+                CheckValidations(response);
+                return View("RequestFailed", report);
             }
-
-            return RedirectToAction("RequestConfirmed");
         }
         return View("Index", report);
+    }
+
+    private void CheckValidations(BusinessResponse response)
+    {
+        if (response.ValidationErrors != null)
+        {
+            foreach (var error in response.ValidationErrors)
+            {
+                foreach (var errorMessage in error.Value)
+                {
+                    ModelState.AddModelError(error.Key, errorMessage);
+                }
+            }
+        }
+        else
+        {
+            ModelState.AddModelError(string.Empty, response.Message);
+        }
     }
 
     public IActionResult RequestConfirmed()

@@ -1,0 +1,14 @@
+@model GamersWorld.WebApp.Models.ReportRequestModel
+
+<div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Doğrulama Hataları Var!</h4>
+    <p>Rapor talebiniz Messenger servisinden geri döndü.</p>
+    <hr />
+    <ul>
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <li>@error.ErrorMessage</li>
+        }
+    </ul>
+    <p class="mb-0">Lütfen hataları düzeltip tekrar deneyin.</p>
+</div>

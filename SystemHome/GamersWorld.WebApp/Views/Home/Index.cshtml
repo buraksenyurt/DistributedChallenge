@@ -1,11 +1,14 @@
 ﻿@model GamersWorld.WebApp.Models.ReportRequestModel
 
-<h2>Submit Report</h2>
+<h2>Gamers World Rapor Talep Ekranı</h2>
 
 <form asp-action="SubmitReport" method="post" class="needs-validation" novalidate>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
     <div class="mb-3">
         <label asp-for="Owner.FullName" class="form-label"></label>
         <input asp-for="Owner.FullName" class="form-control" required />
+        <div asp-validation-for="Owner.FullName" class="text-danger"></div>
         <div class="invalid-feedback">
             Rapor talep sahibi adı girilmeli
         </div>
@@ -13,6 +16,7 @@
     <div class="mb-3">
         <label asp-for="Owner.Title" class="form-label"></label>
         <input asp-for="Owner.Title" class="form-control" required />
+        <div asp-validation-for="Owner.Title" class="text-danger"></div>
         <div class="invalid-feedback">
             Rapor talep sahibi ünvanı girilmeli
         </div>
@@ -20,6 +24,7 @@
     <div class="mb-3">
         <label asp-for="ReportTitle" class="form-label"></label>
         <input asp-for="ReportTitle" class="form-control" required />
+        <div asp-validation-for="ReportTitle" class="text-danger"></div>
         <div class="invalid-feedback">
             Raporu tanımlayan kısa bir tanımlama gerekli
         </div>
@@ -27,6 +32,7 @@
     <div class="mb-3">
         <label asp-for="Expression" class="form-label"></label>
         <input asp-for="Expression" class="form-control" required />
+        <div asp-validation-for="Expression" class="text-danger"></div>
         <div class="invalid-feedback">
             İstenilen raporu yazınız
         </div>
