@@ -75,7 +75,7 @@ public class PostReportRequestTests
 
         // Assert
         Assert.Equal(StatusCode.Success, result.StatusCode);
-        Assert.Equal($"Rapor talebi iletildi. DocumentId: {createReportResponse.DocumentId}", result.Message);
+        Assert.Equal($"Report request sent. DocumentId: {createReportResponse.DocumentId}", result.Message);
     }
 
     [Fact]
@@ -104,7 +104,7 @@ public class PostReportRequestTests
 
         // Assert
         Assert.Equal(StatusCode.Fail, result.StatusCode);
-        Assert.Equal("Rapor talebi gönderimi başarısız", result.Message);
+        Assert.Equal("Report request unsuccessful.", result.Message);
     }
 
     [Fact]
