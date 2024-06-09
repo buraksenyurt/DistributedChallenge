@@ -163,6 +163,25 @@ Rapordaki ifadede ihlal var taklidi yapan bir mesaj.
 
 ![Second Test](/images/second_test.png)
 
+## Redis Stream Entgrasyonu (9 Haziran 2024)
+
+System MiddleEarth içerisinde yer alan Kahin.ReportingGateway, gelen bir rapor talebini aldıktan sonra raporun hazırlanması için bir süreç başlatır. Bu süreç muhtemelen uzun sürebilecek bir iştir. Bu nedenle System MiddleEarth içinde bir mesajlaşma kuyruğu göz önüne alınabilir. Bu sefer RabbitMQ yerine Redis kullanılabilir. Redis tarafı in-memory de çalışabilen dağıtık bir key:value store olarak düşünülür ancak aynı zamanda Publisher/Subscriber modelini de destekler. Dolayısıyla gelen rapor talebini burada kuyruğa bırakıp, bir dinleyicinin almasını ve işlemleri ilerletmesini sağlayabiliriz. Redis tarafı yine docker-compose içerisinde konuşlandırılmıştır. Sistemde bir docker imajı olarak ayağa kalkar. Web uygulamasından geçerli bir rapor talebi Kahin.ReportingGateway'e ulaştığında redis'e düşen mesajda kabaca aşağıdaki komutlar ile yakalanabilir.
+
+```bash
+# Önce redis client terminale girilir
+sudo docker exec -it distributedchallenge-redis-1 redis-cli
+
+# Key'ler sorgulanır
+keys *
+
+# Key içeriklerine bakılır
+XRANGE reportStream - +
+```
+
+Bir deneme sonrası sistemde oluşan görüntü aşağıdaki gibidir.
+
+![Runtime_06](./images/runtime_06.png)
+
 ## SonarQube Genişletmesi
 
 Projenin teknik borçlanma değerlerini ölçümlemek ve kod kalitesini iyileştirmek için **Sonarqube** aracını kullanmaya karar verdim. **Local** ortamda **Sonarqube** kurulumu için Docker imajından yararlanılabilir. Öncelikle sistemde aşağıdaki gibi bir kurulum yapılır.
