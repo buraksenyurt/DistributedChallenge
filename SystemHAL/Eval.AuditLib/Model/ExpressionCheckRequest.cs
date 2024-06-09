@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Eval.AuditApi.Requests;
+namespace Eval.AuditLib.Model;
 public class ExpressionCheckRequest
 {
     [Required(ErrorMessage = "Expression must be filled.")]

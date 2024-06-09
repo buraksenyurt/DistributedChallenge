@@ -1,11 +1,14 @@
 using System.ComponentModel.DataAnnotations;
-using Eval.AuditApi.Requests;
-using Eval.AuditApi.Responses;
+using System.Data;
+using Eval.AuditLib.Contracts;
+using Eval.AuditLib.Model;
+using Eval.Lib;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<IExpressionValidator, ExpressionValidator>();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -26,7 +29,7 @@ app.UseHttpsRedirection();
     bilgi güvenliğine aykırı bir durum varsa bunu kontrol eder vb
 */
 
-app.MapPost("/api", (ExpressionCheckRequest request, ILogger<Program> logger) =>
+app.MapPost("/api", (ExpressionCheckRequest request, ILogger<Program> logger, IExpressionValidator validator) =>
 {
     logger.LogInformation("{Source} kaynaklı {Expression} ifadesi kontrol edilecek."
     , request.Source, request.Expression);
@@ -47,10 +50,7 @@ app.MapPost("/api", (ExpressionCheckRequest request, ILogger<Program> logger) =>
         return Results.ValidationProblem(errors);
     }
 
-    var response = new ExpressionCheckResponse
-    {
-        IsValid = true
-    };
+    var response = validator.IsValid(request);
     return Results.Json(response);
 })
 .WithName("ExpressionCheck")

@@ -1,4 +1,4 @@
-namespace Eval.AuditApi.Responses;
+namespace Eval.AuditLib.Model;
 
 public class ExpressionCheckResponse
 {
