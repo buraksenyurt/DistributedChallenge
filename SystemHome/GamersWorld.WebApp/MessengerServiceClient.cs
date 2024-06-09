@@ -27,12 +27,12 @@ public class MessengerServiceClient
             var errorResponse = await response.Content.ReadFromJsonAsync<BusinessResponse>();
             if (errorResponse != null && errorResponse.ValidationErrors != null)
             {
-                _logger.LogError("Rapor talebi gönderiminde validasyon hataları: {ValidationErrors}",
+                _logger.LogError("There are validation errors. {ValidationErrors}",
                     string.Join("; ", errorResponse.ValidationErrors.Select(e => $"{e.Key}: {string.Join(", ", e.Value)}")));
             }
             else
             {
-                _logger.LogError("Rapor talebi gönderiminde hata: {ReasonPhrase}", response.ReasonPhrase);
+                _logger.LogError("There are validation errors. Reason is '{ReasonPhrase}'", response.ReasonPhrase);
             }
 
             return errorResponse ?? new BusinessResponse

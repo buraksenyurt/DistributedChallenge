@@ -31,7 +31,7 @@ app.UseHttpsRedirection();
 
 app.MapPost("/api", (ExpressionCheckRequest request, ILogger<Program> logger, IExpressionValidator validator) =>
 {
-    logger.LogInformation("{Source} kaynaklı {Expression} ifadesi kontrol edilecek."
+    logger.LogInformation("{Source}, '{Expression}' is under audit check."
     , request.Source, request.Expression);
 
     var validationResults = new List<ValidationResult>();
@@ -39,7 +39,7 @@ app.MapPost("/api", (ExpressionCheckRequest request, ILogger<Program> logger, IE
 
     if (!Validator.TryValidateObject(request, validationContext, validationResults, true))
     {
-        logger.LogError("Doğrulama hataları söz konusu.");
+        logger.LogError("Validation errors occurred!");
         var errors = validationResults
             .GroupBy(e => e.MemberNames.FirstOrDefault() ?? string.Empty)
             .ToDictionary(

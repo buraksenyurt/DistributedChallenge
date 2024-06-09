@@ -43,7 +43,7 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
     try
     {
         var documentId = ReferenceDocumentId.Parse(request.DocumentId);
-        logger.LogWarning("{DocumentId} nolu rapor verilecek", request.DocumentId);
+        logger.LogWarning("Referenced document id is '{DocumentId}'", request.DocumentId);
         
         // Önceden hazırlanmış raporlar için Redis tabanlı bir caching konulabilir
 
@@ -92,12 +92,12 @@ app.MapPost("/", async (CreateReportRequest request, ILogger<Program> logger, Va
     var expressionState = await validatorClient.ValidateExpression(request);
     if (!expressionState)
     {
-        logger.LogError("'{Expression}' geçerli değil", request.Expression);
+        logger.LogError("'{Expression}' is not valid!", request.Expression);
         return Results.Json(new CreateReportResponse
         {
             Status = StatusCode.InvalidExpression,
             DocumentId = string.Empty,
-            Explanation = "Rapor ifadesi geçersiz"
+            Explanation = "Invalid Report Expression"
         });
     }
 
@@ -121,7 +121,7 @@ app.MapPost("/", async (CreateReportRequest request, ILogger<Program> logger, Va
     {
         Status = StatusCode.Success,
         DocumentId = refDocId.ToString(),
-        Explanation = "Rapor talebi başarılı bir şekilde alındı"
+        Explanation = "Report request has been recorded successfully."
     };
     return Results.Json(response);
 })

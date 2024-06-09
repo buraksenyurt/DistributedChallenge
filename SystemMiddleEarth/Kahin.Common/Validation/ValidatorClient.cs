@@ -19,7 +19,7 @@ namespace Kahin.Common.Validation
 
         public async Task<bool> ValidateExpression(CreateReportRequest request)
         {
-            _logger.LogInformation("Audit fonksiyonu çalışıyor");
+            _logger.LogInformation("Audit function is working!");
             var payload = new
             {
                 Source = "KahinDomain",

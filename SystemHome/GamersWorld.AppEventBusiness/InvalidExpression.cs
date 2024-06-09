@@ -27,7 +27,7 @@ public class InvalidExpression
 
         return new BusinessResponse
         {
-            Message = "Rapor için kullanılan sorgu ifadesi doğrulanamadı",
+            Message = "Report expression doesn't validated.",
             StatusCode = StatusCode.InvalidExpression
         };
     }

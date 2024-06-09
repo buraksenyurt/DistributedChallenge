@@ -17,7 +17,7 @@ public class ExpressionValidator
     {
         if (string.IsNullOrEmpty(request.Expression))
         {
-            _logger.LogError("Expression boş veya null geldi");
+            _logger.LogError("Null or empty expression!");
             return new ExpressionCheckResponse
             {
                 IsValid = false
@@ -30,7 +30,7 @@ public class ExpressionValidator
         Random random = new();
         var value = random.Next(1, 9);
         var isValid = value % 7 != 0;
-        _logger.LogWarning("{Rakam}...Gelen ifade geçerli mi? {IsValid}", value, isValid);
+        _logger.LogWarning("{Number}...Is expression valid? {IsValid}", value, isValid);
         return new ExpressionCheckResponse
         {
             IsValid = isValid

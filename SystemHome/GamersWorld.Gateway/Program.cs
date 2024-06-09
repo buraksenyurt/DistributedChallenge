@@ -48,7 +48,7 @@ app.MapPost("/", (ReportStatusRequest request, RabbitMqService rabbitMQService, 
 
         rabbitMQService.PublishEvent(reportReadyEvent);
         logger.LogInformation(
-            "ReporReadyEvent gönderildi. TraceId: {TraceId}, DocumentId: {DocumentId}"
+            "ReporReadyEvent sent. TraceId: {TraceId}, DocumentId: {DocumentId}"
             , request.TraceId, request.DocumentId);
     }
     else if (request.StatusCode == (int)StatusCode.InvalidExpression)
@@ -62,7 +62,7 @@ app.MapPost("/", (ReportStatusRequest request, RabbitMqService rabbitMQService, 
         };
         rabbitMQService.PublishEvent(invalidExpressionEvent);
         logger.LogError(
-            "InvalidExpressionEvent gönderildi. TraceId: {TraceId}, Expression: {Expression}, Reason: {Reason}"
+            "InvalidExpressionEvent sent. TraceId: {TraceId}, Expression: {Expression}, Reason: {Reason}"
             , request.TraceId, request.Detail, request.StatusMessage);
     }
 

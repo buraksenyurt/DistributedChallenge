@@ -34,7 +34,7 @@ public class ReportDocumentAvailable
         return new BusinessResponse
         {
             StatusCode = StatusCode.ReportReady,
-            Message = "Rapor çekilebilir durumda"
+            Message = "Report is available."
         };
     }
 }

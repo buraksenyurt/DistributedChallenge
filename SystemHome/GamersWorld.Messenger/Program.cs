@@ -33,7 +33,7 @@ app.MapPost("/", (NewReportRequest request, RabbitMqService rabbitMQService, ILo
 
     if (!Validator.TryValidateObject(request, validationContext, validationResults, true))
     {
-        logger.LogError("Doğrulama hataları var!");
+        logger.LogError("Validation errors occurred!");
         var errors = validationResults
             .GroupBy(e => e.MemberNames.FirstOrDefault() ?? string.Empty)
             .ToDictionary(
@@ -61,7 +61,7 @@ app.MapPost("/", (NewReportRequest request, RabbitMqService rabbitMQService, ILo
 
     rabbitMQService.PublishEvent(reportRequestedEvent);
     logger.LogInformation(
-        "ReportRequestedEvent gönderildi. TraceId: {TraceId}, Expression: {Expression}"
+        "ReportRequestedEvent sent. TraceId: {TraceId}, Expression: {Expression}"
         , reportRequestedEvent.TraceId, reportRequestedEvent.Expression);
 
     var response = new BusinessResponse

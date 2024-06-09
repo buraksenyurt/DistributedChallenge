@@ -47,16 +47,17 @@ public class PostReportRequest
             {
                 return new BusinessResponse
                 {
-                    Message = $"Rapor talebi iletildi. DocumentId: {createReportResponse.DocumentId}",
+                    Message = $"Report request sent. DocumentId: {createReportResponse.DocumentId}",
                     StatusCode = StatusCode.Success,
                 };
             }
             else if (createReportResponse != null)
             {
-                _logger.LogError("Rapor talebi başarısız oldu");
+                _logger.LogError("Report request unsuccessful.");
                 return new BusinessResponse
                 {
-                    Message = !string.IsNullOrEmpty(createReportResponse.Explanation) ? createReportResponse.Explanation : "Eksik açıklama",
+                    Message = !string.IsNullOrEmpty(createReportResponse.Explanation) ? createReportResponse.Explanation 
+                    : "Empty explanation.",
                     StatusCode = StatusCode.Fail,
                 };
             }
@@ -64,7 +65,7 @@ public class PostReportRequest
 
         return new BusinessResponse
         {
-            Message = "Rapor talebi gönderimi başarısız",
+            Message = "Report request unsuccessful.",
             StatusCode = StatusCode.Fail,
         };
     }

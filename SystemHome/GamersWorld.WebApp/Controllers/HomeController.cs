@@ -27,7 +27,7 @@ public class HomeController : Controller
     {
         if (ModelState.IsValid)
         {
-            _logger.LogInformation("{ReportOwner} bir rapor talebinde bulundu.", report.Owner.ToString());
+            _logger.LogInformation("{ReportOwner} requested a new report.", report.Owner.ToString());
 
             var payload = new NewReportRequest
             {
@@ -36,7 +36,7 @@ public class HomeController : Controller
             };
 
             var response = await _messengerServiceClient.SendNewReportRequestAsync(payload);
-            _logger.LogInformation("Messenger servis cevabı {Response}", response);
+            _logger.LogInformation("Messenger service response is '{Response}'", response);
             if (response.StatusCode == Common.Enums.StatusCode.Success)
             {
                 return RedirectToAction("RequestConfirmed");

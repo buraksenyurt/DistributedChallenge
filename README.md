@@ -70,6 +70,7 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 - [ ] Uçtan uca testi otomatik olarak yapacak bir **RPA _(Robotik Process Automation)_** eklentisi konulabilir. Belki otomatik **UI** testleri için **Playwright** aracından yararlanılabilir.
 - [ ] Bazı servislerin ayakta olup olmadıklarını kontrol etmek için bu servislere **HealthCheck** fonksiyonları eklenebilir.
 - [ ] URL adresleri, **RabbitMQ** ortam bilgileri **(Development, Test, Pre-Production, Production)** gibi alanlar için daha güvenli bir ortamdan **(Secure Vault)** tedarik edilecek şekilde genel bir düzenlemeye gidilebilir.
+- [ ] Log mesajları veya Business Response nesnelerindeki metinsel ifadeler için çoklu dil desteği getirilebilir.
 - [ ] ...
 
 ## Runtime _(Standart)_

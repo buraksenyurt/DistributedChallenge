@@ -46,7 +46,7 @@ public class EventConsumer
 
         channel.BasicConsume(queue: "report_events_queue", autoAck: true, consumer: consumer);
 
-        Console.WriteLine("Kuyruk mesajları dinleniyor. Çıkmak için bir tuşa basın.");
+        Console.WriteLine("Listening event queue...Press any key to exit.");
         Console.ReadLine();
     }
 
@@ -84,7 +84,7 @@ public class EventConsumer
                 await factory.ExecuteEvent(invalidExpressionEvent);
                 break;
             default:
-                _logger.LogError("Event anlaşılamadı.");
+                _logger.LogError("Undefined Event");
                 break;
         }
     }
