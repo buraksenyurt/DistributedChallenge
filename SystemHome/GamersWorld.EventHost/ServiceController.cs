@@ -9,11 +9,13 @@ public static class ServiceController
         try
         {
             var response = await client.GetAsync("/health");
+
             return response.IsSuccessStatusCode;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Hedef servis için sağlık kontrolü başarısız !!!");
+
             return false;
         }
     }

@@ -103,6 +103,7 @@ app.MapPost("/", async (
     if (!expressionState)
     {
         logger.LogError("'{Expression}' is not valid!", request.Expression);
+
         return Results.Json(new CreateReportResponse
         {
             Status = StatusCode.InvalidExpression,
@@ -114,6 +115,7 @@ app.MapPost("/", async (
     if (!Guid.TryParse(request.TraceId, out var traceId))
     {
         logger.LogWarning("TraceId must be a valid GUID.");
+
         return Results.BadRequest(new { error = "TraceId must be a valid GUID." });
     }
 
@@ -140,6 +142,7 @@ app.MapPost("/", async (
         DocumentId = refDocId.ToString(),
         Explanation = "Report request has been recorded successfully."
     };
+
     return Results.Json(response);
 })
 .WithName("CreateReportRequest")

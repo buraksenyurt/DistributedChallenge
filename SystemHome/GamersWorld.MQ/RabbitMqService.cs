@@ -7,8 +7,7 @@ namespace GamersWorld.MQ;
 /*
     RabbitMq tarafına mesaj göndermek için kullanılan servis sınıfı
 */
-public class RabbitMqService
-    : IDisposable
+public class RabbitMqService : IDisposable
 {
     private readonly IConnection _connection;
     private readonly IModel _channel;

@@ -12,14 +12,10 @@ namespace GamersWorld.AppEventBusiness;
     System ABC'den System 123'e bir bilgilendirme yapılmakta. 
     Buna karşılık işletilecek fonksiyon aşağıdaki gibi.
 */
-public class InvalidExpression
-    : IEventDriver<InvalidExpressionEvent>
+public class InvalidExpression(ILogger<InvalidExpression> logger) : IEventDriver<InvalidExpressionEvent>
 {
-    private readonly ILogger<InvalidExpression> _logger;
-    public InvalidExpression(ILogger<InvalidExpression> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<InvalidExpression> _logger = logger;
+
     public async Task<BusinessResponse> Execute(InvalidExpressionEvent appEvent)
     {
         //TODO@buraksenyurt Must implement alert and warning mechanism

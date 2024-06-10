@@ -31,8 +31,10 @@ namespace Kahin.Common.Validation
             {
                 var evalResult = await evalResponse.Content.ReadFromJsonAsync<ExpressionCheckResponse>();
                 _logger.LogInformation("Eval Result; {Response}", evalResult);
+
                 return evalResult != null && evalResult.IsValid;
             }
+
             return false;
         }
     }
