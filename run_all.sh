@@ -6,8 +6,11 @@ gnome-terminal --title="Reporting Gateway" -- bash -c "cd SystemMiddleEarth/Kahi
 # Start Messenger
 gnome-terminal --title="Messenger Service" -- bash -c "cd SystemHome/GamersWorld.Messenger && dotnet run; exec bash"
 
-# Start Home System EventHost
+# Start Home EventHost
 gnome-terminal --title="SYS Home Event Consumer Host" -- bash -c "cd SystemHome/GamersWorld.EventHost && dotnet run; exec bash"
+
+# Start Home Gateway
+gnome-terminal --title="SYS Home Gateway Service" -- bash -c "cd SystemHome/GamersWorld.Gateway && dotnet run; exec bash"
 
 # Start Eval.Api
 gnome-terminal --title="Expression Auditor" -- bash -c "cd SystemHAL/Eval.AuditApi && dotnet run; exec bash"

@@ -135,7 +135,7 @@ app.MapPost("/", async (
         DocumentId = refDocId,
         Expression = request.Expression
     };
-    await redisService.AddReportPayloadAsync("reportStream", payload);
+    await redisService.AddReportPayloadAsync("reportStream", payload, TimeSpan.FromMinutes(60));
 
     var response = new CreateReportResponse
     {

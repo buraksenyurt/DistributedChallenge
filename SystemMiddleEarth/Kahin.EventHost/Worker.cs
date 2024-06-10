@@ -25,7 +25,7 @@ public class Worker(
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            var eventData = await _redisService.ReadReportPayloadAsync("reportStream");
+            var eventData = await _redisService.Pop("reportStream");
             if (eventData != null)
             {
                 _logger.LogInformation("Received eventData: {EventData}", eventData);
@@ -36,13 +36,13 @@ public class Worker(
                     StatusCode = (int)StatusCode.ReportReady,
                     StatusMessage = "Report is ready and live for 60 minutes",
                     DocumentId = eventData.DocumentId.ToString(),
+                    Detail = ""
                 };
-                var response = await _httpGatewayClient.Post(_gatewayProxyHostAddress, payload);
-
+                var response = await _httpGatewayClient.Post(_gatewayProxyHostAddress, payload);                
                 _logger.LogInformation("Home Gateway API Response: {Response}", response);
             }
 
-            await Task.Delay(1000, stoppingToken);
+            await Task.Delay(10000, stoppingToken);
         }
     }
 }
