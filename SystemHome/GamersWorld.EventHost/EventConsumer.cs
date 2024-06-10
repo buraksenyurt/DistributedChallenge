@@ -8,19 +8,12 @@ using RabbitMQ.Client.Events;
 
 namespace GamersWorld.EventHost;
 
-public class EventConsumer
-{
-    private readonly IConnectionFactory _connectionFactory;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<EventConsumer> _logger;
-
-    public EventConsumer(IConnectionFactory connectionFactory, IServiceProvider serviceProvider,
+public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvider serviceProvider,
         ILogger<EventConsumer> logger)
-    {
-        _connectionFactory = connectionFactory;
-        _serviceProvider = serviceProvider;
-        _logger = logger;
-    }
+{
+    private readonly IConnectionFactory _connectionFactory = connectionFactory;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly ILogger<EventConsumer> _logger = logger;
 
     public void Run()
     {

@@ -3,21 +3,17 @@ using Eval.AuditLib.Model;
 using Microsoft.Extensions.Logging;
 
 namespace Eval.Lib;
-
-public class ExpressionValidator
-    : IExpressionValidator
+// .net 8 ile gelen primary constructor özelliği
+public class ExpressionValidator(ILogger<ExpressionValidator> logger) : IExpressionValidator
 {
-    private readonly ILogger<ExpressionValidator> _logger;
-    public ExpressionValidator(ILogger<ExpressionValidator> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<ExpressionValidator> _logger = logger;
 
     public ExpressionCheckResponse IsValid(ExpressionCheckRequest request)
     {
         if (string.IsNullOrEmpty(request.Expression))
         {
             _logger.LogError("Null or empty expression!");
+
             return new ExpressionCheckResponse
             {
                 IsValid = false
@@ -31,6 +27,7 @@ public class ExpressionValidator
         var value = random.Next(1, 9);
         var isValid = value % 7 != 0;
         _logger.LogWarning("{Number}...Is expression valid? {IsValid}", value, isValid);
+
         return new ExpressionCheckResponse
         {
             IsValid = isValid

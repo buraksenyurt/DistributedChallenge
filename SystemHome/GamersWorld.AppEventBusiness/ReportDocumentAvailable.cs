@@ -15,14 +15,10 @@ namespace GamersWorld.AppEventBusiness;
     Kuyruk dinleyicisi bu event'i yakalarsa aşağıdaki sınıfa ait nesne örneğini kullanır.
     Execute içerisindeki işlemler yapılır.
 */
-public class ReportDocumentAvailable
-    : IEventDriver<ReportReadyEvent>
+public class ReportDocumentAvailable(ILogger<ReportDocumentAvailable> logger) : IEventDriver<ReportReadyEvent>
 {
-    private readonly ILogger<ReportDocumentAvailable> _logger;
-    public ReportDocumentAvailable(ILogger<ReportDocumentAvailable> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<ReportDocumentAvailable> _logger = logger;
+
     public async Task<BusinessResponse> Execute(ReportReadyEvent appEvent)
     {
         //TODO@buraksenyurt Must implement Get Report Document
