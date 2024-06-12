@@ -30,19 +30,39 @@ public class Worker(
             {
                 _logger.LogInformation("Received eventData: {EventData}", eventData);
 
-                var payload = new ReportStatusRequest
+                switch (eventData.EventType)
                 {
-                    TraceId = eventData.TraceId,
-                    StatusCode = (int)StatusCode.ReportReady,
-                    StatusMessage = "Report is ready and live for 60 minutes",
-                    DocumentId = eventData.DocumentId.ToString(),
-                    Detail = ""
-                };
-                var response = await _httpGatewayClient.Post(_gatewayProxyHostAddress, payload);                
-                _logger.LogInformation("Home Gateway API Response: {Response}", response);
+                    case EventType.ReportRequested:
+                        await PrepareReportAsync(eventData, stoppingToken);
+                        break;
+                    case EventType.ReportReady:
+                        var payload = new ReportStatusRequest
+                        {
+                            TraceId = eventData.TraceId,
+                            StatusCode = (int)StatusCode.ReportReady,
+                            StatusMessage = "Report is ready and live for 60 minutes",
+                            DocumentId = eventData.DocumentId.ToString(),
+                            Detail = ""
+                        };
+                        var response = await _httpGatewayClient.Post(_gatewayProxyHostAddress, payload);
+                        _logger.LogInformation("Home Gateway API Response: {Response}", response);
+                        break;
+                    case EventType.Error:
+                        break;
+                }
             }
 
             await Task.Delay(10000, stoppingToken);
         }
+    }
+
+    public async Task PrepareReportAsync(RedisPayload payload, CancellationToken cancellationToken)
+    {
+        if (!cancellationToken.IsCancellationRequested)
+        {
+            Thread.Sleep(60 * 1000); // Sembolik olarak bir gecikme söz konusu
+        }
+        payload.EventType = EventType.ReportReady;
+        await redisService.AddReportPayloadAsync("reportStream", payload, TimeSpan.FromMinutes(60));
     }
 }

@@ -133,8 +133,10 @@ app.MapPost("/", async (
     {
         TraceId = request.TraceId,
         DocumentId = refDocId,
-        Expression = request.Expression
+        Expression = request.Expression,
+        EventType = EventType.ReportRequested
     };
+    
     await redisService.AddReportPayloadAsync("reportStream", payload, TimeSpan.FromMinutes(60));
 
     var response = new CreateReportResponse
