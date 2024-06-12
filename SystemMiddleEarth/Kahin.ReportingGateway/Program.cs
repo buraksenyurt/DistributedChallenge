@@ -5,9 +5,14 @@ using Kahin.Common.Requests;
 using Kahin.Common.Responses;
 using Kahin.Common.Validation;
 using Kahin.MQ;
+using Kahin.ReportingGateway.SecretManagement;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
+
+SecretStoreService secretsService = new();
+string redisConnectionString = await secretsService.GetSecretAsync("RedisConnectionString");
+string evalApiServiceAddress = await secretsService.GetSecretAsync("EvalServiceApiAddress");
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -19,14 +24,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Services.AddHttpClient("EvalApi", client =>
 {
-    var reportingServiceHostAddress = configuration["EvalServiceApi:Address"];
-    client.BaseAddress = new Uri(reportingServiceHostAddress ?? "http://localhost:5147/api");
+    //var reportingServiceHostAddress = configuration["EvalServiceApi:Address"];
+    client.BaseAddress = new Uri($"http://{evalApiServiceAddress}");
 });
 builder.Services.AddTransient<ValidatorClient>();
 builder.Services.AddSingleton<IRedisService>(sp =>
 {
-    var redisConnectionString = configuration["Redis:ConnectionString"];
-    return new RedisService(redisConnectionString ?? "localhost:6379");
+    //var redisConnectionString = configuration["Redis:ConnectionString"];
+    return new RedisService(redisConnectionString);
 });
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -136,7 +141,7 @@ app.MapPost("/", async (
         Expression = request.Expression,
         EventType = EventType.ReportRequested
     };
-    
+
     await redisService.AddReportPayloadAsync("reportStream", payload, TimeSpan.FromMinutes(60));
 
     var response = new CreateReportResponse

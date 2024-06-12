@@ -14,3 +14,14 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
+
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - SERVICES=secretsmanager
+      - DEBUG=1
+    volumes:
+      - "./localstack:/localstack"
