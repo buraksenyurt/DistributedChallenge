@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Kahin.Common.Enums;
 using Kahin.Common.Requests;
 using StackExchange.Redis;
 

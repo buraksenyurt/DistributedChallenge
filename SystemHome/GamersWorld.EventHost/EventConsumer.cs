@@ -45,12 +45,12 @@ public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvide
 
     private async Task Handle(string eventType, byte[] eventMessage)
     {
-        _logger.LogInformation("Event: #{EvenType} , Message: {EventMessage}", eventType, eventMessage);
+        _logger.LogInformation("Event: {EventType}, Message: {EventMessage}", eventType, eventMessage);
 
         using var scope = _serviceProvider.CreateScope();
         var factory = scope.ServiceProvider.GetRequiredService<EventHandlerFactory>();
 
-        // Kuyruktan yakalanan Event ve mesaj içeriği burada değerlendirlir
+        // Kuyruktan yakalanan Event ve mesaj içeriği burada değerlendirilir
         // eventType türüne göre JSON formatından döndürülen mesaj içeriği
         // factory nesnesi üzerinden uygun business nesnesinin execute fonksiyonuna kadar gönderilir
 
@@ -58,23 +58,38 @@ public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvide
         {
             case nameof(ReportRequestedEvent):
                 var reportRequestedEvent = JsonSerializer.Deserialize<ReportRequestedEvent>(eventMessage);
-                await factory.ExecuteEvent(reportRequestedEvent);
+                if (reportRequestedEvent != null)
+                {
+                    await factory.ExecuteEvent(reportRequestedEvent);
+                }
                 break;
             case nameof(ReportReadyEvent):
                 var reportReadyEvent = JsonSerializer.Deserialize<ReportReadyEvent>(eventMessage);
-                await factory.ExecuteEvent(reportReadyEvent);
+                if (reportReadyEvent != null)
+                {
+                    await factory.ExecuteEvent(reportReadyEvent);
+                }
                 break;
             case nameof(ReportIsHereEvent):
                 var reportIsHereEvent = JsonSerializer.Deserialize<ReportIsHereEvent>(eventMessage);
-                await factory.ExecuteEvent(reportIsHereEvent);
+                if (reportIsHereEvent != null)
+                {
+                    await factory.ExecuteEvent(reportIsHereEvent);
+                }
                 break;
             case nameof(ReportProcessCompletedEvent):
                 var reportProcessCompletedEvent = JsonSerializer.Deserialize<ReportProcessCompletedEvent>(eventMessage);
-                await factory.ExecuteEvent(reportProcessCompletedEvent);
+                if (reportProcessCompletedEvent != null)
+                {
+                    await factory.ExecuteEvent(reportProcessCompletedEvent);
+                }
                 break;
             case nameof(InvalidExpressionEvent):
                 var invalidExpressionEvent = JsonSerializer.Deserialize<InvalidExpressionEvent>(eventMessage);
-                await factory.ExecuteEvent(invalidExpressionEvent);
+                if (invalidExpressionEvent != null)
+                {
+                    await factory.ExecuteEvent(invalidExpressionEvent);
+                }
                 break;
             default:
                 _logger.LogError("Undefined Event");
