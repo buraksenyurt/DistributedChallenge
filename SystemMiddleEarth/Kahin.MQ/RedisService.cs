@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Kahin.Common.Enums;
 using Kahin.Common.Requests;
 using StackExchange.Redis;
 
@@ -31,11 +32,11 @@ public class RedisService : IRedisService
         if (entries.Length > 0)
         {
             var jsonPayload = entries[0].Values[0].Value;
-
-            return JsonSerializer.Deserialize<RedisPayload>(jsonPayload);
+            var payload = JsonSerializer.Deserialize<RedisPayload>(jsonPayload);
+            return payload ?? RedisPayload.Default();
         }
 
-        return null;
+        return RedisPayload.Default();
     }
 
     public async Task<RedisPayload> Pop(string streamName)
@@ -46,9 +47,10 @@ public class RedisService : IRedisService
             var jsonPayload = entries[0].Values[0].Value;
             await _db.StreamDeleteAsync(streamName, [entries[0].Id]);
 
-            return JsonSerializer.Deserialize<RedisPayload>(jsonPayload);
+            var payload = JsonSerializer.Deserialize<RedisPayload>(jsonPayload);
+            return payload ?? RedisPayload.Default();
         }
 
-        return null;
+        return RedisPayload.Default();
     }
 }

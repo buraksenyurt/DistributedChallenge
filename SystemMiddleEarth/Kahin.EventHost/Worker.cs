@@ -48,6 +48,7 @@ public class Worker(
                         _logger.LogInformation("Home Gateway API Response: {Response}", response);
                         break;
                     case EventType.Error:
+                        _logger.LogError("Error on Redis event streaming. {EventData}", eventData);
                         break;
                 }
             }
