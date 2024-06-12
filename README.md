@@ -190,7 +190,7 @@ Projenin teknik borçlanma değerlerini ölçümlemek ve kod kalitesini iyileşt
 sudo docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
 ```
 
-Kurulum sonrası **http://localhost:9000** adresine gidilir ve standart kullanıcı adı ve şifre ile giriş yapılır _(admin,admin)_ Sistem ilk girişte şifre değişikliği istenebilir. Sonrasında bir proje oluşturulur. Bende **DistributedChallengeProject** isimli bir proje oluşturdum ve .Net Core taraması yapması için gerekli adımları işlettim. SQ, proje için bir key üretecektir. Bu key değerinden yararlanılarak tarama aşağıdaki terminal komutları ile başlatılabilir. Zaten anahtar değer üretimi sonrası SQ hangi komutları çalıştıracağınızı dokümanda gösterir.
+Kurulum sonrası **localhost:9000** adresine gidilir ve standart kullanıcı adı ve şifre ile giriş yapılır _(admin,admin)_ Sistem ilk girişte şifre değişikliği istenebilir. Sonrasında bir proje oluşturulur. Bende **DistributedChallengeProject** isimli bir proje oluşturdum ve .Net Core taraması yapması için gerekli adımları işlettim. SQ, proje için bir key üretecektir. Bu key değerinden yararlanılarak tarama aşağıdaki terminal komutları ile başlatılabilir. Zaten anahtar değer üretimi sonrası SQ hangi komutları çalıştıracağınızı dokümanda gösterir.
 
 ```bash
 # Sistem yüklü olması gereken araçlardan birisi
@@ -211,6 +211,35 @@ dotnet sonarscanner end /d:sonar.token="sqp_6be82d1ead44e1675b09dc6f39456909a6f4
 ![Sonar Scanner Day 1](./images/sonar_scanner_day_1.png)
 
 Tarama yaklaşık 1200 satır kod tespiti yapmış. Bunun %3.1'inin tekrarlı kodlardan oluştuğu ifade ediliyor _(Duplicate Codes)_ Kodun güvenilirliği ile ilgili olarak 21 sorunlu nokta mevcut. Ayrıca bakımı maliyeti çıkartacak derecede sıkıntılı 41 maddemiz bulunuyor. Bunlardan birisinin etkisi yüksek riskli olarak işaretlenmiş. Ne yazık ki şu an itibariyle Code Coverage değerimiz %0.0. Dolayısıyla birim testler ile projenin kod kalitesini güçlendirmemiz lazım. Dolayısıyla proje kodlarımız henüz birkaç günlük yol katetmiş olmasına rağmen teknik borç bırakma eğilimi gösteriyor.
+
+## Secure Vault Entegrasyonu
+
+Solution içerisinde yer alan birçok parametre genelde appsettings konfigurasyonlarından besleniyor. Burada URL, username, password gibi birçok hassas bilgil yer alabilir. Bu bilgileri daha güvenli bir ortamda tutmak tercih edilen bir yöntemdir. Cloud provider'larda bu amaçla kullanılabilecek birçok Vault ürünü söz konusu. Ben bu çalışmada [HashiCorp'un Go ile yazılmış Vault](https://github.com/hashicorp/vault) ürününü tercih ettim. Her zaman ki gibi onu da docker imajı ile kullanıyorum. Bu nedenle docker-compose dosyasında değişiklik söz konusu.
+
+Image çalıştıktan sonra Container içerisine terminal açıp secret key:value değerlerini ekleyebilir, silebilir, listeleyebilir ve başka yönetsel işlemleri gerçekleştirebiliriz. İşte örnek bazı komutlar;
+
+```bash
+# Container'a terminal açmak için
+sudo docker exec -it distributedchallenge-vault-1 sh
+
+# Root ile login
+export VAULT_ADDR='http://localhost:8200'
+vault login root
+
+# Örnek bir key:value eklenmesi
+vault kv put secret/RedisConnectionString value="localhost:6379"
+
+# Eklenmiş key:value bilgisinin görüntülenmesi
+vault kv get secret/RedisConnectionString
+
+# Eklenmiş bir key değerinin silinmesi
+vault kv delete secret/RedisConnectionString
+
+# Listeleme
+vault kv list secret/
+```
+
+![Vault Runtime](/images/vault_01.png)
 
 ## Zorluk Seviyesini Artırma
 
