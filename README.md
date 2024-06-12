@@ -214,29 +214,36 @@ Tarama yaklaşık 1200 satır kod tespiti yapmış. Bunun %3.1'inin tekrarlı ko
 
 ## Secure Vault Entegrasyonu
 
-Solution içerisinde yer alan birçok parametre genelde appsettings konfigurasyonlarından besleniyor. Burada URL, username, password gibi birçok hassas bilgil yer alabilir. Bu bilgileri daha güvenli bir ortamda tutmak tercih edilen bir yöntemdir. Cloud provider'larda bu amaçla kullanılabilecek birçok Vault ürünü söz konusu. Ben bu çalışmada [HashiCorp'un Go ile yazılmış Vault](https://github.com/hashicorp/vault) ürününü tercih ettim. Her zaman ki gibi onu da docker imajı ile kullanıyorum. Bu nedenle docker-compose dosyasında değişiklik söz konusu.
-
-Image çalıştıktan sonra Container içerisine terminal açıp secret key:value değerlerini ekleyebilir, silebilir, listeleyebilir ve başka yönetsel işlemleri gerçekleştirebiliriz. İşte örnek bazı komutlar;
+Solution içerisinde yer alan birçok parametre genelde appsettings konfigurasyonlarından besleniyor. Burada URL, username, password gibi birçok hassas bilgil yer alabilir. Bu bilgileri daha güvenli bir ortamda tutmak tercih edilen bir yöntemdir. Cloud provider'larda bu amaçla kullanılabilecek birçok Vault ürünü söz konusu. Bunlardan birisi ve ilk denediğim Hashicorp'un Vault ürünü idi. Ancak bir sebepten .net nuget aracından eklenen key değerlerini çekmeyi başaramadım. Bunun üzerine alternatif bir yaklaşım aradım ve [LocalStack'te](https://github.com/localstack/localstack) karar kıldım. Bu development testleri için yeterli. Localstack kısaca bir cloud service emulator olarak tanımlanıyor. Örneğin AWS Cloud Provider'a bağlanmadan local ortamda AWS'nin birçok özelliğini kullanabiliyoruz. Ben AWS'nin Secrets Manager hizmetini local ortamda kullanmaktayım. İlk denemeyi System Middle Earth'teki Kahin.ReportingGateway üzerinde yaptım. Bu uygulama Redis ve SystemHAL'deki EvalApi adres bilgilerini appsettings'ten okuyor. Bunların vault üstünden karşılanması için gerekli değişiklikler yapıldı.
 
 ```bash
-# Container'a terminal açmak için
-sudo docker exec -it distributedchallenge-vault-1 sh
+# LocalStack docker-compose ile ayağa kalktıktan sonra aws komut satırı aracı ile yönetilebilir
+# Ubuntu tarafında bu kurulum için şu adımlar izlenebilir
+sudo apt update
+# yoksa python3 yüklenebilir
+sudo apt install python3 python3-pip -y 
+pip3 install awscli --upgrade --user
+echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+aws --version
 
-# Root ile login
-export VAULT_ADDR='http://localhost:8200'
-vault login root
+# Örnek secret key:value çiflerinin eklenmesi için
+aws configure set aws_access_key_id test
+aws configure set aws_secret_access_key test
+aws configure set region eu-west-1
 
-# Örnek bir key:value eklenmesi
-vault kv put secret/RedisConnectionString value="localhost:6379"
+aws --endpoint-url=http://localhost:4566 secretsmanager create-secret --name RedisConnectionString --secret-string "localhost:6379"
+aws --endpoint-url=http://localhost:4566 secretsmanager create-secret --name EvalServiceApiAddress --secret-string "localhost:5147/api"
 
-# Eklenmiş key:value bilgisinin görüntülenmesi
-vault kv get secret/RedisConnectionString
+# Secret bilgilerini görmek için (tümü)
+aws --endpoint-url=http://localhost:4566 secretsmanager list-secrets
 
-# Eklenmiş bir key değerinin silinmesi
-vault kv delete secret/RedisConnectionString
+# Belirli id değerine sahip olanların değerlerini görmek için
+aws --endpoint-url=http://localhost:4566 secretsmanager get-secret-value --secret-id RedisConnectionString
+aws --endpoint-url=http://localhost:4566 secretsmanager get-secret-value --secret-id EvalServiceApiAddress
 
-# Listeleme
-vault kv list secret/
+# Bellir bir secret içeriğini silmek için
+aws --endpoint-url=http://localhost:4566 secretsmanager delete-secret --secret-id RedisConnectionString
 ```
 
 ![Vault Runtime](/images/vault_01.png)
