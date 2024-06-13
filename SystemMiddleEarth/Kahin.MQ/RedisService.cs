@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Kahin.Common.Requests;
+using Kahin.Common.Services;
 using StackExchange.Redis;
 
 namespace Kahin.MQ;
@@ -8,9 +9,12 @@ public class RedisService : IRedisService
 {
     private readonly ConnectionMultiplexer _redis;
     private readonly IDatabase _db;
+    private readonly ISecretStoreService _secretStoreService;
 
-    public RedisService(string connectionString)
+    public RedisService(ISecretStoreService secretStoreService)
     {
+        _secretStoreService = secretStoreService;
+        var connectionString = _secretStoreService.GetSecretAsync("RedisConnectionString").GetAwaiter().GetResult();
         _redis = ConnectionMultiplexer.Connect(connectionString);
         _db = _redis.GetDatabase();
     }
