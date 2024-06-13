@@ -1,8 +1,10 @@
 namespace Kahin.Common.Enums;
 
-public enum EventType{
+public enum EventType
+{
+    Error,
+    NotActive,
     ReportRequested,
     ReportReady,
-    Error,
     ReportLoaded
 }

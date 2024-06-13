@@ -5,21 +5,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Kahin.Common.Services;
 
-public class HomeGatewayClientService : IHomeGatewayClientService
+public class HomeGatewayClientService(HttpClient httpClient, ILogger<HomeGatewayClientService> logger, ISecretStoreService secretStoreService) : IHomeGatewayClientService
 {
-    private readonly HttpClient _httpClient;
-    private readonly ILogger<HomeGatewayClientService> _logger;
-    public HomeGatewayClientService(HttpClient httpClient, ILogger<HomeGatewayClientService> logger)
-    {
-        _httpClient = httpClient;
-        _logger = logger;
-    }
-    public async Task<string> Post(string url, ReportStatusRequest request)
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly ILogger<HomeGatewayClientService> _logger = logger;
+    private readonly ISecretStoreService _secretStoreService = secretStoreService;
+
+    public async Task<string> Post(ReportStatusRequest request)
     {
         var payload = JsonSerializer.Serialize(request);
+        var url = await _secretStoreService.GetSecretAsync("HomeGatewayApiAddress");
         _logger.LogInformation("Payload for sending {Payload}", payload);
         var content = new StringContent(payload, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync(url, content);
+        var response = await _httpClient.PostAsync($"http://{url}", content);
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadAsStringAsync();

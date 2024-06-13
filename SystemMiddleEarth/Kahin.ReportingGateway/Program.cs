@@ -3,9 +3,9 @@ using Kahin.Common.Entities;
 using Kahin.Common.Enums;
 using Kahin.Common.Requests;
 using Kahin.Common.Responses;
+using Kahin.Common.Services;
 using Kahin.Common.Validation;
 using Kahin.MQ;
-using Kahin.ReportingGateway.SecretManagement;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,23 +14,16 @@ SecretStoreService secretsService = new();
 string redisConnectionString = await secretsService.GetSecretAsync("RedisConnectionString");
 string evalApiServiceAddress = await secretsService.GetSecretAsync("EvalServiceApiAddress");
 
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", reloadOnChange: true, optional: false)
-    .Build();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Services.AddHttpClient("EvalApi", client =>
 {
-    //var reportingServiceHostAddress = configuration["EvalServiceApi:Address"];
     client.BaseAddress = new Uri($"http://{evalApiServiceAddress}");
 });
 builder.Services.AddTransient<ValidatorClient>();
 builder.Services.AddSingleton<IRedisService>(sp =>
 {
-    //var redisConnectionString = configuration["Redis:ConnectionString"];
     return new RedisService(redisConnectionString);
 });
 builder.Logging.ClearProviders();

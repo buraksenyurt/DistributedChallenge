@@ -20,6 +20,6 @@ public class RedisPayload
         TraceId = null,
         DocumentId = new ReferenceDocumentId(),
         Expression = null,
-        EventType = EventType.Error
+        EventType = EventType.NotActive
     };
 }

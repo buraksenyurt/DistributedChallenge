@@ -2,7 +2,6 @@ using Kahin.Common.Enums;
 using Kahin.Common.Requests;
 using Kahin.Common.Services;
 using Kahin.MQ;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -11,13 +10,12 @@ namespace Kahin.EventHost;
 public class Worker(
     IRedisService redisService
         , IHomeGatewayClientService httpGatewayClient
-        , IConfiguration configuration, ILogger<Worker> logger)
+        , ILogger<Worker> logger)
         : BackgroundService
 {
     private readonly IRedisService _redisService = redisService;
     private readonly IHomeGatewayClientService _httpGatewayClient = httpGatewayClient;
     private readonly ILogger<Worker> _logger = logger;
-    private readonly string _gatewayProxyHostAddress = configuration["HomeGatewayApi:Address"] ?? "http://localhost:5102";
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -44,7 +42,7 @@ public class Worker(
                             DocumentId = eventData.DocumentId.ToString(),
                             Detail = ""
                         };
-                        var response = await _httpGatewayClient.Post(_gatewayProxyHostAddress, payload);
+                        var response = await _httpGatewayClient.Post(payload);
                         _logger.LogInformation("Home Gateway API Response: {Response}", response);
                         break;
                     case EventType.Error:
