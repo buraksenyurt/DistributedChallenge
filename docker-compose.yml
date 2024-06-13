@@ -24,4 +24,7 @@ services:
       - SERVICES=secretsmanager
       - DEBUG=1
     volumes:
-      - "./localstack:/localstack"
+      - "localstack_data:/var/lib/localstack"
+
+volumes:
+  localstack_data:
