@@ -46,13 +46,13 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 
 ## Solution için Aday Uygulama Türleri
 
-- Rapor formu girilen arabirim basit bir Asp.Net MVC uygulaması olabilir.
-- Rapor taleplerine ait olayları oluşturup gönderen Event Trigger Asp.Net Web Api olabilir.
-- Asenkron mesaj kuyruğu için RabbitMQ kullanılabilir. İşi kolaylaştırmak adına RabbitMQ bir Docker Container ile işletilebilir.
-- Event Consumer/Publisher Service(Gamersworld.EventHost) tarafı esas itibariyle rapor talebi, rapor alındı ve rapor hazır gibi aksiyonları sürekli dinleyen ve farklı aksiyonları tetikleyen bir ara katman gibi duruyor. Sürekli çalışır konumda olan bir process olması ve farklı gerçekleşen aksiyonlar için başka bağımlılıkları tetikleyebilecek bir yapıda tasarlanması iyi olabilir. Bu anlamda sürekli çalışan dinleyici ve aksiyonları gerçekleştiren bir kütüphane topluluğuna ihtiyaç duyabiliriz. Yani host uygulamanın hangi olay gerçekleştiğinde hangi aksiyonları alacağını belki bir DI Container üstünden çözümleyerek çalışıyor olması gerekebilir. Bu durumda üzerinde durduğumuz bu Challenge içerisindeki başka bir Challenge olarak karşımıza çıkıyor.
-- External Reader Service(GamersWorld.Gateway) aslında Reporting App Service(Kahin.Gateway)'in tüketilmesi için açılmış bir Endpoint sağlayıcı rolünde. Onu da ayrı bir Web API hizmeti olarak tasarlayabiliriz.
-- Reporting App Service(Kahin.Gateway) ve Reporting File Service birer Web API hizmeti olarak tasarlanabilirler. Local Storage olarak senaryoyu kolayca uygulayabilmek adına fiziki dosya sistemini kullanacaklarını düşünebiliriz. Yani hazırlanması bir süre alacak PDF içeriğini fiziki diske kaydetip buradan okuyarak External Reader Service(GamersWorld.Gateway)'e iletebilirler.
-- Report Trace Service uygulaması da esasında sürekli ayakta olması ve ReportIsHere olayını dinlemesi gereken bir konumadır. Bu anlamda sürekli çalışan bir Console uygulaması olarak da tasarlanabilir.
+- Rapor formu girilen arabirim basit bir **Asp.Net MVC** uygulaması olabilir.
+- Rapor taleplerine ait olayları oluşturup gönderen **Event Trigger Asp.Net Web Api** olabilir.
+- Asenkron mesaj kuyruğu için **RabbitMQ** kullanılabilir. İşi kolaylaştırmak adına RabbitMQ bir **Docker Container **ile işletilebilir.
+- **Event Consumer/Publisher Service(Gamersworld.EventHost)** tarafı esas itibariyle rapor talebi, rapor alındı ve rapor hazır gibi aksiyonları sürekli dinleyen ve farklı aksiyonları tetikleyen bir ara katman gibi duruyor. Sürekli çalışır konumda olan bir process olması ve farklı gerçekleşen aksiyonlar için başka bağımlılıkları tetikleyebilecek bir yapıda tasarlanması iyi olabilir. Bu anlamda sürekli çalışan dinleyici ve aksiyonları gerçekleştiren bir kütüphane topluluğuna ihtiyaç duyabiliriz. Yani host uygulamanın hangi olay gerçekleştiğinde hangi aksiyonları alacağını belki bir DI Container üstünden çözümleyerek çalışıyor olması gerekebilir. Bu durumda üzerinde durduğumuz bu Challenge içerisindeki başka bir Challenge olarak karşımıza çıkıyor.
+- **External Reader Service(GamersWorld.Gateway)** aslında **Reporting App Service(Kahin.Gateway)**'in tüketilmesi için açılmış bir Endpoint sağlayıcı rolünde. Onu da ayrı bir Web API hizmeti olarak tasarlayabiliriz.
+- **Reporting App Service(Kahin.Gateway)** ve **Reporting File Service** birer Web API hizmeti olarak tasarlanabilirler. Local Storage olarak senaryoyu kolayca uygulayabilmek adına fiziki dosya sistemini kullanacaklarını düşünebiliriz. Yani hazırlanması bir süre alacak PDF içeriğini fiziki diske kaydetip buradan okuyarak **External Reader Service(GamersWorld.Gateway)**'e iletebilirler.
+- **Report Trace Service** uygulaması da esasında sürekli ayakta olması ve ReportIsHere olayını dinlemesi gereken bir konumadır. Bu anlamda sürekli çalışan bir **Console** uygulaması olarak da tasarlanabilir.
 
   **Not:** Dikkat edileceği üzere Event Consumer/Publisher(Gamersworld.EventHost) olarak araya koyduğumuz katman bazı olaylar ile ilgili olarak bir takım aksiyonlar alıyor. Örneğin ReportRequestEvent gerçekleştiğinde POST ile bir dış servise talep gönderiyor ve ReportIsHereEvent gerçekleştiğinde de GET Report ile PDF çekip Back Office tarafındaki Local Storage'a kaydediyor. Dolayısıyla bir event karşılığında bir takım aksiyonlar icra ediyor. Bunları A event'i için şu Interface implementasyonunu çağır şeklinde başka bir katmana alarak runtime'da çözümlenebilir bağımlılıkar haline getirebilir ve böylece runtime çalışıyorken yeni event-aksiyon bağımlılıklarını sisteme dahil edebiliriz belki de. Dolayısıyla aradaki Event Consumer/Publisher(Gamersworld.EventHost)'ın tasarımı oldukça önemli.
 
@@ -69,8 +69,8 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 - [ ] Tüm servisler **HTTPS** protokolünde çalışacak hale getirilebilir.
 - [ ] Uçtan uca testi otomatik olarak yapacak bir **RPA _(Robotik Process Automation)_** eklentisi konulabilir. Belki otomatik **UI** testleri için **Playwright** aracından yararlanılabilir.
 - [ ] Bazı servislerin ayakta olup olmadıklarını kontrol etmek için bu servislere **HealthCheck** fonksiyonları eklenebilir.
-- [ ] URL adresleri, **RabbitMQ** ortam bilgileri **(Development, Test, Pre-Production, Production)** gibi alanlar için daha güvenli bir ortamdan **(Secure Vault)** tedarik edilecek şekilde genel bir düzenlemeye gidilebilir.
-- [ ] Log mesajları veya Business Response nesnelerindeki metinsel ifadeler için çoklu dil desteği getirilebilir.
+- [x] URL adresleri, **RabbitMQ** ortam bilgileri **(Development, Test, Pre-Production, Production)** gibi alanlar için daha güvenli bir ortamdan **(Hashicorp Vault, AWS Secrets Manager, Azure Key Vault, Google Cloud Secret Manager, CyberArk Conjur vb)** tedarik edilecek şekilde genel bir düzenlemeye gidilebilir.
+- [ ] Log mesajları veya **Business Response** nesnelerindeki metinsel ifadeler için çoklu dil desteği _(Multilanguage Support)_ getirilebilir.
 - [ ] ...
 
 ## Runtime _(Standart)_
@@ -214,7 +214,7 @@ Tarama yaklaşık 1200 satır kod tespiti yapmış. Bunun %3.1'inin tekrarlı ko
 
 ## Secure Vault Entegrasyonu
 
-Solution içerisinde yer alan birçok parametre genelde appsettings konfigurasyonlarından besleniyor. Burada URL, username, password gibi birçok hassas bilgil yer alabilir. Bu bilgileri daha güvenli bir ortamda tutmak tercih edilen bir yöntemdir. Cloud provider'larda bu amaçla kullanılabilecek birçok Vault ürünü söz konusu. Bunlardan birisi ve ilk denediğim Hashicorp'un Vault ürünü idi. Ancak bir sebepten .net nuget aracından eklenen key değerlerini çekmeyi başaramadım. Bunun üzerine alternatif bir yaklaşım aradım ve [LocalStack'te](https://github.com/localstack/localstack) karar kıldım. Bu development testleri için yeterli. Localstack kısaca bir cloud service emulator olarak tanımlanıyor. Örneğin AWS Cloud Provider'a bağlanmadan local ortamda AWS'nin birçok özelliğini kullanabiliyoruz. Ben AWS'nin Secrets Manager hizmetini local ortamda kullanmaktayım. İlk denemeyi System Middle Earth'teki Kahin.ReportingGateway üzerinde yaptım. Bu uygulama Redis ve SystemHAL'deki EvalApi adres bilgilerini appsettings'ten okuyor. Bunların vault üstünden karşılanması için gerekli değişiklikler yapıldı.
+Solution içerisinde yer alan birçok parametre genelde appsettings konfigurasyonlarından besleniyor. Burada URL, username, password gibi birçok hassas bilgi yer alabilir. Bu bilgileri daha güvenli bir ortamda tutmak tercih edilen bir yöntemdir. Hatta secret bilgileri dev,test,pre-prod ve prod gibi farklı dağıtım ortamları için farklılaştırılabilir. Cloud provider'larda bu amaçla kullanılabilecek birçok Vault ürünü söz konusu. Bunlardan birisi ve ilk denediğim **Hashicorp**'un **Vault** ürünü idi. Ancak bir sebepten VaultSharp nuget aracından eklenen key değerlerini çekmeyi başaramadım. Bunun üzerine alternatif bir yaklaşım aradım ve [LocalStack'te](https://github.com/localstack/localstack) karar kıldım. Bu ortam development testleri için yeterli. Localstack kısaca bir **Cloud Service Emulator** olarak tanımlanıyor. Örneğin **AWS Cloud Provider**'a bağlanmadan local ortamda **AWS**'nin birçok özelliğini kullanabiliyoruz. Ben AWS'nin **Secrets Manager** hizmetini local ortamda kullanmaktayım _(Bir SaaS - Software as a Service çözümü)_. İlk denemeyi **System Middle Earth**'teki **Kahin.ReportingGateway** üzerinde yaptım. Bu uygulama **Redis** ve **SystemHAL**'deki **EvalApi** adres bilgilerini normal şartlarda appsettings dosyasında okuyor. Bunların vault üstünden karşılanması için gerekli değişiklikler yapıldı.
 
 ```bash
 # LocalStack docker-compose ile ayağa kalktıktan sonra aws komut satırı aracı ile yönetilebilir
@@ -234,6 +234,7 @@ aws configure set region eu-west-1
 
 aws --endpoint-url=http://localhost:4566 secretsmanager create-secret --name RedisConnectionString --secret-string "localhost:6379"
 aws --endpoint-url=http://localhost:4566 secretsmanager create-secret --name EvalServiceApiAddress --secret-string "localhost:5147/api"
+aws --endpoint-url=http://localhost:4566 secretsmanager create-secret --name HomeGatewayApiAddress --secret-string "localhost:5102"
 
 # Secret bilgilerini görmek için (tümü)
 aws --endpoint-url=http://localhost:4566 secretsmanager list-secrets
@@ -247,6 +248,12 @@ aws --endpoint-url=http://localhost:4566 secretsmanager delete-secret --secret-i
 ```
 
 ![Vault Runtime](/images/vault_01.png)
+
+Vault bilgilerini okumak ve her ihtimale karşı docker container sıfırlanırsa yeniden oluşturmak için iki hazır shell script dosyası yer alıyor. **add_secrets.sh** ile secret'lerin yüklenmesi, **get_secrets.sh** ile de eklenmiş secret'lerin görülmesi sağlanabilir. Bu shell script'lerinin çalıştırılabilmesi için aşağıdaki komut ile gerekli yetkilerin verilmesi gerekebilir.
+
+```bash
+chmod +x manage_secrets.sh
+```
 
 ## Zorluk Seviyesini Artırma
 
