@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Kahin.Common.Constants;
 using Kahin.Common.Entities;
 using Kahin.Common.Enums;
 using Kahin.Common.Requests;
@@ -30,12 +31,22 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
     var response = new GetReportResponse();
     try
     {
+        if (request.DocumentId == null)
+        {
+            response.Exception = "DocumentId is null";
+            response.StatusCode = StatusCode.Fail;
+
+            return Results.Json(response);
+        }
+
         var documentId = ReferenceDocumentId.Parse(request.DocumentId);
-        logger.LogWarning("Referenced document id is '{DocumentId}'", request.DocumentId);
+        logger.LogWarning("Referenced document ID is '{DocumentId}'", request.DocumentId);
 
         // Önceden hazırlanmış raporlar için Redis tabanlı bir caching konulabilir
 
         var reportContent = await File.ReadAllBytesAsync("SampleReport.dat");
+
+        logger.LogWarning("Referenced document lenth is  {Length} bytes.", reportContent.Length);
 
         response = new GetReportResponse
         {
@@ -119,7 +130,7 @@ app.MapPost("/", async (
         EventType = EventType.ReportRequested
     };
 
-    await redisService.AddReportPayloadAsync("reportStream", payload, TimeSpan.FromMinutes(60));
+    await redisService.AddReportPayloadAsync(Names.EventStream, payload, TimeSpan.FromMinutes(TimeCop.SixtyMinutes));
 
     var response = new CreateReportResponse
     {

@@ -4,13 +4,10 @@ using Kahin.MQ;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-// SecretStoreService secretsService = new();
-// string redisConnectionString = await secretsService.GetSecretAsync("RedisConnectionString");
-
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        services.AddSingleton<ISecretStoreService>(new SecretStoreService());
+        services.AddSingleton<ISecretStoreService, SecretStoreService>();
         services.AddSingleton<IRedisService, RedisService>();
         services.AddHostedService<Worker>();
         services.AddHttpClient<IHomeGatewayClientService, HomeGatewayClientService>();
