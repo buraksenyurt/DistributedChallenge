@@ -9,7 +9,6 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddDependencies(this IServiceCollection services)
     {
-
         services.AddSingleton<ISecretStoreService, SecretStoreService>();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
@@ -17,7 +16,10 @@ public static class DependencyInjection
         services.AddHttpClient("EvalApi", (serviceProvider, client) =>
         {
             var secretsService = serviceProvider.GetRequiredService<ISecretStoreService>();
-            var evalApiServiceAddress = secretsService.GetSecretAsync("EvalServiceApiAddress").GetAwaiter().GetResult();
+            var evalApiServiceAddress = secretsService
+                .GetSecretAsync("EvalServiceApiAddress")
+                .GetAwaiter()
+                .GetResult();
             client.BaseAddress = new Uri($"http://{evalApiServiceAddress}");
         });
         services.AddTransient<ValidatorClient>();

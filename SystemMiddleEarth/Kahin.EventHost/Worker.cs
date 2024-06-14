@@ -26,7 +26,7 @@ public class Worker(
             var eventData = await _redisService.Pop("reportStream");
             if (eventData != null)
             {
-                _logger.LogInformation("Received eventData: {EventData}", eventData);
+                _logger.LogWarning("Received eventData: {EventData}", eventData);
 
                 switch (eventData.EventType)
                 {

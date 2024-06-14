@@ -30,6 +30,14 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
     var response = new GetReportResponse();
     try
     {
+        if (request.DocumentId == null)
+        {
+            response.Exception = "DocumentId is null";
+            response.StatusCode = StatusCode.Fail;
+            
+            return Results.Json(response);
+        }
+
         var documentId = ReferenceDocumentId.Parse(request.DocumentId);
         logger.LogWarning("Referenced document id is '{DocumentId}'", request.DocumentId);
 
