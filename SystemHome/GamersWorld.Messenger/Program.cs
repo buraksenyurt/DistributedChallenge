@@ -13,8 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-var rabbitMqSettings = builder.Configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
-builder.Services.AddSingleton(sp => new RabbitMqService(rabbitMqSettings));
+builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
 
 var app = builder.Build();
 
@@ -26,7 +25,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/", (NewReportRequest request, RabbitMqService rabbitMQService, ILogger<Program> logger) =>
+app.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
 {
     var validationResults = new List<ValidationResult>();
     var validationContext = new ValidationContext(request);
@@ -59,7 +58,7 @@ app.MapPost("/", (NewReportRequest request, RabbitMqService rabbitMQService, ILo
         Time = DateTime.Now,
     };
 
-    rabbitMQService.PublishEvent(reportRequestedEvent);
+    eventQueueService.PublishEvent(reportRequestedEvent);
     logger.LogInformation(
         "ReportRequestedEvent sent. TraceId: {TraceId}, Expression: {Expression}"
         , reportRequestedEvent.TraceId, reportRequestedEvent.Expression);

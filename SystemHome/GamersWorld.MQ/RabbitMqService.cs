@@ -1,4 +1,5 @@
 using GamersWorld.Common.Settings;
+using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using System.Text.Json;
 
@@ -7,20 +8,30 @@ namespace GamersWorld.MQ;
 /*
     RabbitMq tarafına mesaj göndermek için kullanılan servis sınıfı
 */
-public class RabbitMqService : IDisposable
+public class RabbitMqService
+    : IEventQueueService, IDisposable
 {
     private readonly IConnection _connection;
     private readonly IModel _channel;
 
-    public RabbitMqService(RabbitMqSettings settings)
+    public RabbitMqService(IConfiguration configuration)
     {
-        var factory = new ConnectionFactory()
+        var settings = configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
+        var factory = new ConnectionFactory();
+        if (settings == null)
         {
-            HostName = settings.HostName,
-            UserName = settings.Username,
-            Password = settings.Password,
-            Port = settings.Port
-        };
+            factory.HostName = "localhost";
+            factory.UserName = "scothtiger";
+            factory.Password = "P@ssw0rd";
+            factory.Port = 5672;
+        }
+        else
+        {
+            factory.HostName = settings.HostName;
+            factory.UserName = settings.Username;
+            factory.Password = settings.Password;
+            factory.Port = settings.Port;
+        }
 
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
