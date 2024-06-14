@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Kahin.Common.Constants;
 using Kahin.Common.Requests;
 using Kahin.Common.Services;
 using StackExchange.Redis;
@@ -14,7 +15,7 @@ public class RedisService : IRedisService
     public RedisService(ISecretStoreService secretStoreService)
     {
         _secretStoreService = secretStoreService;
-        var connectionString = _secretStoreService.GetSecretAsync("RedisConnectionString").GetAwaiter().GetResult();
+        var connectionString = _secretStoreService.GetSecretAsync(SecretName.RedisConnectionString).GetAwaiter().GetResult();
         _redis = ConnectionMultiplexer.Connect(connectionString);
         _db = _redis.GetDatabase();
     }
@@ -22,7 +23,7 @@ public class RedisService : IRedisService
     public async Task AddReportPayloadAsync(string streamName, RedisPayload payload, TimeSpan? lifetime = null)
     {
         var jsonPayload = JsonSerializer.Serialize(payload);
-        await _db.StreamAddAsync(streamName, "events", jsonPayload);
+        await _db.StreamAddAsync(streamName, Names.EventStreamField, jsonPayload);
         if (lifetime.HasValue)
         {
             await _db.KeyExpireAsync(streamName, lifetime);

@@ -33,7 +33,7 @@ public class SecretStoreService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Get secrets error");
+            _logger.LogError("Errors on getting secret value.");
             throw new InvalidOperationException($"Error fetching secret {secretName}: {ex.Message}", ex);
         }
     }

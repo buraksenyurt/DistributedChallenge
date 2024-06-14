@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Kahin.Common.Constants;
 using Kahin.Common.Requests;
 using Kahin.Common.Responses;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ namespace Kahin.Common.Validation
 
         public ValidatorClient(IHttpClientFactory httpClientFactory, ILogger<ValidatorClient> logger)
         {
-            _httpClient = httpClientFactory.CreateClient("EvalApi");
+            _httpClient = httpClientFactory.CreateClient(Names.EvalApi);
             _logger = logger;
             _logger.LogWarning("{ClientAddress}", _httpClient.BaseAddress);
         }
@@ -22,7 +23,7 @@ namespace Kahin.Common.Validation
             _logger.LogInformation("Audit function is working!");
             var payload = new
             {
-                Source = "KahinDomain",
+                Source = Names.SourceDomain,
                 request.Expression
             };
             var evalResponse = await _httpClient.PostAsJsonAsync("", payload);

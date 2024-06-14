@@ -1,3 +1,4 @@
+using Kahin.Common.Constants;
 using Kahin.Common.Enums;
 using Kahin.Common.Requests;
 using Kahin.Common.Services;
@@ -23,7 +24,7 @@ public class Worker(
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            var eventData = await _redisService.Pop("reportStream");
+            var eventData = await _redisService.Pop(Names.EventStream);
             if (eventData != null)
             {
                 _logger.LogWarning("Received eventData: {EventData}", eventData);
@@ -51,7 +52,7 @@ public class Worker(
                 }
             }
 
-            await Task.Delay(10000, stoppingToken);
+            await Task.Delay(TimeCop.SleepDuration, stoppingToken);
         }
     }
 
@@ -59,9 +60,9 @@ public class Worker(
     {
         if (!cancellationToken.IsCancellationRequested)
         {
-            Thread.Sleep(60 * 1000); // Sembolik olarak bir gecikme söz konusu
+            Thread.Sleep(TimeCop.SixtySeconds * TimeCop.OneMilisecond); // Sembolik olarak bir gecikme söz konusu
         }
         payload.EventType = EventType.ReportReady;
-        await redisService.AddReportPayloadAsync("reportStream", payload, TimeSpan.FromMinutes(60));
+        await redisService.AddReportPayloadAsync(Names.EventStream, payload, TimeSpan.FromMinutes(TimeCop.SixtyMinutes));
     }
 }
