@@ -1,7 +1,6 @@
 using GamersWorld.AppEvents;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Messages.Requests;
-using GamersWorld.Common.Settings;
 using GamersWorld.MQ;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +10,7 @@ builder.Services.AddSwaggerGen();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-var rabbitMqSettings = builder.Configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
-builder.Services.AddSingleton(sp => new RabbitMqService(rabbitMqSettings));
+builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
 
 var app = builder.Build();
 
@@ -35,7 +33,7 @@ app.UseHttpsRedirection();
 
 */
 
-app.MapPost("/", (ReportStatusRequest request, RabbitMqService rabbitMQService, ILogger<Program> logger) =>
+app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
 {
     if (request.StatusCode == (int)StatusCode.ReportReady)
     {
@@ -46,7 +44,7 @@ app.MapPost("/", (ReportStatusRequest request, RabbitMqService rabbitMQService, 
             CreatedReportId = request.DocumentId,
         };
 
-        rabbitMQService.PublishEvent(reportReadyEvent);
+        eventQueueService.PublishEvent(reportReadyEvent);
         logger.LogInformation(
             "ReporReadyEvent sent. TraceId: {TraceId}, DocumentId: {DocumentId}"
             , request.TraceId, request.DocumentId);
@@ -60,7 +58,7 @@ app.MapPost("/", (ReportStatusRequest request, RabbitMqService rabbitMQService, 
             Reason = request.StatusMessage,
             Time = DateTime.Now,
         };
-        rabbitMQService.PublishEvent(invalidExpressionEvent);
+        eventQueueService.PublishEvent(invalidExpressionEvent);
         logger.LogError(
             "InvalidExpressionEvent sent. TraceId: {TraceId}, Expression: {Expression}, Reason: {Reason}"
             , request.TraceId, request.Detail, request.StatusMessage);
