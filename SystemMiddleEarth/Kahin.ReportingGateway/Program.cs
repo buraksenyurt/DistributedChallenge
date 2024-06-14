@@ -40,11 +40,13 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
         }
 
         var documentId = ReferenceDocumentId.Parse(request.DocumentId);
-        logger.LogWarning("Referenced document id is '{DocumentId}'", request.DocumentId);
+        logger.LogWarning("Referenced document ID is '{DocumentId}'", request.DocumentId);
 
         // Önceden hazırlanmış raporlar için Redis tabanlı bir caching konulabilir
 
         var reportContent = await File.ReadAllBytesAsync("SampleReport.dat");
+
+        logger.LogWarning("Referenced document lenth is  {Length} bytes.", reportContent.Length);
 
         response = new GetReportResponse
         {

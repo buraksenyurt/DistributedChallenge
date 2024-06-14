@@ -23,7 +23,7 @@ public static class Names
 public static class TimeCop
 {
     public const int SleepDuration = 10_000;
-    public const byte SixtySeconds = 60;
+    public const byte WaitFactor = 23;
     public const byte SixtyMinutes = 60;
     public const short OneMilisecond = 1000;
 }

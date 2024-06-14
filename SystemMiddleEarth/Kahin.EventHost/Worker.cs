@@ -60,7 +60,7 @@ public class Worker(
     {
         if (!cancellationToken.IsCancellationRequested)
         {
-            Thread.Sleep(TimeCop.SixtySeconds * TimeCop.OneMilisecond); // Sembolik olarak bir gecikme söz konusu
+            Thread.Sleep(TimeCop.WaitFactor * TimeCop.OneMilisecond); // Sembolik olarak bir gecikme söz konusu
         }
         payload.EventType = EventType.ReportReady;
         await redisService.AddReportPayloadAsync(Names.EventStream, payload, TimeSpan.FromMinutes(TimeCop.SixtyMinutes));
