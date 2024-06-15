@@ -1,14 +1,14 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using GamersWorld.AppEvents;
+using GamersWorld.Events;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Responses;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 
-namespace GamersWorld.AppEventBusiness.Tests;
+namespace GamersWorld.EventBusiness.Tests;
 
 public class PostReportRequestTests
 {

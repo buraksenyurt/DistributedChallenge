@@ -1,6 +1,6 @@
 ﻿using GamersWorld.SDK;
 
-namespace GamersWorld.AppEvents;
+namespace GamersWorld.Events;
 
 public class ReportReadyEvent : IEvent
 {

@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.SDK", "SystemHome\GamersWorld.SDK\GamersWorld.SDK.csproj", "{0EBBFDDE-478F-49BF-9640-175926F7AFE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.AppEvents", "SystemHome\GamersWorld.AppEvents\GamersWorld.AppEvents.csproj", "{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Events", "SystemHome\GamersWorld.Events\GamersWorld.Events.csproj", "{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.AppEventBusiness", "SystemHome\GamersWorld.AppEventBusiness\GamersWorld.AppEventBusiness.csproj", "{000D5101-CB24-44CC-B9FB-2239CD3DF739}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventBusiness", "SystemHome\GamersWorld.EventBusiness\GamersWorld.EventBusiness.csproj", "{000D5101-CB24-44CC-B9FB-2239CD3DF739}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventHost", "SystemHome\GamersWorld.EventHost\GamersWorld.EventHost.csproj", "{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}"
 EndProject
@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.MQ", "SystemHom
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1637ED5C-ED57-47EE-9F92-3E5C9946D31B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.AppEventBusiness.Tests", "Test\GamersWorld.AppEventBusiness.Tests\GamersWorld.AppEventBusiness.Tests.csproj", "{AC152A8D-EA72-4159-872F-C97D2A37B9C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventBusiness.Tests", "Test\GamersWorld.EventBusiness.Tests\GamersWorld.EventBusiness.Tests.csproj", "{AC152A8D-EA72-4159-872F-C97D2A37B9C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.Common", "SystemMiddleEarth\Kahin.Common\Kahin.Common.csproj", "{4D90FFA4-F212-48F8-ABDF-B9515963D5AB}"
 EndProject

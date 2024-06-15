@@ -3,8 +3,8 @@
   <ItemGroup>
     <ProjectReference Include="..\GamersWorld.SDK\GamersWorld.SDK.csproj" />
     <ProjectReference Include="..\GamersWorld.Common\GamersWorld.Common.csproj" />
-    <ProjectReference Include="..\GamersWorld.AppEvents\GamersWorld.AppEvents.csproj" />
-    <ProjectReference Include="..\GamersWorld.AppEventBusiness\GamersWorld.AppEventBusiness.csproj" />
+    <ProjectReference Include="..\GamersWorld.Events\GamersWorld.Events.csproj" />
+    <ProjectReference Include="..\GamersWorld.EventBusiness\GamersWorld.EventBusiness.csproj" />
     <ProjectReference Include="..\GamersWorld.Business\GamersWorld.Business.csproj" />
   </ItemGroup>
 

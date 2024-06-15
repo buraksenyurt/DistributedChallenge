@@ -1,5 +1,5 @@
 using System.Text.Json;
-using GamersWorld.AppEvents;
+using GamersWorld.Events;
 using GamersWorld.EventHost.Factory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

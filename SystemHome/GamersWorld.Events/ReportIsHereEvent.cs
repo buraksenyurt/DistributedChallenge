@@ -1,8 +1,8 @@
 ﻿using GamersWorld.SDK;
 
-namespace GamersWorld.AppEvents;
+namespace GamersWorld.Events;
 
-public class ReportProcessCompletedEvent : IEvent
+public class ReportIsHereEvent : IEvent
 {
     public Guid TraceId { get; set; }
     public DateTime Time { get; set; }

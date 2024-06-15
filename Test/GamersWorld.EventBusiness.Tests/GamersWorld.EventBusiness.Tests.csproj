@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SystemHome\GamersWorld.AppEvents\GamersWorld.AppEvents.csproj" />
-    <ProjectReference Include="..\..\SystemHome\GamersWorld.AppEventBusiness\GamersWorld.AppEventBusiness.csproj" />
+    <ProjectReference Include="..\..\SystemHome\GamersWorld.Events\GamersWorld.Events.csproj" />
+    <ProjectReference Include="..\..\SystemHome\GamersWorld.EventBusiness\GamersWorld.EventBusiness.csproj" />
     <ProjectReference Include="..\..\SystemHome\GamersWorld.Common\GamersWorld.Common.csproj" />
   </ItemGroup>
 

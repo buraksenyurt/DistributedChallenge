@@ -1,4 +1,4 @@
-using GamersWorld.AppEvents;
+using GamersWorld.Events;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Requests;
 using GamersWorld.MQ;

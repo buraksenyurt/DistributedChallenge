@@ -1,9 +1,9 @@
-﻿using GamersWorld.AppEvents;
+﻿using GamersWorld.Events;
 using GamersWorld.Common.Responses;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;
 
-namespace GamersWorld.AppEventBusiness;
+namespace GamersWorld.EventBusiness;
 
 /*
     Rapor karşı sistemden diğer sistemin Local Storage'ına indiğinde

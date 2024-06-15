@@ -1,11 +1,11 @@
 using System.Net.Http.Json;
-using GamersWorld.AppEvents;
+using GamersWorld.Events;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Responses;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;
 
-namespace GamersWorld.AppEventBusiness;
+namespace GamersWorld.EventBusiness;
 
 /*
     Kullanıcı form aracılığı ile bir rapor talebinde bulunduğunda Event Trigger Service

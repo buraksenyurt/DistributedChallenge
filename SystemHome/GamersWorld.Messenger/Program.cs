@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using GamersWorld.Common.Requests;
 using GamersWorld.Common.Responses;
 using GamersWorld.Common.Enums;
-using GamersWorld.AppEvents;
+using GamersWorld.Events;
 using GamersWorld.MQ;
 
 var builder = WebApplication.CreateBuilder(args);

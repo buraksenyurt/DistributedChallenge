@@ -1,12 +1,12 @@
 ﻿using System.Net.Http.Json;
-using GamersWorld.AppEvents;
+using GamersWorld.Events;
 using GamersWorld.Business.Contracts;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Responses;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;
 
-namespace GamersWorld.AppEventBusiness;
+namespace GamersWorld.EventBusiness;
 
 /*
     Reporting App Service tarafı rapor hazır olduğunda External Reader Service'i tetikler

@@ -1,10 +1,10 @@
-﻿using GamersWorld.AppEvents;
+﻿using GamersWorld.Events;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Responses;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;
 
-namespace GamersWorld.AppEventBusiness;
+namespace GamersWorld.EventBusiness;
 
 /*
     System 123'ten bir rapor talebi yapılırken o sisteme özgü betik dil ile bir ifade yollanıyor.
