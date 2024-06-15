@@ -54,11 +54,11 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 - **Reporting App Service(Kahin.Gateway)** ve **Reporting File Service** birer Web API hizmeti olarak tasarlanabilirler. Local Storage olarak senaryoyu kolayca uygulayabilmek adına fiziki dosya sistemini kullanacaklarını düşünebiliriz. Yani hazırlanması bir süre alacak PDF içeriğini fiziki diske kaydetip buradan okuyarak **External Reader Service(GamersWorld.Gateway)**'e iletebilirler.
 - **Report Trace Service** uygulaması da esasında sürekli ayakta olması ve ReportIsHere olayını dinlemesi gereken bir konumadır. Bu anlamda sürekli çalışan bir **Console** uygulaması olarak da tasarlanabilir.
 
-  **Not:** Dikkat edileceği üzere Event Consumer/Publisher(Gamersworld.EventHost) olarak araya koyduğumuz katman bazı olaylar ile ilgili olarak bir takım aksiyonlar alıyor. Örneğin ReportRequestEvent gerçekleştiğinde POST ile bir dış servise talep gönderiyor ve ReportIsHereEvent gerçekleştiğinde de GET Report ile PDF çekip Back Office tarafındaki Local Storage'a kaydediyor. Dolayısıyla bir event karşılığında bir takım aksiyonlar icra ediyor. Bunları A event'i için şu Interface implementasyonunu çağır şeklinde başka bir katmana alarak runtime'da çözümlenebilir bağımlılıkar haline getirebilir ve böylece runtime çalışıyorken yeni event-aksiyon bağımlılıklarını sisteme dahil edebiliriz belki de. Dolayısıyla aradaki Event Consumer/Publisher(Gamersworld.EventHost)'ın tasarımı oldukça önemli.
+  **Not:** Dikkat edileceği üzere **Event Consumer/Publisher(Gamersworld.EventHost)** olarak araya koyduğumuz katman bazı olaylar ile ilgili olarak bir takım aksiyonlar alıyor. Örneğin **ReportRequestEvent** gerçekleştiğinde **POST** ile bir dış servise talep gönderiyor ve **ReportIsHereEvent** gerçekleştiğinde de GET Report ile **PDF/CSV/XML/JSON** çekip Back Office tarafındaki Local Storage'a kaydediyor. Dolayısıyla bir event karşılığında bir takım aksiyonlar icra ediyor. Bunları A event'i için şu Interface implementasyonunu çağır şeklinde başka bir katmana alarak runtime'da çözümlenebilir bağımlılıkar haline getirebilir ve böylece runtime çalışıyorken yeni event-aksiyon bağımlılıklarını sisteme dahil edebiliriz belki de. Dolayısıyla aradaki **Event Consumer/Publisher(Gamersworld.EventHost)**'ın tasarımı oldukça önemli.
 
 ## Yapılacaklar Listesi _(ToDo List)_
 
-- [ ] Solution yapısı ve proje isimlendirmeleri gözden geçirilebilir.
+- [x] Solution yapısı ve proje isimlendirmeleri gözden geçirilebilir.
 - [x] Solution için **Sonarqube** entegrasyonu yapılıp kod kalite metrikleri ölçümlenebilir.
 - [ ] Bazı kütüphaneler için birim testler _(Unit Tests)_ yazılarak **Code Coverage** değerleri yükseltilebilir.
 - [ ] Kahin _(SystemMiddleEarth)_ sistemindeki projeler için ayrı bir **Solution** açılabilir.
@@ -71,6 +71,7 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 - [ ] Bazı servislerin ayakta olup olmadıklarını kontrol etmek için bu servislere **HealthCheck** fonksiyonları eklenebilir.
 - [x] URL adresleri, **RabbitMQ** ortam bilgileri **(Development, Test, Pre-Production, Production)** gibi alanlar için daha güvenli bir ortamdan **(Hashicorp Vault, AWS Secrets Manager, Azure Key Vault, Google Cloud Secret Manager, CyberArk Conjur vb)** tedarik edilecek şekilde genel bir düzenlemeye gidilebilir.
 - [ ] Log mesajları veya **Business Response** nesnelerindeki metinsel ifadeler için çoklu dil desteği _(Multilanguage Support)_ getirilebilir.
+- [ ] SystemHome'daki Event Host uygulaması bir çeşit Pipeline. Event yönetiminde ilgili business nesneler çağırılmadan önce ve sonrası için akan veri içeriklerini loglayacak ortak bir mekanizma yazılabilir.
 - [ ] ...
 
 ## Runtime _(Standart)_
@@ -79,12 +80,14 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 
 **Not: Buradaki ve çözüme sonradan eklenecek uygulamaları tek seferde çalıştırmak için bir shell script dosyamız var. run_all.sh isimli dosyayı bu amaçla kullanabilirsiniz.**
 
-- [ ] **RabbitMQ**'nun çalışır halde olduğu kontrol edilir. (localhost:15672)
-- [ ] **SystemMiddleEarth**'deki **Kahin.ReportingGateway** servisi çalıştırılır. (localhost:5218)
-- [ ] **SystemHome**'de yer alan **GamersWorld.Messenger** servisi çalıştırılır. Web uygulaması taleplerini iletmek için bu servisi kullanır. (localhost:5234)
-- [ ] RabbitMQ event'lerini dinleyen **GamersWorld.EventHost** console uygulaması çalıştırılır. Console uygulamasıdır.
-- [ ] Rapor ifadesini denetleyen **SystemHAL** sistemindeki **Eval.AuditApi** servisi çalıştırılır. (localhost:5147)
-- [ ] Rapor talebi girdisi yapılan **GamersWorld.WebApp** çalıştırılır. (localhost:5093)
+1. [ ] **RabbitMQ**'nun çalışır halde olduğu kontrol edilir. (localhost:15672)
+2. [ ] **System MiddleEarth**'deki **Kahin.ReportingGateway** servisi çalıştırılır. (localhost:5218)
+3. [ ] **System Home**'de yer alan **GamersWorld.Messenger** servisi çalıştırılır. Web uygulaması taleplerini iletmek için bu servisi kullanır. (localhost:5234)
+4. [ ] RabbitMQ event'lerini dinleyen **GamersWorld.EventHost** console uygulaması çalıştırılır.
+5. [ ] Rapor ifadesini denetleyen **System HAL** sistemindeki **Eval.AuditApi** servisi çalıştırılır. (localhost:5147)
+6. [ ] Rapor talebi girdisi yapılan **GamersWorld.WebApp** çalıştırılır. (localhost:5093)
+7. [ ] builder.Logging.ClearProviders();
+builder.Logging.AddConsole(); tarafındaki event streaming'leri dinleyen **Kahin.EventHost** isimli Console uygulaması çalıştırılır.
 
 Bu durumda web uygulamasından örnek bir raporu girilip gönderildiğinde diğer uygulamalarda aşağıdakine benzer log bilgilerinin oluşması beklenir.
 
@@ -104,13 +107,16 @@ Nihai senaryonun işletilmesinde birçok servisin aynı anda ayağa kalkması ge
 
 ```bash
 # Docker-Compose'u sistemde build edip çalıştırmak için
-docker-compose up --build
+sudo docker-compose up --build
+
+# Sonraki çalıştırmalarda aşağıdaki gibide ilerlenebilir
+sudo docker-compose up -d
 
 # Uygulama loglarını görmek için
-docker-compose logs -f
+sudo docker-compose logs -f
 
 # Container'ları durdurmak için
-docker-compose down
+sudo docker-compose down
 ```
 
 ## İlk Temas (First Contact - 29 Mayıs 2024, 21:00 suları)
@@ -165,7 +171,7 @@ Rapordaki ifadede ihlal var taklidi yapan bir mesaj.
 
 ## Redis Stream Entgrasyonu (9 Haziran 2024)
 
-System MiddleEarth içerisinde yer alan Kahin.ReportingGateway, gelen bir rapor talebini aldıktan sonra raporun hazırlanması için bir süreç başlatır. Bu süreç muhtemelen uzun sürebilecek bir iştir. Bu nedenle System MiddleEarth içinde bir mesajlaşma kuyruğu göz önüne alınabilir. Bu sefer RabbitMQ yerine Redis kullanılabilir. Redis tarafı in-memory de çalışabilen dağıtık bir key:value store olarak düşünülür ancak aynı zamanda Publisher/Subscriber modelini de destekler. Dolayısıyla gelen rapor talebini burada kuyruğa bırakıp, bir dinleyicinin almasını ve işlemleri ilerletmesini sağlayabiliriz. Redis tarafı yine docker-compose içerisinde konuşlandırılmıştır. Sistemde bir docker imajı olarak ayağa kalkar. Web uygulamasından geçerli bir rapor talebi Kahin.ReportingGateway'e ulaştığında redis'e düşen mesajda kabaca aşağıdaki komutlar ile yakalanabilir.
+**System MiddleEarth** içerisinde yer alan **Kahin.ReportingGateway**, gelen bir rapor talebini aldıktan sonra raporun hazırlanması için bir süreç başlatır. Bu süreç muhtemelen uzun sürebilecek bir iştir. Bu nedenle **System MiddleEarth** içinde bir mesajlaşma kuyruğu söz konusudur. Bu sefer **RabbitMQ** yerine **Redis** kullanılmıştır. Redis tarafı in-memory de çalışabilen dağıtık bir key:value store olarak düşünülür ancak aynı zamanda **Pub/Sub** modelini de destekler. Dolayısıyla gelen rapor talebini burada kuyruğa bırakıp bir dinleyicinin almasını ve işlemleri ilerletmesini sağlayabiliriz. **Redis** tarafı yine **docker-compose** içerisinde konuşlandırılmıştır. Sistemde bir docker imajı olarak ayağa kalkar. Web uygulamasından geçerli bir rapor **talebi Kahin.ReportingGateway**'e ulaştığında redis'e düşen mesaj kabaca aşağıdaki komutlar ile yakalanabilir.
 
 ```bash
 # Önce redis client terminale girilir
@@ -190,7 +196,7 @@ Projenin teknik borçlanma değerlerini ölçümlemek ve kod kalitesini iyileşt
 sudo docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
 ```
 
-Kurulum sonrası **localhost:9000** adresine gidilir ve standart kullanıcı adı ve şifre ile giriş yapılır _(admin,admin)_ Sistem ilk girişte şifre değişikliği istenebilir. Sonrasında bir proje oluşturulur. Bende **DistributedChallengeProject** isimli bir proje oluşturdum ve .Net Core taraması yapması için gerekli adımları işlettim. SQ, proje için bir key üretecektir. Bu key değerinden yararlanılarak tarama aşağıdaki terminal komutları ile başlatılabilir. Zaten anahtar değer üretimi sonrası SQ hangi komutları çalıştıracağınızı dokümanda gösterir.
+Kurulum sonrası **localhost:9000** adresine gidilir ve standart kullanıcı adı ve şifre ile giriş yapılır _(admin,admin)_ Sistem ilk girişte şifre değişikliği istenebilir. Sonrasında bir proje oluşturulur. Bende **DistributedChallengeProject** isimli bir proje oluşturdum ve .Net Core taraması yapması için gerekli adımları işlettim. **SQ**, proje için bir key üretecektir. Bu key değerinden yararlanılarak tarama aşağıdaki terminal komutları ile başlatılabilir. Zaten anahtar değer üretimi sonrası **SQ** hangi komutları çalıştıracağınızı dokümanda gösterir.
 
 ```bash
 # Sistem yüklü olması gereken araçlardan birisi
@@ -254,10 +260,6 @@ Vault bilgilerini okumak ve her ihtimale karşı docker container sıfırlanırs
 ```bash
 chmod +x manage_secrets.sh
 ```
-
-## Zorluk Seviyesini Artırma
-
-Yukarıda bahsedilen senaryoda sisteme dahil olan tüm uygulamaların aynı firmanın dahili ağı _(Internal Network)_ içerisinde yer aldığı varsayılmıştır. Senaryoyu zorlaştırmak için raporlamayı yapan uygulamanın/servisinin internet üzerinden erişilebilen bir 3ncü taraf servis _(3rd Party Vendor Service)_ sağlayacısına ait olduğunu düşünebilirsiniz.
 
 ## Bazı Düşünceler _(Some Thoughts)_
 
