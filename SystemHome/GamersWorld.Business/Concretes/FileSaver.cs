@@ -14,6 +14,11 @@ public class FileSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueS
 
     public async Task<int> SaveTo(DocumentSaveRequest payload)
     {
+        if (payload == null || payload.Content == null)
+        {
+            return 0;
+        }
+
         //QUESTION : Diyelimki dosyanın yazıldığı disk dolu veya arızalandı. Sistem nasıl tepki vermeli?
         try
         {
@@ -35,7 +40,7 @@ public class FileSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueS
         catch (Exception excp)
         {
             //QUESTION: Exception söz konusu ise, TraceId'ye sahip olaylar silsilesinin akibeti ne olacak?
-            _logger.LogError("Document save error {Message}", excp.Message);
+            _logger.LogError(excp, "Error on document saving!");
             return 0;
         }
     }

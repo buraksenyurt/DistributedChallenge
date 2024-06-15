@@ -8,16 +8,13 @@ namespace Kahin.MQ;
 
 public class RedisService : IRedisService
 {
-    private readonly ConnectionMultiplexer _redis;
     private readonly IDatabase _db;
-    private readonly ISecretStoreService _secretStoreService;
 
     public RedisService(ISecretStoreService secretStoreService)
     {
-        _secretStoreService = secretStoreService;
-        var connectionString = _secretStoreService.GetSecretAsync(SecretName.RedisConnectionString).GetAwaiter().GetResult();
-        _redis = ConnectionMultiplexer.Connect(connectionString);
-        _db = _redis.GetDatabase();
+        var connectionString = secretStoreService.GetSecretAsync(SecretName.RedisConnectionString).GetAwaiter().GetResult();
+        var redis = ConnectionMultiplexer.Connect(connectionString);
+        _db = redis.GetDatabase();
     }
 
     public async Task AddReportPayloadAsync(string streamName, RedisPayload payload, TimeSpan? lifetime = null)

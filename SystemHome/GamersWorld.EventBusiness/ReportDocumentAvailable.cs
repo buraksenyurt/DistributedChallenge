@@ -51,10 +51,6 @@ public class ReportDocumentAvailable(
 
         var getReportResponse = await response.Content.ReadFromJsonAsync<GetReportResponse>();
 
-        // _logger.LogInformation("GetReport call contents\n\t{StatusCode}\n\t{DocumentId}"
-        // , getReportResponse.StatusCode
-        // , getReportResponse.DocumentId);
-
         if (getReportResponse != null && getReportResponse.StatusCode == StatusCode.ReportReady)
         {
             _logger.LogWarning("{DocumentId} is ready and fetching...", getReportResponse.DocumentId);

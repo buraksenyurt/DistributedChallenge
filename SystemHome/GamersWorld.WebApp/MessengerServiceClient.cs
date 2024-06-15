@@ -12,11 +12,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
     {
         var response = await _httpClient.PostAsJsonAsync("http://localhost:5234/", request);
 
-        if (response.IsSuccessStatusCode)
-        {
-            return await response.Content.ReadFromJsonAsync<BusinessResponse>();
-        }
-        else
+        if (!response.IsSuccessStatusCode)
         {
             var errorResponse = await response.Content.ReadFromJsonAsync<BusinessResponse>();
             if (errorResponse != null && errorResponse.ValidationErrors != null)
@@ -34,6 +30,19 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
                 StatusCode = Common.Enums.StatusCode.Fail,
                 Message = "Not OK(200)"
             };
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<BusinessResponse>();
+            if (result == null)
+            {
+                return new BusinessResponse
+                {
+                    StatusCode = Common.Enums.StatusCode.Fail,
+                    Message = "Not OK(200)"
+                };
+            }
+            return result;
         }
     }
 }

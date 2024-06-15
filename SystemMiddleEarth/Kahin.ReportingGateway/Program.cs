@@ -40,13 +40,12 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
         }
 
         var documentId = ReferenceDocumentId.Parse(request.DocumentId);
-        logger.LogWarning("Referenced document ID is '{DocumentId}'", request.DocumentId);
 
         // Önceden hazırlanmış raporlar için Redis tabanlı bir caching konulabilir
 
         var reportContent = await File.ReadAllBytesAsync("SampleReport.dat");
 
-        logger.LogWarning("Referenced document lenth is  {Length} bytes.", reportContent.Length);
+        logger.LogWarning("Referenced '{DocumentId}' lenth is  {Length} bytes.", request.DocumentId, reportContent.Length);
 
         response = new GetReportResponse
         {
@@ -57,7 +56,7 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
     }
     catch (Exception excp)
     {
-        logger.LogError("{ExceptionMessage}", excp.Message);
+        logger.LogError(excp, "Error on getReport post call.");
         response = new GetReportResponse
         {
             Exception = excp.Message,
