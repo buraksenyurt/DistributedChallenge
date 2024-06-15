@@ -1,4 +1,5 @@
 ﻿using GamersWorld.EventHost;
+using GamersWorld.Business;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,7 @@ services.AddSingleton<IConfiguration>(configuration);
 
 // Olay sürücüleri, RabbitMq ve Loglama gibi bileşenler DI servislerine yüklenir
 services.AddEventDrivers();
+services.AddBusinessDrivers();
 services.AddRabbitMq(configuration);
 services.AddLogging(cfg =>
 {

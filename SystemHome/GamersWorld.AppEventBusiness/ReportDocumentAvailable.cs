@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using GamersWorld.AppEvents;
+using GamersWorld.Business.Contracts;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Messages.Responses;
 using GamersWorld.Common.Responses;
@@ -19,11 +20,13 @@ namespace GamersWorld.AppEventBusiness;
 */
 public class ReportDocumentAvailable(
     ILogger<ReportDocumentAvailable> logger
-    , IHttpClientFactory httpClientFactory)
+    , IHttpClientFactory httpClientFactory
+    , IDocumentSaver documentSaver)
     : IEventDriver<ReportReadyEvent>
 {
     private readonly ILogger<ReportDocumentAvailable> _logger = logger;
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
+    private readonly IDocumentSaver _documentSaver = documentSaver;
 
     public async Task<BusinessResponse> Execute(ReportReadyEvent appEvent)
     {
@@ -36,29 +39,42 @@ public class ReportDocumentAvailable(
         };
         var response = await client.PostAsJsonAsync("/getReport", payload);
         _logger.LogInformation("GetReport call status code is {StatusCode}", response.StatusCode);
-        if (response.IsSuccessStatusCode)
+
+        if (!response.IsSuccessStatusCode)
         {
-            var getReportResponse = await response.Content.ReadFromJsonAsync<GetReportResponse>();
-
-            // _logger.LogInformation("GetReport call contents\n\t{StatusCode}\n\t{DocumentId}"
-            // , getReportResponse.StatusCode
-            // , getReportResponse.DocumentId);
-
-            if (getReportResponse != null && getReportResponse.StatusCode == StatusCode.ReportReady)
+            return new BusinessResponse
             {
-                _logger.LogWarning("{DocumentId} is ready and fetching...", getReportResponse.DocumentId);
-                var content = getReportResponse.Document;
-                // Şimdilik deneysel olarak bir dosya yazdırma işlemi söz konusu.
-                // Burada gelen byte içeriğini yazma işlemi izole edip DI servislerinden gelen bir bileşen ile ele alınabilir.
-                await File.WriteAllBytesAsync(Path.Combine(Environment.CurrentDirectory, $"{getReportResponse.DocumentId}.csv"), content);
+                StatusCode = StatusCode.Fail,
+                Message = "Save document failed!"
+            };
+        }
+
+        var getReportResponse = await response.Content.ReadFromJsonAsync<GetReportResponse>();
+
+        // _logger.LogInformation("GetReport call contents\n\t{StatusCode}\n\t{DocumentId}"
+        // , getReportResponse.StatusCode
+        // , getReportResponse.DocumentId);
+
+        if (getReportResponse != null && getReportResponse.StatusCode == StatusCode.ReportReady)
+        {
+            _logger.LogWarning("{DocumentId} is ready and fetching...", getReportResponse.DocumentId);
+            var content = getReportResponse.Document;
+            // Başka bir Business enstrüman kullanılarak yazma işlemi gerçekleştirilir
+            var length = await _documentSaver.SaveTo(getReportResponse.DocumentId, content);
+            if (length == 0)
+            {
+                return new BusinessResponse
+                {
+                    StatusCode = StatusCode.Fail,
+                    Message = "Report document has not been saved."
+                };
             }
         }
 
-        // ReportIsHere olayını hazırla ve kuyruğa bırak
         return new BusinessResponse
         {
-            StatusCode = StatusCode.ReportReady,
-            Message = "Report is available."
+            StatusCode = StatusCode.DocumentSaved,
+            Message = "Report document has been saved."
         };
     }
 }

@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using GamersWorld.Common.Messages.Requests;
 using GamersWorld.Common.Messages.Responses;
 using GamersWorld.Common.Enums;
-using GamersWorld.Common.Settings;
 using GamersWorld.AppEvents;
 using GamersWorld.MQ;
 

@@ -5,6 +5,7 @@
     <ProjectReference Include="..\GamersWorld.Common\GamersWorld.Common.csproj" />
     <ProjectReference Include="..\GamersWorld.AppEvents\GamersWorld.AppEvents.csproj" />
     <ProjectReference Include="..\GamersWorld.AppEventBusiness\GamersWorld.AppEventBusiness.csproj" />
+    <ProjectReference Include="..\GamersWorld.Business\GamersWorld.Business.csproj" />
   </ItemGroup>
 
   <ItemGroup>
