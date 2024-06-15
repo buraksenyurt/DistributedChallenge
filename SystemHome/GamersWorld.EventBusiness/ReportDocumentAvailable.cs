@@ -5,6 +5,7 @@ using GamersWorld.Common.Enums;
 using GamersWorld.Common.Responses;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;
+using GamersWorld.Common.Requests;
 
 namespace GamersWorld.EventBusiness;
 
@@ -59,7 +60,13 @@ public class ReportDocumentAvailable(
             _logger.LogWarning("{DocumentId} is ready and fetching...", getReportResponse.DocumentId);
             var content = getReportResponse.Document;
             // Başka bir Business enstrüman kullanılarak yazma işlemi gerçekleştirilir
-            var length = await _documentSaver.SaveTo(getReportResponse.DocumentId, content);
+            var docContent = new DocumentSaveRequest
+            {
+                TraceId = appEvent.TraceId,
+                DocumentId = getReportResponse.DocumentId,
+                Content = content,
+            };
+            var length = await _documentSaver.SaveTo(docContent);
             if (length == 0)
             {
                 return new BusinessResponse

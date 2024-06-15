@@ -15,7 +15,7 @@ namespace GamersWorld.EventBusiness;
 public class InvalidExpression(ILogger<InvalidExpression> logger) : IEventDriver<InvalidExpressionEvent>
 {
     private readonly ILogger<InvalidExpression> _logger = logger;
-
+    
     public async Task<BusinessResponse> Execute(InvalidExpressionEvent appEvent)
     {
         //TODO@buraksenyurt Must implement alert and warning mechanism

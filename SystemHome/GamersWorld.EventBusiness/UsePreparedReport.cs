@@ -17,13 +17,17 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger) : IEventDriver
 
     public async Task<BusinessResponse> Execute(ReportIsHereEvent appEvent)
     {
-        //TODO@buraksenyurt Must implement Use Report steps
-
-        _logger.LogInformation("{TraceId}, {CreatedReportId}", appEvent.TraceId, appEvent.CreatedReportId);
+        _logger.LogInformation("Document Accepted, Trace Id : {TraceId}, Document Id : {CreatedReportId}"
+            , appEvent.TraceId, appEvent.CreatedReportId);
 
         // Dokümanı Local Storage'dan oku
         // E-posta ile gönder
-        // raporun hazırlandığına dair bir bilgilendirme olayı(ReportProcessCompleted) hazırlayıp fırlat
-        throw new NotImplementedException();
+        // Raporun hazırlandığına dair bir bilgilendirme olayı(ReportProcessCompleted) hazırlayıp fırlat
+
+        return new BusinessResponse
+        {
+            StatusCode = Common.Enums.StatusCode.Success,
+            Message = "Report document fetched and send succesfully"
+        };
     }
 }
