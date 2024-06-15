@@ -1,4 +1,4 @@
-namespace GamersWorld.Common.Messages.Requests;
+namespace GamersWorld.Common.Requests;
 public class ReportStatusRequest
 {
     public string? TraceId { get; set; }

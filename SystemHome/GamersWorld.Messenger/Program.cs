@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using GamersWorld.Common.Messages.Requests;
-using GamersWorld.Common.Messages.Responses;
+using GamersWorld.Common.Requests;
+using GamersWorld.Common.Responses;
 using GamersWorld.Common.Enums;
 using GamersWorld.AppEvents;
 using GamersWorld.MQ;
@@ -9,10 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
-
-builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
 
 var app = builder.Build();
 
@@ -52,8 +51,8 @@ app.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService
     var reportRequestedEvent = new ReportRequestedEvent
     {
         TraceId = Guid.NewGuid(),
-        Title = request.Title,
-        Expression = request.Expression,
+        Title = request.Title ?? "Last Sales Report",
+        Expression = request.Expression ?? "Güncel ülke bazlı satış raporlarının özet dökümü.",
         Time = DateTime.Now,
     };
 

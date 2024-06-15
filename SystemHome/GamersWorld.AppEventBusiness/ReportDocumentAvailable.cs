@@ -2,7 +2,6 @@
 using GamersWorld.AppEvents;
 using GamersWorld.Business.Contracts;
 using GamersWorld.Common.Enums;
-using GamersWorld.Common.Messages.Responses;
 using GamersWorld.Common.Responses;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;

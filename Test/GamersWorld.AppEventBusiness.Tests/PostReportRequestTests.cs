@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using GamersWorld.AppEvents;
 using GamersWorld.Common.Enums;
-using GamersWorld.Common.Messages.Responses;
+using GamersWorld.Common.Responses;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;

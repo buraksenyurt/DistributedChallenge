@@ -1,6 +1,6 @@
 using GamersWorld.AppEvents;
 using GamersWorld.Common.Enums;
-using GamersWorld.Common.Messages.Requests;
+using GamersWorld.Common.Requests;
 using GamersWorld.MQ;
 
 var builder = WebApplication.CreateBuilder(args);

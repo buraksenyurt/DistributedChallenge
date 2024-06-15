@@ -1,5 +1,4 @@
-
-using GamersWorld.Common.Messages.Responses;
+using GamersWorld.Common.Responses;
 
 namespace GamersWorld.SDK;
 

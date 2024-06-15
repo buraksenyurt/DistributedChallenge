@@ -1,7 +1,7 @@
 namespace GamersWorld.WebApp.Utility;
 
-using GamersWorld.Common.Messages.Requests;
-using GamersWorld.Common.Messages.Responses;
+using GamersWorld.Common.Requests;
+using GamersWorld.Common.Responses;
 
 public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServiceClient> logger)
 {
