@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Gamersworld.Gateway",
     "collectionId": "71d56da9-e3af-49b6-84f8-551a2252d76a",
-    "dateExported": "2024-06-07T14:46:25.368Z",
+    "dateExported": "2024-06-17T18:53:08.442Z",
     "version": "1.2",
     "folders": [],
     "requests": [
@@ -39,7 +39,19 @@
                 "raw": "{\n  \"TraceId\": \"edd4e07d-2391-47c1-bf6f-96a96c447585\",\n  \"DocumentId\": \"200-10-edd4e07d-2391-47c1-bf6f-96a96c447585\",\n  \"StatusCode\": 200,\n  \"StatusMessage\": \"Report is ready and live for 60 minutes\",\n  \"Detail\": \"\"\n}",
                 "form": []
             }
+        },
+        {
+            "_id": "3ad31c83-d6e2-4983-8af0-9bcb2ec0e22c",
+            "colId": "71d56da9-e3af-49b6-84f8-551a2252d76a",
+            "containerId": "",
+            "name": "Health Check",
+            "url": "http://localhost:5102/health",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-06-17T18:47:59.099Z",
+            "modified": "2024-06-17T18:48:10.077Z",
+            "headers": []
         }
     ],
-    "ref": "GaQrDAicavxtWUK7iMcFqCm8S9mzKUr1XBs_Xc4jLxojHb6FV07PECAVC9j9Pyov_URy3muo8TksDs_Tdih7tw"
+    "ref": "GaQrDAicavxtWUK7iMcFqKyp9neUTrDrd_wBFgiHx1VtkckMyExQecry4G4_YfDNnRSB_aSL2Sv8ZuwaFoW_yg"
 }

@@ -1,5 +1,9 @@
 @Kahin.ReportingService_HostAddress = http://localhost:5218
 
+GET {{Kahin.ReportingService_HostAddress}}/health
+
+###
+
 POST {{Kahin.ReportingService_HostAddress}}/
 Content-Type: application/json
 Accept: application/json

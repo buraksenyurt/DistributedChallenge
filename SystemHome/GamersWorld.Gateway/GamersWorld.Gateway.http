@@ -1,6 +1,10 @@
 @GamersWorld.GateWayProxy_HostAddress = http://localhost:5102
 
-POST {{Kahin.GateWayProxy_HostAddress}}/
+GET {{GamersWorld.GateWayProxy_HostAddress}}/health
+
+###
+
+POST {{GamersWorld.GateWayProxy_HostAddress}}/
 Content-Type: application/json
 Accept: application/json
 
@@ -14,7 +18,7 @@ Accept: application/json
 
 ###
 
-POST {{Kahin.GateWayProxy_HostAddress}}/
+POST {{GamersWorld.GateWayProxy_HostAddress}}/
 Content-Type: application/json
 Accept: application/json
 

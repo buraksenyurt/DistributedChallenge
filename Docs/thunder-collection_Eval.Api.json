@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Eval.Api",
     "collectionId": "30d6857a-6bf5-44f6-9e4b-9d91da561251",
-    "dateExported": "2024-06-07T15:01:46.750Z",
+    "dateExported": "2024-06-17T18:42:47.872Z",
     "version": "1.2",
     "folders": [],
     "requests": [
@@ -56,7 +56,19 @@
                 "raw": "{\n  \"Source\": \"KahinDomain\",\n  \"Expression\": \"\"\n}",
                 "form": []
             }
+        },
+        {
+            "_id": "e7076d33-8aae-45cf-bebf-2470ed3c3ac7",
+            "colId": "30d6857a-6bf5-44f6-9e4b-9d91da561251",
+            "containerId": "",
+            "name": "Health Check",
+            "url": "http://localhost:5147/health",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-06-17T18:40:07.245Z",
+            "modified": "2024-06-17T18:40:23.753Z",
+            "headers": []
         }
     ],
-    "ref": "07jJzCt3Tjs-LLLSphnImnQcKY3YgkfbBqslY0eecG6m74N5DktkiEcy1RS_ILTE_UuiH_Vuq4oxS5tRAYufZw"
+    "ref": "07jJzCt3Tjs-LLLSphnImtQ9Mtu6RXRFyiBwSNELuQHcEfV6z2duP69s9IRArDscZIxguuonNxkTtEqLJcc5uw"
 }

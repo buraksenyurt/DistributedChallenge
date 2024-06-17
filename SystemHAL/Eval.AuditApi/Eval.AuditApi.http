@@ -1,5 +1,9 @@
 @Eval.Api_HostAddress = http://localhost:5147
 
+GET {{Eval.Api_HostAddress}}//health
+
+###
+
 POST {{Eval.Api_HostAddress}}//api
 Accept: application/json
 {

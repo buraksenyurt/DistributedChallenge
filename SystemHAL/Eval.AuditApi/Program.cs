@@ -3,12 +3,14 @@ using System.Data;
 using Eval.AuditLib.Contracts;
 using Eval.AuditLib.Model;
 using Eval.Lib;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IExpressionValidator, ExpressionValidator>();
+builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -21,6 +23,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapHealthChecks("/health");
 
 /*
     Bu servis Kahin tarafından kullanılan ve sembolik olarak

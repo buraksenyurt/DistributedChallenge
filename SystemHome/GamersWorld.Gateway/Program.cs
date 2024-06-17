@@ -2,11 +2,13 @@ using GamersWorld.Events;
 using GamersWorld.Common.Enums;
 using GamersWorld.Common.Requests;
 using GamersWorld.MQ;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -21,6 +23,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapHealthChecks("/health");
 
 app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
 {
