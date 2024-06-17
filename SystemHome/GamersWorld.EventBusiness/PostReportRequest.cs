@@ -7,20 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace GamersWorld.EventBusiness;
 
-/*
-    Kullanıcı form aracılığı ile bir rapor talebinde bulunduğunda Event Trigger Service
-    yeni bir ReportRequestedEvent nesnesi hazırlar ve bunu kuyruğa gönderir.
-
-    Kuyruğu dinleyen taraf bu event gerçekleştiğinde 
-    aşağıdaki nesnenin Execute metodunu icra edip buradaki işlemleri yapmalıdır.
-*/
 public class PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFactory httpClientFactory)
     : IEventDriver<ReportRequestedEvent>
 {
     private readonly ILogger<PostReportRequest> _logger = logger;
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
 
-    public async Task<BusinessResponse> Execute(ReportRequestedEvent appEvent)
+    public async Task Execute(ReportRequestedEvent appEvent)
     {
         var client = _httpClientFactory.CreateClient("KahinGateway");
         _logger.LogInformation("{TraceId}, {Title}, {Expression}", appEvent.TraceId, appEvent.Title, appEvent.Expression);
@@ -41,29 +34,20 @@ public class PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFac
 
             if (createReportResponse != null && createReportResponse.Status == StatusCode.Success)
             {
-                return new BusinessResponse
-                {
-                    Message = $"Report request sent. DocumentId: {createReportResponse.DocumentId}",
-                    StatusCode = StatusCode.Success,
-                };
+                _logger.LogInformation("Report request sent({Status}). {DocumentId}"
+                    , createReportResponse.Status, createReportResponse.DocumentId);
+                return;
             }
-            else if (createReportResponse != null)
+            else
             {
+                // QUESTION: Rapor gönderimi başarısız ise buna karşılık başka bir business tetiklenmeli mi?
                 _logger.LogError("Report request unsuccessful.");
-
-                return new BusinessResponse
-                {
-                    Message = !string.IsNullOrEmpty(createReportResponse.Explanation) ? createReportResponse.Explanation
-                    : "Empty explanation.",
-                    StatusCode = StatusCode.Fail,
-                };
             }
         }
-
-        return new BusinessResponse
+        else
         {
-            Message = "Report request unsuccessful.",
-            StatusCode = StatusCode.Fail,
-        };
+            // QUESTION: Rapor gönderimi başarısız ise buna karşılık başka bir business tetiklenmeli mi?   
+            _logger.LogError("Report request unsuccessful.");
+        }
     }
 }

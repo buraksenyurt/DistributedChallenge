@@ -9,26 +9,17 @@ using GamersWorld.Common.Requests;
 
 namespace GamersWorld.EventBusiness;
 
-/*
-    Reporting App Service tarafı rapor hazır olduğunda External Reader Service'i tetikler
-    ve raporun hazır olduğunu HTTP Post çağrısı ile bildirir.
-
-    External Reader Service bunun üzerine ReportReadyEvent hazırlar ve kuyruğa bırakır.
-
-    Kuyruk dinleyicisi bu event'i yakalarsa aşağıdaki sınıfa ait nesne örneğini kullanır.
-    Execute içerisindeki işlemler yapılır.
-*/
 public class ReportDocumentAvailable(
     ILogger<ReportDocumentAvailable> logger
     , IHttpClientFactory httpClientFactory
-    , IDocumentSaver documentSaver)
+    , IDocumentWriter documentSaver)
     : IEventDriver<ReportReadyEvent>
 {
     private readonly ILogger<ReportDocumentAvailable> _logger = logger;
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
-    private readonly IDocumentSaver _documentSaver = documentSaver;
+    private readonly IDocumentWriter _documentSaver = documentSaver;
 
-    public async Task<BusinessResponse> Execute(ReportReadyEvent appEvent)
+    public async Task Execute(ReportReadyEvent appEvent)
     {
         var client = _httpClientFactory.CreateClient("KahinGateway");
         _logger.LogInformation("{TraceId}, Ref Doc: {CreatedReportId}", appEvent.TraceId, appEvent.CreatedReportId);
@@ -39,14 +30,11 @@ public class ReportDocumentAvailable(
         };
         var response = await client.PostAsJsonAsync("/getReport", payload);
         _logger.LogInformation("GetReport call status code is {StatusCode}", response.StatusCode);
-
+        // QUESTION: Doküman çekilen servise ulaşılamadı. Akış nasıl devam etmeli?
         if (!response.IsSuccessStatusCode)
         {
-            return new BusinessResponse
-            {
-                StatusCode = StatusCode.Fail,
-                Message = "Save document failed!"
-            };
+            _logger.LogError("Document fetching error");
+            return;
         }
 
         var getReportResponse = await response.Content.ReadFromJsonAsync<GetReportResponse>();
@@ -62,21 +50,9 @@ public class ReportDocumentAvailable(
                 DocumentId = getReportResponse.DocumentId,
                 Content = content,
             };
-            var length = await _documentSaver.SaveTo(docContent);
-            if (length == 0)
-            {
-                return new BusinessResponse
-                {
-                    StatusCode = StatusCode.Fail,
-                    Message = "Report document has not been saved."
-                };
-            }
+            var saveResponse = await _documentSaver.SaveTo(docContent);
+            _logger.LogInformation("Save response is {StatusCode} and message is {Message}"
+            , saveResponse.StatusCode, saveResponse.Message);
         }
-
-        return new BusinessResponse
-        {
-            StatusCode = StatusCode.DocumentSaved,
-            Message = "Report document has been saved."
-        };
     }
 }
