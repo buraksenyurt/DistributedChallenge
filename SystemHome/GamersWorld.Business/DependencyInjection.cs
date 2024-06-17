@@ -9,7 +9,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddBusinessDrivers(this IServiceCollection services)
     {
-        services.AddTransient<IDocumentSaver, FileSaver>();
+        services.AddTransient<IDocumentWriter, FileSaver>();
         services.AddTransient<IEventQueueService, RabbitMqService>();
 
         return services;

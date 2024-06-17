@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GamersWorld.MQ\GamersWorld.MQ.csproj" />
     <ProjectReference Include="..\GamersWorld.Events\GamersWorld.Events.csproj" />
+    <ProjectReference Include="..\GamersWorld.Common\GamersWorld.Common.csproj" />
   </ItemGroup>
 
  <ItemGroup>
