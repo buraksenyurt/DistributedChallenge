@@ -1,0 +1,74 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "GamersWorld.Messenger",
+    "collectionId": "bbaf2fbd-a8e3-4060-a0f2-064c968b2294",
+    "dateExported": "2024-06-17T18:36:22.065Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "edf5fbf4-4e23-4c2d-9c88-b24426cd6090",
+            "colId": "bbaf2fbd-a8e3-4060-a0f2-064c968b2294",
+            "containerId": "",
+            "name": "Post New Report Request",
+            "url": "http://localhost:5234",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-06-17T18:31:47.634Z",
+            "modified": "2024-06-17T18:32:14.495Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Geçen Yılki Satışlar\",\n  \"expression\": \"Geçen yıl satılan oyunlardan en iyi yorum alan ilk 50 oyunun ülke bazlı satış rakamları.\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "aaf673fe-3c85-45d9-ad3d-fa56bb1ea0cd",
+            "colId": "bbaf2fbd-a8e3-4060-a0f2-064c968b2294",
+            "containerId": "",
+            "name": "Health Check",
+            "url": "http://localhost:5234/health",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-06-17T18:33:22.650Z",
+            "modified": "2024-06-17T18:33:33.288Z",
+            "headers": []
+        },
+        {
+            "_id": "ae7afc4d-83ec-4310-b184-507899920901",
+            "colId": "bbaf2fbd-a8e3-4060-a0f2-064c968b2294",
+            "containerId": "",
+            "name": "Validation Errors (Title)",
+            "url": "http://localhost:5234",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-06-17T18:34:04.238Z",
+            "modified": "2024-06-17T18:34:59.112Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Geçen Yılki\",\n  \"expression\": \"Geçen yıl satılan oyunlardan en iyi yorum alan ilk 50 oyunun ülke bazlı satış rakamları.\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "d0cf2598-d6cc-44b0-872f-0e720cb9ce8d",
+            "colId": "bbaf2fbd-a8e3-4060-a0f2-064c968b2294",
+            "containerId": "",
+            "name": "Validation Request(Expression)",
+            "url": "http://localhost:5234",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-06-17T18:35:23.307Z",
+            "modified": "2024-06-17T18:36:05.826Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Geçen Yılki Satışlar\",\n  \"expression\": \"\"\n}",
+                "form": []
+            }
+        }
+    ],
+    "ref": "nJYSkXKmItNjACGmj026uRotR8qJ6p8jkTnMAevtdDFaOh3TlERB8vZWN1FGfj_cl6RutczBVe317JhIz9uR6g"
+}

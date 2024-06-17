@@ -1,6 +1,36 @@
 @GamersWorld.Messenger_HostAddress = http://localhost:5234
 
-GET {{GamersWorld.Messenger_HostAddress}}/weatherforecast/
+GET {{GamersWorld.Messenger_HostAddress}}/health
 Accept: application/json
+
+###
+
+POST {{GamersWorld.Messenger_HostAddress}}/
+Accept: application/json
+
+{
+  "title": "Geçen Yılki Satışlar",
+  "expression": "Geçen yıl satılan oyunlardan en iyi yorum alan ilk 50 oyunun ülke bazlı satış rakamları."
+}
+
+###
+
+POST {{GamersWorld.Messenger_HostAddress}}/
+Accept: application/json
+
+{
+  "title": "Son Satışlar",
+  "expression": "Geçen yıl satılan oyunlardan en iyi yorum alan ilk 50 oyunun ülke bazlı satış rakamları."
+}
+
+###
+
+POST {{GamersWorld.Messenger_HostAddress}}/
+Accept: application/json
+
+{
+  "title": "Geçen Yılki Satışlar",
+  "expression": ""
+}
 
 ###
