@@ -37,7 +37,7 @@ public class PostReportRequestTests
     }
 
     [Fact]
-    public async Task Should_Return_Success_Response_Test()
+    public async Task Should_Log_Success_Message_When_Response_Is_Success()
     {
         // Arrange
         var eventPayload = new ReportRequestedEvent
@@ -71,15 +71,21 @@ public class PostReportRequestTests
             });
 
         // Act
-        var result = await _postReportRequest.Execute(eventPayload);
+        await _postReportRequest.Execute(eventPayload);
 
         // Assert
-        Assert.Equal(StatusCode.Success, result.StatusCode);
-        Assert.Equal($"Report request sent. DocumentId: {createReportResponse.DocumentId}", result.Message);
+        _loggerMock.Verify(
+            x => x.Log(
+                It.Is<LogLevel>(logLevel => logLevel == LogLevel.Information),
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Report request sent")),
+                It.IsAny<Exception?>(),
+                (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()
+        ), Times.Once);
     }
 
     [Fact]
-    public async Task Should_Return_Fail_Response_When_Api_Fail_Test()
+    public async Task Should_Log_Error_Message_When_Api_Fails()
     {
         // Arrange
         var eventPayload = new ReportRequestedEvent
@@ -100,15 +106,21 @@ public class PostReportRequestTests
             });
 
         // Act
-        var result = await _postReportRequest.Execute(eventPayload);
+        await _postReportRequest.Execute(eventPayload);
 
         // Assert
-        Assert.Equal(StatusCode.Fail, result.StatusCode);
-        Assert.Equal("Report request unsuccessful.", result.Message);
+        _loggerMock.Verify(
+            x => x.Log(
+                It.Is<LogLevel>(logLevel => logLevel == LogLevel.Error),
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Report request unsuccessful")),
+                It.IsAny<Exception?>(),
+                (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()
+        ), Times.Once);
     }
 
     [Fact]
-    public async Task Should_Return_Fail_Response_When_Api_Returns_Fail_Status_Test()
+    public async Task Should_Log_Error_Message_When_Response_Status_Is_Fail()
     {
         // Arrange
         var eventPayload = new ReportRequestedEvent
@@ -141,9 +153,25 @@ public class PostReportRequestTests
             });
 
         // Act
-        var result = await _postReportRequest.Execute(eventPayload);
+        await _postReportRequest.Execute(eventPayload);
 
         // Assert
-        Assert.Equal(StatusCode.Fail, result.StatusCode);
+        _loggerMock.Verify(
+            x => x.Log(
+                It.Is<LogLevel>(logLevel => logLevel == LogLevel.Information),
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Report request sent")),
+                It.IsAny<Exception>(),
+                (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()
+            ), Times.Never);
+
+        _loggerMock.Verify(
+            x => x.Log(
+                It.Is<LogLevel>(logLevel => logLevel == LogLevel.Error),
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Report request unsuccessful")),
+                It.IsAny<Exception?>(),
+                (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()
+        ), Times.Once);
     }
 }
