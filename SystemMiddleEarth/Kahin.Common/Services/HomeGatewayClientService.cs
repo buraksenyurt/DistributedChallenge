@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using Kahin.Common.Constants;
@@ -18,11 +19,11 @@ public class HomeGatewayClientService(
 
     public async Task<string> Post(ReportStatusRequest request)
     {
-        var payload = JsonSerializer.Serialize(request);
         var url = await _secretStoreService.GetSecretAsync(SecretName.HomeGatewayApiAddress);
-        _logger.LogInformation("Payload for sending {Payload}", payload);
-        var content = new StringContent(payload, Encoding.UTF8, EncodingContent.Json);
-        var response = await _httpClient.PostAsync($"http://{url}", content);
+        // Enable this with JsonSerializer.Serialize if you want to see the payload
+        // _logger.LogInformation("Payload for sending {Payload}", payload);
+        
+        var response = await _httpClient.PostAsJsonAsync($"http://{url}", request);
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadAsStringAsync();
