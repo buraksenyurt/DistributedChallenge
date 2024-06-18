@@ -21,9 +21,6 @@ jobs:
       with:
         dotnet-version: 8.0.x
       
-    - name: Clear NuGet Cache
-      run: dotnet nuget locals all --clear
-
     - name: Restore dependencies
       run: dotnet restore --configfile NuGet.Config
 
