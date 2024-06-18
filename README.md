@@ -303,9 +303,9 @@ dotnet add package SecretsAgent
 
 ![Nuget Server 03](/images/local_nuget_03.png)
 
-## Github Actions Problemi
+## Github Actions ve Local Nuget Repo Problemi
 
-Şu anda github actions ile ilgili bir sorun var. Doğal olarak local nuget reposuna github actions'ın erişimi yok. Bunu aşmak için ngrok ürününden yararlanmaya çalışıyorum. Ngrok'a kayıt olduktan sonra [şu adresteki talimatlar](https://dashboard.ngrok.com/get-started/setup/linux) ile ilerlenebilir. Local repoyu Ngrok'a kayıt etmek için örneğin aşağıdaki gibi bir kullanım yeterli olacaktır.
+Şu anda github actions ile ilgili bir sorun var. Doğal olarak local nuget reposuna github actions'ın erişimi yok. Bunu aşmak için ngrok ürününden yararlandım. Ngrok'a kayıt olduktan sonra [şu adresteki talimatlar](https://dashboard.ngrok.com/get-started/setup/linux) ile ilerlenebilir. Local repoyu Ngrok'a kayıt etmek için örneğin aşağıdaki gibi bir kullanım yeterli olacaktır.
 
 ```bash
 # local ortama Ngrok client aracını kurmak için
@@ -322,7 +322,39 @@ Bu komut ile local makineye gelen talepler de izlenebilir.
 
 ![Ngrok 01](/images/ngrok_01.png)
 
-Tabi bir problemim var. Github actions bir sebepten global nuget paketlerini de ngrok ile yönlendirilen local repoda arıyor. Bu nedenle şu anda tüm build'lar patlamakta. Bunu çözmeye çalışıyorum.
+Tabi bir problemim var. ngrok'u her çalıştırdığımızda bizim için vereceği adres bilgisi değişecek. Buna göre dotnet.yml isimli workflow'un içeriğini de güncellemek gerekecek. Daha iyi bir çözüm bulana kadar böyle ilerleyeceğim. Örnek build akışımıza ait yml dosyası da şimdilik aşağıdaki gibi.
+
+```yml
+name: .NET
+
+on:
+  push:
+    branches: [ "main","dev" ]
+  pull_request:
+    branches: [ "main","dev" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+      
+    # This ngrok address will change every run probably!
+    - name: Restore dependencies
+      run: dotnet restore --source https://b8d5-78-183-110-17.ngrok-free.app/v3/index.json --source https://api.nuget.org/v3/index.json
+
+    - name: Build
+      run: dotnet build --no-restore
+      
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+```
 
 ## Bazı Düşünceler _(Some Thoughts)_
 
