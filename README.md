@@ -303,6 +303,27 @@ dotnet add package SecretsAgent
 
 ![Nuget Server 03](/images/local_nuget_03.png)
 
+## Github Actions Problemi
+
+Şu anda github actions ile ilgili bir sorun var. Doğal olarak local nuget reposuna github actions'ın erişimi yok. Bunu aşmak için ngrok ürününden yararlanmaya çalışıyorum. Ngrok'a kayıt olduktan sonra [şu adresteki talimatlar](https://dashboard.ngrok.com/get-started/setup/linux) ile ilerlenebilir. Local repoyu Ngrok'a kayıt etmek için örneğin aşağıdaki gibi bir kullanım yeterli olacaktır.
+
+```bash
+# local ortama Ngrok client aracını kurmak için
+snap install ngrok
+
+# Bize verilen authentication-key ile doğrulanmak için
+ngrok config add-authtoken [AuthenticationKey]
+
+# Ngrok tarafından tahsis edilecek domain ile local adrese gelinmesi için
+ngrok http http://localhost:5000
+```
+
+Bu komut ile local makineye gelen talepler de izlenebilir.
+
+![Ngrok 01](/images/ngrok_01.png)
+
+Tabi bir problemim var. Github actions bir sebepten global nuget paketlerini de ngrok ile yönlendirilen local repoda arıyor. Bu nedenle şu anda tüm build'lar patlamakta. Bunu çözmeye çalışıyorum.
+
 ## Bazı Düşünceler _(Some Thoughts)_
 
 - Senaryoda farklı sistemler olduğunu düşünmeliyiz. **SystemMiddleEarth** raporlama tarafını üstleniyor. Gelen rapor ifadesini anlamlı bir betiğe dönüştürmek, işletmek, pdf gibi çıktısını hazırlamak ve hazır olduğuna dair **SystemHome**' ü bilgilendirmek görevleri arasında. Kendi içerisindeki süreçlerin yönetiminde de **Event** bazlı bir yaklaşıma gidebilir. Söz gelimi ifadenin bir **Gen AI** ile anlamlı hale dönüştürülmesi birkaç saniye sürebilecek bir iş olabilir. Dönüştürme işi başarısız ise bununla ilgili olarak da **SystemHome**'ü bilgilendirmesi gerekebilir. Dolayısıyla bu da yeni bir olayın üretilmesi, **SystemHome**'e aktarılması ve **SystemHome** tarafında bu hatanın ele alınmasını gerektirecektir _(Çizelgede e1 ile ifade edilen kısım)_ Tüm çözümü zorlaştırmamak adına belki bu kısım şimdilik atlanabilir.
