@@ -22,7 +22,7 @@ jobs:
         dotnet-version: 8.0.x
       
     - name: Restore dependencies
-      run: dotnet restore --configfile NuGet.Config
+      run: dotnet restore --source https://b8d5-78-183-110-17.ngrok-free.app/v3/index.json --source https://api.nuget.org/v3/index.json
 
     - name: Build
       run: dotnet build --no-restore
