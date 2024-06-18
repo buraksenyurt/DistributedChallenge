@@ -26,5 +26,18 @@ services:
     volumes:
       - "localstack_data:/var/lib/localstack"
 
+  baget:
+    image: loicsharma/baget:latest
+    ports:
+      - "5000:80"
+    environment:
+      - Baget__Database__Type=Sqlite
+      - Baget__Database__ConnectionString=Data Source=/var/baget/baget.db
+      - Baget__Storage__Type=FileSystem
+      - Baget__Storage__Path=/var/baget/packages
+    volumes:
+      - baget_data:/var/baget
+
 volumes:
   localstack_data:
+  baget_data:
