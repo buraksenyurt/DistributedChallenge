@@ -1,6 +1,4 @@
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 using Kahin.Common.Constants;
 using Kahin.Common.Requests;
 using Microsoft.Extensions.Logging;
