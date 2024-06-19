@@ -1,16 +1,20 @@
 namespace GamersWorld.WebApp.Utility;
 
+using GamersWorld.Common.Constants;
 using GamersWorld.Common.Requests;
 using GamersWorld.Common.Responses;
+using Kahin.Common.Services;
 
-public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServiceClient> logger)
+public class MessengerServiceClient(HttpClient httpClient, ISecretStoreService secretStoreService, ILogger<MessengerServiceClient> logger)
 {
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<MessengerServiceClient> _logger = logger;
+    private readonly ISecretStoreService _secretStoreService = secretStoreService;
 
     public async Task<BusinessResponse> SendNewReportRequestAsync(NewReportRequest request)
     {
-        var response = await _httpClient.PostAsJsonAsync("http://localhost:5234/", request);
+        var messengerApiAddress = await _secretStoreService.GetSecretAsync(SecretName.MessengerApiAddress);
+        var response = await _httpClient.PostAsJsonAsync($"http://{messengerApiAddress}/", request);
 
         if (!response.IsSuccessStatusCode)
         {
