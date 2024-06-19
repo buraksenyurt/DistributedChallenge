@@ -5,18 +5,27 @@ export AWS_SECRET_ACCESS_KEY=test
 export AWS_DEFAULT_REGION=eu-west-1
 
 add_secret() {
-    secret_name=$1
-    secret_value=$2
-    aws --endpoint-url=http://localhost:4566 secretsmanager create-secret --name $secret_name --secret-string $secret_value
-    echo "Added secret $secret_name"
+    environment=$1
+    secret_name=$2
+    secret_value=$3
+    aws --endpoint-url=http://localhost:4566 secretsmanager create-secret \
+        --name "$secret_name" \
+        --secret-string "$secret_value" \
+        --tags Key=Environment,Value=$environment
+    echo "Added secret $secret_name for $environment"
 }
 
-add_secret "RedisConnectionString"              "localhost:6379"
-add_secret "EvalServiceApiAddress"              "localhost:5147/api"
-add_secret "HomeGatewayApiAddress"              "localhost:5102"
-add_secret "MessengerApiAddress"                "localhost:5234"
-add_secret "RabbitMQHostName"                   "localhost"
-add_secret "RabbitMQUsername"                   "scothtiger"
-add_secret "RabbitMQPassword"                   "P@ssw0rd"
-add_secret "RabbitMQPort"                       "5672"
-add_secret "KahinReportingGatewayApiAddres"     "localhost:5218"
+# Development Secrets
+add_secret "Development" "RedisConnectionString" "localhost:6379"
+add_secret "Development" "EvalServiceApiAddress" "localhost:5147/api"
+add_secret "Development" "HomeGatewayApiAddress" "localhost:5102"
+add_secret "Development" "MessengerApiAddress" "localhost:5234"
+add_secret "Development" "RabbitMQHostName" "localhost"
+add_secret "Development" "RabbitMQUsername" "scothtiger"
+add_secret "Development" "RabbitMQPassword" "P@ssw0rd"
+add_secret "Development" "RabbitMQPort" "5672"
+add_secret "Development" "KahinReportingGatewayApiAddress" "localhost:5218"
+
+# Test Environment Secrets
+
+# Production Environment Secrets
