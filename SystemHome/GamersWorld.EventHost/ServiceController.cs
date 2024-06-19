@@ -8,13 +8,14 @@ public static class ServiceController
     {
         try
         {
+            logger.LogInformation("Health check for {Address}", client.BaseAddress);
             var response = await client.GetAsync("/health");
 
             return response.IsSuccessStatusCode;
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Hedef servis için sağlık kontrolü başarısız !!!");
+            logger.LogError(ex, "Healt check unsuccedded");
 
             return false;
         }

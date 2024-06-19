@@ -1,16 +1,16 @@
 using GamersWorld.EventBusiness;
 using GamersWorld.Events;
-using GamersWorld.Common.Settings;
 using GamersWorld.EventHost.Factory;
 using GamersWorld.SDK;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
+using Kahin.Common.Services;
+using GamersWorld.Common.Constants;
 
 namespace GamersWorld.EventHost;
 
 public static class DependencyInjection
-{    
+{
     // Event ve Business nesne bağımlılıklarının DI servislerine yükleyen metot
 
     public static IServiceCollection AddEventDrivers(this IServiceCollection services)
@@ -26,19 +26,15 @@ public static class DependencyInjection
     }
 
     // RabbitMq hizmetini DI servisine yükleyen fonksiyon
-    
-    public static IServiceCollection AddRabbitMq(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddRabbitMq(this IServiceCollection services)
     {
-        var rabbitMqSettings = new RabbitMqSettings();
-        configuration.GetSection("RabbitMqSettings").Bind(rabbitMqSettings);
-
-        // RabbitMQ bağlantı bilgileri appSettings sekmesinden çekilir
+        var secretStoreService = services.BuildServiceProvider().GetRequiredService<ISecretStoreService>();
         services.AddSingleton<IConnectionFactory>(c => new ConnectionFactory()
         {
-            HostName = rabbitMqSettings.HostName,
-            UserName = rabbitMqSettings.Username,
-            Password = rabbitMqSettings.Password,
-            Port = rabbitMqSettings.Port
+            HostName = secretStoreService.GetSecretAsync(SecretName.RabbitMQHostName).GetAwaiter().GetResult(),
+            UserName = secretStoreService.GetSecretAsync(SecretName.RabbitMQUsername).GetAwaiter().GetResult(),
+            Password = secretStoreService.GetSecretAsync(SecretName.RabbitMQPassword).GetAwaiter().GetResult(),
+            Port = Convert.ToInt32(secretStoreService.GetSecretAsync(SecretName.RabbitMQPort).GetAwaiter().GetResult())
         });
         services.AddSingleton<EventConsumer>();
 

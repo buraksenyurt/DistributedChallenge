@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using GamersWorld.Common.Constants;
 
 namespace GamersWorld.EventHost;
 
@@ -21,7 +22,7 @@ public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvide
         using var connection = _connectionFactory.CreateConnection();
         using var channel = connection.CreateModel();
         // reports_event_queue isimli bir kuyruk tanımlanır
-        channel.QueueDeclare(queue: "report_events_queue", durable: false, exclusive: false, autoDelete: false,
+        channel.QueueDeclare(queue: Names.EventQueue, durable: false, exclusive: false, autoDelete: false,
             arguments: null);
 
         var consumer = new EventingBasicConsumer(channel);
@@ -37,7 +38,7 @@ public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvide
             await Handle(eventType, message);
         };
 
-        channel.BasicConsume(queue: "report_events_queue", autoAck: true, consumer: consumer);
+        channel.BasicConsume(queue: Names.EventQueue, autoAck: true, consumer: consumer);
 
         Console.WriteLine("Listening event queue...Press any key to exit.");
         Console.ReadLine();

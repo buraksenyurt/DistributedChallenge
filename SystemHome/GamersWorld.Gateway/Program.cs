@@ -3,6 +3,7 @@ using GamersWorld.Common.Enums;
 using GamersWorld.Common.Requests;
 using GamersWorld.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Kahin.Common.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Heal
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
+builder.Services.AddSingleton<ISecretStoreService, SecretStoreService>();
 builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
 
 var app = builder.Build();

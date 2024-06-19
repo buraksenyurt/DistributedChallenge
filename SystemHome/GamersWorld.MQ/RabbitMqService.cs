@@ -1,5 +1,5 @@
-using GamersWorld.Common.Settings;
-using Microsoft.Extensions.Configuration;
+using GamersWorld.Common.Constants;
+using Kahin.Common.Services;
 using RabbitMQ.Client;
 using System.Text.Json;
 
@@ -14,24 +14,15 @@ public class RabbitMqService
     private readonly IConnection _connection;
     private readonly IModel _channel;
 
-    public RabbitMqService(IConfiguration configuration)
+    public RabbitMqService(ISecretStoreService secretStoreService)
     {
-        var settings = configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
-        var factory = new ConnectionFactory();
-        if (settings == null)
+        var factory = new ConnectionFactory
         {
-            factory.HostName = "localhost";
-            factory.UserName = "scothtiger";
-            factory.Password = "P@ssw0rd";
-            factory.Port = 5672;
-        }
-        else
-        {
-            factory.HostName = settings.HostName;
-            factory.UserName = settings.Username;
-            factory.Password = settings.Password;
-            factory.Port = settings.Port;
-        }
+            HostName = secretStoreService.GetSecretAsync(SecretName.RabbitMQHostName).GetAwaiter().GetResult(),
+            UserName = secretStoreService.GetSecretAsync(SecretName.RabbitMQUsername).GetAwaiter().GetResult(),
+            Password = secretStoreService.GetSecretAsync(SecretName.RabbitMQPassword).GetAwaiter().GetResult(),
+            Port = Convert.ToInt32(secretStoreService.GetSecretAsync(SecretName.RabbitMQPort).GetAwaiter().GetResult())
+        };
 
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
@@ -39,7 +30,7 @@ public class RabbitMqService
 
     public void PublishEvent<T>(T eventMessage)
     {
-        var queueName = "report_events_queue";
+        var queueName = Names.EventQueue;
         _channel.QueueDeclare(queue: queueName,
                              durable: false,
                              exclusive: false,

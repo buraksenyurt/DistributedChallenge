@@ -3,6 +3,12 @@ namespace GamersWorld.Common.Constants;
 public static class SecretName
 {
     public const string MessengerApiAddress = "MessengerApiAddress";
+    public const string RabbitMQHostName = "RabbitMQHostName";
+    public const string RabbitMQPort = "RabbitMQPort";
+    public const string RabbitMQUsername = "RabbitMQUsername";
+    public const string RabbitMQPassword = "RabbitMQPassword";
+    public const string KahinReportingGatewayApiAddres = "KahinReportingGatewayApiAddres";
+
 }
 
 public static class EncodingContent
@@ -12,6 +18,6 @@ public static class EncodingContent
 
 public static class Names
 {
-    public const string EventStream = "reportStream";
-    public const string EventStreamField = "events";
+    public const string EventQueue = "report_events_queue";
+    public const string KahinGateway = "KahinGateway";
 }
