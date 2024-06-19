@@ -13,3 +13,4 @@ get_secret() {
 get_secret "RedisConnectionString"
 get_secret "EvalServiceApiAddress"
 get_secret "HomeGatewayApiAddress"
+get_secret "MessengerApiAddress"

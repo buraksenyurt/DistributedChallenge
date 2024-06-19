@@ -11,6 +11,7 @@ add_secret() {
     echo "Added secret $secret_name"
 }
 
-add_secret "RedisConnectionString" "localhost:6379"
-add_secret "EvalServiceApiAddress" "localhost:5147/api"
-add_secret "HomeGatewayApiAddress" "localhost:5102"
+add_secret "RedisConnectionString"  "localhost:6379"
+add_secret "EvalServiceApiAddress"  "localhost:5147/api"
+add_secret "HomeGatewayApiAddress"  "localhost:5102"
+add_secret "MessengerApiAddress"    "localhost:5234"
