@@ -6,6 +6,7 @@ using GamersWorld.Common.Responses;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;
 using GamersWorld.Common.Requests;
+using GamersWorld.Common.Constants;
 
 namespace GamersWorld.EventBusiness;
 
@@ -21,7 +22,7 @@ public class ReportDocumentAvailable(
 
     public async Task Execute(ReportReadyEvent appEvent)
     {
-        var client = _httpClientFactory.CreateClient("KahinGateway");
+        var client = _httpClientFactory.CreateClient(Names.KahinGateway);
         _logger.LogInformation("{TraceId}, Ref Doc: {CreatedReportId}", appEvent.TraceId, appEvent.CreatedReportId);
 
         var payload = new

@@ -4,6 +4,7 @@ using GamersWorld.Common.Enums;
 using GamersWorld.Common.Responses;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;
+using GamersWorld.Common.Constants;
 
 namespace GamersWorld.EventBusiness;
 
@@ -15,7 +16,7 @@ public class PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFac
 
     public async Task Execute(ReportRequestedEvent appEvent)
     {
-        var client = _httpClientFactory.CreateClient("KahinGateway");
+        var client = _httpClientFactory.CreateClient(Names.KahinGateway);
         _logger.LogInformation("{TraceId}, {Title}, {Expression}", appEvent.TraceId, appEvent.Title, appEvent.Expression);
 
         var payload = new
