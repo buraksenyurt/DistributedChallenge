@@ -11,7 +11,12 @@ add_secret() {
     echo "Added secret $secret_name"
 }
 
-add_secret "RedisConnectionString"  "localhost:6379"
-add_secret "EvalServiceApiAddress"  "localhost:5147/api"
-add_secret "HomeGatewayApiAddress"  "localhost:5102"
-add_secret "MessengerApiAddress"    "localhost:5234"
+add_secret "RedisConnectionString"              "localhost:6379"
+add_secret "EvalServiceApiAddress"              "localhost:5147/api"
+add_secret "HomeGatewayApiAddress"              "localhost:5102"
+add_secret "MessengerApiAddress"                "localhost:5234"
+add_secret "RabbitMQHostName"                   "localhost"
+add_secret "RabbitMQUsername"                   "scothtiger"
+add_secret "RabbitMQPassword"                   "P@ssw0rd"
+add_secret "RabbitMQPort"                       "5672"
+add_secret "KahinReportingGatewayApiAddres"     "localhost:5218"
