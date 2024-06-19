@@ -7,7 +7,7 @@ public static class SecretName
     public const string RabbitMQPort = "RabbitMQPort";
     public const string RabbitMQUsername = "RabbitMQUsername";
     public const string RabbitMQPassword = "RabbitMQPassword";
-    public const string KahinReportingGatewayApiAddres = "KahinReportingGatewayApiAddres";
+    public const string KahinReportingGatewayApiAddress = "KahinReportingGatewayApiAddress";
 
 }
 

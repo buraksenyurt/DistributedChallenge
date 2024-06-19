@@ -3,7 +3,7 @@ namespace GamersWorld.WebApp.Utility;
 using GamersWorld.Common.Constants;
 using GamersWorld.Common.Requests;
 using GamersWorld.Common.Responses;
-using Kahin.Common.Services;
+using SecretsAgent;
 
 public class MessengerServiceClient(HttpClient httpClient, ISecretStoreService secretStoreService, ILogger<MessengerServiceClient> logger)
 {

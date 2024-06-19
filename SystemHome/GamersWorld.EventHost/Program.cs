@@ -3,8 +3,8 @@ using GamersWorld.Business;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Kahin.Common.Services;
 using GamersWorld.Common.Constants;
+using SecretsAgent;
 
 // RabbitMq ayarlarını da ele alacağımız için appSettings konfigurasyonu için bir builder nesnesi örnekledik
 var configuration = new ConfigurationBuilder()
@@ -30,7 +30,7 @@ services.AddRabbitMq();
 services.AddHttpClient(Names.KahinGateway, (serviceProvider, client) =>
 {
     var secretStoreService = serviceProvider.GetRequiredService<ISecretStoreService>();
-    var reportingServiceHostAddress = secretStoreService.GetSecretAsync(SecretName.KahinReportingGatewayApiAddres).GetAwaiter().GetResult();
+    var reportingServiceHostAddress = secretStoreService.GetSecretAsync(SecretName.KahinReportingGatewayApiAddress).GetAwaiter().GetResult();
     client.BaseAddress = new Uri($"http://{reportingServiceHostAddress}");
 });
 

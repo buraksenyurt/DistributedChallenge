@@ -1,6 +1,6 @@
 using GamersWorld.Common.Constants;
-using Kahin.Common.Services;
 using RabbitMQ.Client;
+using SecretsAgent;
 using System.Text.Json;
 
 namespace GamersWorld.MQ;

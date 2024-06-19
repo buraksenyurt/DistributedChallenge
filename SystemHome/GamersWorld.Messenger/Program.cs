@@ -5,7 +5,7 @@ using GamersWorld.Common.Enums;
 using GamersWorld.Events;
 using GamersWorld.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Kahin.Common.Services;
+using SecretsAgent;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ISecretStoreService, SecretStoreService>();
 builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 

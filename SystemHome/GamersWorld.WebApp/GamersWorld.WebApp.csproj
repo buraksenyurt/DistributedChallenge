@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SecretsAgent" Version="1.0.0" />
+    <PackageReference Include="SecretsAgent" Version="1.0.1" />
   </ItemGroup>
 
   <PropertyGroup>

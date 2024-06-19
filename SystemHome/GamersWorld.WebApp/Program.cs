@@ -1,5 +1,5 @@
 using GamersWorld.WebApp.Utility;
-using Kahin.Common.Services;
+using SecretsAgent;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +7,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<MessengerServiceClient>();
 builder.Services.AddSingleton<ISecretStoreService, SecretStoreService>();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 

@@ -1,8 +1,8 @@
 using Kahin.Common.Constants;
-using Kahin.Common.Services;
 using Kahin.Common.Validation;
 using Kahin.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using SecretsAgent;
 
 namespace Kahin.ReportingGateway;
 

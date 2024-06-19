@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Kahin.Common.Constants;
 using Kahin.Common.Requests;
-using Kahin.Common.Services;
+using SecretsAgent;
 using StackExchange.Redis;
 
 namespace Kahin.MQ;

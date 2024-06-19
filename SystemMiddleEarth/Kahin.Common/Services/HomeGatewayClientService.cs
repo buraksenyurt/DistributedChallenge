@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using Kahin.Common.Constants;
 using Kahin.Common.Requests;
 using Microsoft.Extensions.Logging;
+using SecretsAgent;
 
 namespace Kahin.Common.Services;
 
