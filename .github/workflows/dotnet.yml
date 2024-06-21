@@ -21,9 +21,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
       
-    # This ngrok address will change every run probably!
     - name: Restore dependencies
-      run: dotnet restore --source https://b8d5-78-183-110-17.ngrok-free.app/v3/index.json --source https://api.nuget.org/v3/index.json
+      run: dotnet restore --source https://monkfish-singular-blindly.ngrok-free.app/v3/index.json --source https://api.nuget.org/v3/index.json
 
     - name: Build
       run: dotnet build --no-restore
