@@ -350,15 +350,13 @@ snap install ngrok
 # Bize verilen authentication-key ile doğrulanmak için
 ngrok config add-authtoken [AuthenticationKey]
 
-# Ngrok tarafından tahsis edilecek domain ile local adrese gelinmesi için
-ngrok http http://localhost:5000
+# Ngro tarafında static domain oluşturulduktan sonra ise aşağıdaki gibi gelinebilir.
+ngrok http --domain=monkfish-singular-blindly.ngrok-free.app 5000
 ```
 
 Bu komut ile local makineye gelen talepler de izlenebilir.
 
 ![Ngrok 01](/images/ngrok_01.png)
-
-Tabi bir problemim var. ngrok'u her çalıştırdığımızda bizim için vereceği adres bilgisi değişecek. Buna göre dotnet.yml isimli workflow'un içeriğini de güncellemek gerekecek. Daha iyi bir çözüm bulana kadar böyle ilerleyeceğim. Örnek build akışımıza ait yml dosyası da şimdilik aşağıdaki gibi.
 
 ```yml
 name: .NET
@@ -381,9 +379,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
       
-    # This ngrok address will change every run probably!
-    - name: Restore dependencies
-      run: dotnet restore --source https://b8d5-78-183-110-17.ngrok-free.app/v3/index.json --source https://api.nuget.org/v3/index.json
+   - name: Restore dependencies
+      run: dotnet restore --source https://monkfish-singular-blindly.ngrok-free.app/v3/index.json --source https://api.nuget.org/v3/index.json
 
     - name: Build
       run: dotnet build --no-restore
