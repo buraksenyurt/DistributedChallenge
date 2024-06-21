@@ -10,4 +10,10 @@ public static class DependencyInjection
 
         return app;
     }
+    public static IApplicationBuilder AddJudgeMiddleware(this IApplicationBuilder app, MetricOptions metricOptions)
+    {
+        app.UseMiddleware<PerformanceBehavior>(metricOptions);
+
+        return app;
+    }
 }
