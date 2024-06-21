@@ -7,12 +7,17 @@ public static class DependencyInjection
     public static IApplicationBuilder AddJudgeMiddleware(this IApplicationBuilder app)
     {
         app.UseMiddleware<PerformanceBehavior>();
+        app.UseMiddleware<InputOutputBehavior>();
 
         return app;
     }
     public static IApplicationBuilder AddJudgeMiddleware(this IApplicationBuilder app, MetricOptions metricOptions)
     {
-        app.UseMiddleware<PerformanceBehavior>(metricOptions);
+        if (!metricOptions.DeactivatePerformanceBehavior)
+            app.UseMiddleware<PerformanceBehavior>(metricOptions);
+
+        if (!metricOptions.DeactivateInputOutputBehavior)
+            app.UseMiddleware<InputOutputBehavior>(metricOptions);
 
         return app;
     }

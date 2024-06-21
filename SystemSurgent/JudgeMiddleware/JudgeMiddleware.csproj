@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <PackageId>JudgeMiddleware</PackageId>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <Authors>Burak Selim Senyurt</Authors>
     <Company>Maybe Later Mefrüşat, Hırdavat, Yazılım Geliştirme</Company>
     <Description>A few Middleware functionality for Asp.Net Web Api Projects</Description>
