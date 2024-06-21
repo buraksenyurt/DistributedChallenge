@@ -278,6 +278,17 @@ chmod +x manage_secrets.sh
 ```bash
 # Bir dotnet kütüphanesi için nuget paketi oluşturmak
 dotnet pack -c Release
+
+# Olurda kendi paketlerimiz güncellendikten sonra
+# bir sebepten yeni sürümler çekilemez,
+# Local Cache temizliği işe yarayabilir
+dotnet nuget locals all --clear
+
+# Local Nuget cache listesi için
+dotnet nuget locals all --list
+
+# Solution içerisinde yüklü paketlere ait detaylı bilgiler için
+dotnet list package
 ```
 
 Bu komutla oluşan .nupkg uzantılı dosya Nuget paketimizdir. Bu ve diğer olası paketleri SystemSurgent altındaki Packages klasöründe depolayabiliriz.
