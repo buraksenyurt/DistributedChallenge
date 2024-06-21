@@ -63,6 +63,21 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 
 **NOT: Yeni servisler ilave edildikçe burası güncellenmeli.**
 
+![inventory](./images/current_inventory.png)
+
+Envanterimize göre sistemin genel dayanıklılığını test edebileceğimiz ve Resilience taktiklerini ele alabileceğimiz senaryoları aşağıdaki listeye ekleyebiliriz. [Netflix'in Chaos Monkey'si](https://netflix.github.io/chaosmonkey/) tadında sistemde bu tip sorunları çıkartabilecek bazı uygulamalar üzerinde de çalışılabilir.
+
+- [ ] WebApp rapor talep eder. Messenger servis cevap veremez durumdadır.
+- [ ] WebApp rapor talep eder. Messenge servis talebi alır. Event nesnesi oluşur. Event Host uygulaması kapalıdır.
+- [ ] WebApp rapor talep eder. Messenge servis talebi alır. Event nesnesi oluşur ama RabbitMQ aşağı inmiş haldedir.
+- [ ] Rapor talebi System MiddleEarth'e gönderilmek istenir. Kahin.ReportingGateway cevap veremez durumdadır.
+- [ ] Kahin.ReportingGateway talebi alır, AuditApi cevap veremez durumdadır.
+- [ ] Kahin.ReportingGateway talebi alır. AuditApi ifadeyi onaylar. Redis aşağı inmiş haldedir.
+- [ ] WebApp rapor talep eder. Messenger servis talebi alır. Event nesnesi oluşur. Rapor talebi Kahin.ReportingGateway'e ulaşır. AuditApi ifadeyi onaylar. Rapor hazır hale gelir. Geri bildirim için GamersWorld.Gateway servisi çağrılır. GamersWorld.Gateway ayakta ama talep fazlalığı sebebiyle cevap verebilir konumda değildir.
+- [ ] AWS Secrets Manager herhangi bir anda aşağıya iner.
+- [ ] System MiddleEarth servislerinin cevap verme sürelerinde _(Response Times)_ gecikmeler söz konusudur ve belirgin bir darboğaz oluşmaya başlar.
+- [ ] System MiddleEarth'teki Redis servisi herhangi bir zamanda çöker.
+
 ## Yapılacaklar Listesi _(ToDo List)_
 
 - [x] Solution yapısı ve proje isimlendirmeleri gözden geçirilebilir.
