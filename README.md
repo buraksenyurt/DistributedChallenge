@@ -8,13 +8,12 @@ Projeye katkı vermek isteyenler dev branch'inden yeni bir branch açıp ilerley
 
 ## Vaka Senaryosu
 
-Kullanıcılarına oyun kiralayan bir internet şirketi olduğunu düşünelim. Şirketin son kullanıcılara _(End Users)_ sunduğu web ve mobile bazlı uygulamalar dışında şirket genel merkezinde kullanılan Back Office tadında farklı bir uygulamaları daha var. Bu uygulamada yer alan ekranlardan birisi de raporlama talepleri için kullanılıyor. Şirketin sahip olduğu veri miktarı ve rapor taleplerinin belli bir onay sürecinden geçip içeriklerini farklı alanlardan toplaması nedeniyle bir raporun çekilmesi bazen birkaç dakikayı bulabiliyor. Her ne kadar şirket içerisinde bu işleri üstelenen bir raporlama ekibi bulunsa da personelin kullandığı web sayfalarında bu şekilde belirsiz süreyle beklenmeleri istenmiyor. Çözüm olarak rapor talebinin girildiği bir formun tasarlanması ve talebin raporlama ekibine ait uygulamalara ulaştırılıp hazır hale geldikten sonra personelin bilgilendirilmesi şeklinde bir yol izlenmesine karar veriliyor. Tüm bu sürecin tamamen sistem tarafından gerçekleştirilmesi ve otomatize edilmesi isteniyor.
+Kullanıcılarına oyun kiralayan bir internet şirketi olduğunu düşünelim. Şirketin son kullanıcılara _(End Users)_ sunduğu web ve mobile bazlı uygulamalar dışında şirket genel merkezinde kullanılan Back Office tadında farklı bir uygulamaları daha var. Bu uygulamada yer alan ekranlardan birisi de raporlama talepleri için kullanılıyor. Şirketin sahip olduğu veri miktarı ve rapor taleplerinin belli bir onay sürecinden geçip içeriklerini farklı alanlardan toplaması nedeniyle bir raporun çekilmesi bazen birkaç dakikayı bulabiliyor. Her ne kadar şirket içerisinde bu işleri üstelenen bir raporlama ekibi bulunsa da personelin kullandığı web sayfalarında bu şekilde belirsiz süreyle beklenmeleri istenmiyor. Çözüm olarak rapor talebinin girildiği bir formun tasarlanması ve talebin raporlama ekibine ait uygulamalara ulaştırılıp hazır hale geldikten sonra personelin bilgilendirilmesi şeklinde bir yol izlenmesine karar veriliyor. Tüm bu sürecin tamamen sistem tarafından gerçekleştirilmesi ve otomatize edilmesi isteniyor. İşte Örnek Birkaç Rapor İfadesi;
 
-```text
-İşte Örnek Bir Rapor İfadesi
-
-Geçtiğimiz yıl kiraladığımız oyunlardan en çok pozitif yorum alan ilk 25 adedinin ülke bazlı satış rakamları.
-```
+- Geçtiğimiz yıl kiraladığımız oyunlardan en çok pozitif yorum alan ilk 25 adedinin ülke bazlı satış rakamları.
+- Dün yapılan kiralamalardan firma ve oyun türü bazında gruplanmış kar değerleri.
+- Geçen ay en yüksek puan alan oyuncuların yaptığı toplam harcama tutarları.
+- Dövüş oyunlarından puan olarak benimkini geçen en iyi 10 oyunun kullanım istatistikleri.
 
 ## Çözümleme ile İlgili Bilgiler
 
@@ -44,22 +43,31 @@ Senaryodaki adımları da aşağıdaki gibi tarifleyelim.
 
 Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin Form uygulamasından girilen rapor talebindeki ifade geçersiz olabilir. Sistemden bilgi sızdırmaya yönelik güvensiz ifadeler içerebilir vs. Bu gibi bir durumda SystemMiddleEarth'nin geçersiz bir mesaj olduğuna dair SystemHome'ü bilgilendirmesi de gerekir. SystemMiddleEarth'nin kendi içinde ele alıp detay loglarla değerlendirdiği bu durum SystemHome'e bir Event olarak girer ve buna karşılık da bir süreç başlayabilir. Resimde görülen soru işaret kısmı dikkat edileceği üzere hata durumu yakalandıktan sonra ne yapılacağına dairdir. Rapor talebi sahibinin bilgilendirilmesi için e-posta gönderimi, sistem loglarına bilgi düşülmesi, form uygulamasında popup ile bilgilendirme yapılması vs gibi bir işler bütünü başlatılabilir.
 
-## Solution için Aday Uygulama Türleri
+## Envanter
 
-- Rapor formu girilen arabirim basit bir **Asp.Net MVC** uygulaması olabilir.
-- Rapor taleplerine ait olayları oluşturup gönderen **Event Trigger Asp.Net Web Api** olabilir.
-- Asenkron mesaj kuyruğu için **RabbitMQ** kullanılabilir. İşi kolaylaştırmak adına RabbitMQ bir **Docker Container **ile işletilebilir.
-- **Event Consumer/Publisher Service(Gamersworld.EventHost)** tarafı esas itibariyle rapor talebi, rapor alındı ve rapor hazır gibi aksiyonları sürekli dinleyen ve farklı aksiyonları tetikleyen bir ara katman gibi duruyor. Sürekli çalışır konumda olan bir process olması ve farklı gerçekleşen aksiyonlar için başka bağımlılıkları tetikleyebilecek bir yapıda tasarlanması iyi olabilir. Bu anlamda sürekli çalışan dinleyici ve aksiyonları gerçekleştiren bir kütüphane topluluğuna ihtiyaç duyabiliriz. Yani host uygulamanın hangi olay gerçekleştiğinde hangi aksiyonları alacağını belki bir DI Container üstünden çözümleyerek çalışıyor olması gerekebilir. Bu durumda üzerinde durduğumuz bu Challenge içerisindeki başka bir Challenge olarak karşımıza çıkıyor.
-- **External Reader Service(GamersWorld.Gateway)** aslında **Reporting App Service(Kahin.Gateway)**'in tüketilmesi için açılmış bir Endpoint sağlayıcı rolünde. Onu da ayrı bir Web API hizmeti olarak tasarlayabiliriz.
-- **Reporting App Service(Kahin.Gateway)** ve **Reporting File Service** birer Web API hizmeti olarak tasarlanabilirler. Local Storage olarak senaryoyu kolayca uygulayabilmek adına fiziki dosya sistemini kullanacaklarını düşünebiliriz. Yani hazırlanması bir süre alacak PDF içeriğini fiziki diske kaydetip buradan okuyarak **External Reader Service(GamersWorld.Gateway)**'e iletebilirler.
-- **Report Trace Service** uygulaması da esasında sürekli ayakta olması ve ReportIsHere olayını dinlemesi gereken bir konumadır. Bu anlamda sürekli çalışan bir **Console** uygulaması olarak da tasarlanabilir.
+Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulamalara ait envanter aşağıdaki gibidir.
 
-  **Not:** Dikkat edileceği üzere **Event Consumer/Publisher(Gamersworld.EventHost)** olarak araya koyduğumuz katman bazı olaylar ile ilgili olarak bir takım aksiyonlar alıyor. Örneğin **ReportRequestEvent** gerçekleştiğinde **POST** ile bir dış servise talep gönderiyor ve **ReportIsHereEvent** gerçekleştiğinde de GET Report ile **PDF/CSV/XML/JSON** çekip Back Office tarafındaki Local Storage'a kaydediyor. Dolayısıyla bir event karşılığında bir takım aksiyonlar icra ediyor. Bunları A event'i için şu Interface implementasyonunu çağır şeklinde başka bir katmana alarak runtime'da çözümlenebilir bağımlılıkar haline getirebilir ve böylece runtime çalışıyorken yeni event-aksiyon bağımlılıklarını sisteme dahil edebiliriz belki de. Dolayısıyla aradaki **Event Consumer/Publisher(Gamersworld.EventHost)**'ın tasarımı oldukça önemli.
+| **Sistem**     | **Servis**             | **Tür**     | **Görev**                                            | **Dev Adres**  |
+|----------------|------------------------|-------------|------------------------------------------------------|----------------|
+| HAL            | Eval.AuditApi          | REST        | Rapor talebindeki ifadeyi denetlemek                 | localhost:5147 |
+| HOME           | GamersWorld.Gateway    | REST        | Middle Earth için rapor statü güncelleme hizmeti     | localhost:5102 |
+| HOME           | GamersWorld.Messenger  | REST        | Web önyüz için backend servisi                       | localhost:5234 |
+| HOME           | GamersWorld.WebApp     | Self Hosted | Web uygulaması                                       | localhost:5093 |
+| HOME           | GamersWorld.EventHost  | Self Hosted | Home sistemindeki event yönetim hizmeti              | N/A            |
+| MIDDLE EARTH   | Kahin.ReportingGateway | REST        | Rapor hazırlama, yollama ve durum güncellemesi       | localhost:5218 |
+| MIDDLE EARTH   | Kahin.EventHost        | Self Hosted | Middle Earth tarafında çalışan event yönetim hizmeti | N/A            |
+| DOCKER COMPOSE | RabbitMQ               |             | Async Event Queue                                    | localhost:5672 |
+| DOCKER COMPOSE | Redis                  |             | Distributed Key Value Store                          | localhost:6379 |
+| DOCKER COMPOSE | LocalStack             |             | Local AWS Secrets Manager                            | localhost:4566 |
+| DOCKER COMPOSE | BaGet                  |             | Local NuGet Server                                   | localhost:5000 |
+
+**NOT: Yeni servisler ilave edildikçe burası güncellenmeli.**
 
 ## Yapılacaklar Listesi _(ToDo List)_
 
 - [x] Solution yapısı ve proje isimlendirmeleri gözden geçirilebilir.
 - [x] Solution için **Sonarqube** entegrasyonu yapılıp kod kalite metrikleri ölçümlenebilir.
+- [x] Servis fonksiyon çağrılarının response time değerlerinin ölçümü için middleware tarafına ek bir nuget paketi yazılabilir.
 - [ ] Bazı kütüphaneler için birim testler _(Unit Tests)_ yazılarak **Code Coverage** değerleri yükseltilebilir.
 - [ ] Kahin _(SystemMiddleEarth)_ sistemindeki projeler için ayrı bir **Solution** açılabilir.
 - [ ] Loglama altyapısı **Elasticsearch**'e alınabilir.
