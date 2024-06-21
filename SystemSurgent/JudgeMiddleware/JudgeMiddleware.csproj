@@ -8,15 +8,25 @@
 
   <PropertyGroup>
     <PackageId>JudgeMiddleware</PackageId>
-    <Version>1.0.5</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>apiMiddleware performance logging middleware</PackageTags>
+    <Version>1.0.6</Version>
     <Authors>Burak Selim Senyurt</Authors>
     <Company>Maybe Later Mefrüşat, Hırdavat, Yazılım Geliştirme</Company>
     <Description>A few Middleware functionality for Asp.Net Web Api Projects</Description>
+    <TargetFramework>net8.0</TargetFramework>    
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>true</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
