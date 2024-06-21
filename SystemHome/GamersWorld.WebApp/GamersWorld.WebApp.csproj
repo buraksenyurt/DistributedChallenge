@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="SecretsAgent" Version="1.0.1" />
-    <PackageReference Include="JudgeMiddleware" Version="1.0.4" />
+    <PackageReference Include="JudgeMiddleware" Version="1.0.8" />
   </ItemGroup>
 
   <PropertyGroup>

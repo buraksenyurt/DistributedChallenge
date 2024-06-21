@@ -17,7 +17,7 @@ public static class DependencyInjection
             app.UseMiddleware<PerformanceBehavior>(metricOptions);
 
         if (!metricOptions.DeactivateInputOutputBehavior)
-            app.UseMiddleware<InputOutputBehavior>(metricOptions);
+            app.UseMiddleware<InputOutputBehavior>();
 
         return app;
     }

@@ -16,7 +16,8 @@ var app = builder.Build();
 
 app.AddJudgeMiddleware(new MetricOptions
 {
-    DurationThreshold = TimeSpan.FromSeconds(2)
+    DurationThreshold = TimeSpan.FromSeconds(2),
+    DeactivateInputOutputBehavior = true,
 });
 
 if (!app.Environment.IsDevelopment())
