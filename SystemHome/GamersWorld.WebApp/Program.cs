@@ -1,4 +1,5 @@
 using GamersWorld.WebApp.Utility;
+using JudgeMiddleware;
 using SecretsAgent;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,11 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 var app = builder.Build();
+
+app.AddJudgeMiddleware(new MetricOptions
+{
+    DurationThreshold = TimeSpan.FromSeconds(2)
+});
 
 if (!app.Environment.IsDevelopment())
 {

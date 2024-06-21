@@ -4,6 +4,7 @@ using GamersWorld.Common.Requests;
 using GamersWorld.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SecretsAgent;
+using JudgeMiddleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,11 @@ builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 var app = builder.Build();
+
+app.AddJudgeMiddleware(new MetricOptions
+{
+    DurationThreshold = TimeSpan.FromSeconds(2)
+});
 
 if (app.Environment.IsDevelopment())
 {

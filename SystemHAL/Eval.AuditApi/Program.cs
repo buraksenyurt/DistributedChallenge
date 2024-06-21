@@ -3,6 +3,7 @@ using System.Data;
 using Eval.AuditLib.Contracts;
 using Eval.AuditLib.Model;
 using Eval.Lib;
+using JudgeMiddleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,11 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 var app = builder.Build();
+
+app.AddJudgeMiddleware(new MetricOptions
+{
+    DurationThreshold = TimeSpan.FromSeconds(2)
+});
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using JudgeMiddleware;
 using Kahin.Common.Constants;
 using Kahin.Common.Entities;
 using Kahin.Common.Enums;
@@ -15,6 +16,10 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 var app = builder.Build();
+app.AddJudgeMiddleware(new MetricOptions
+{
+    DurationThreshold = TimeSpan.FromSeconds(2)
+});
 
 if (app.Environment.IsDevelopment())
 {
