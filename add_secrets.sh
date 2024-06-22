@@ -17,8 +17,9 @@ add_secret() {
 
 # Development Secrets
 add_secret "Development" "RedisConnectionString" "localhost:6379"
-add_secret "Development" "EvalServiceApiAddress" "localhost:5147/api"
+add_secret "Development" "EvalServiceApiAddress" "localhost:5147"
 add_secret "Development" "HomeGatewayApiAddress" "localhost:5102"
+add_secret "Development" "HomeWebAppAddress" "localhost:5093"
 add_secret "Development" "MessengerApiAddress" "localhost:5234"
 add_secret "Development" "RabbitMQHostName" "localhost"
 add_secret "Development" "RabbitMQUsername" "scothtiger"
