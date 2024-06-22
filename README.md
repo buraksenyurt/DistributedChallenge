@@ -60,6 +60,7 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 | DOCKER COMPOSE | Redis                  |             | Distributed Key Value Store                          | localhost:6379 |
 | DOCKER COMPOSE | LocalStack             |             | Local AWS Secrets Manager                            | localhost:4566 |
 | DOCKER COMPOSE | BaGet                  |             | Local NuGet Server                                   | localhost:5000 |
+| SYSTEM ASGARD  | Heimdall               | Self Hosted | Servis izleme uygulaması                             | localhost:5247 |
 
 **NOT: Yeni servisler ilave edildikçe burası güncellenmeli.**
 
@@ -388,6 +389,16 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 ```
+
+## Servisler için HealthCheck Uygulaması
+
+Envanterimizdeki servislerin sayısı giderek artıyor. Bu servislerin sağlık durumlarını kontrol etmek için Health Check mekanizmalarından yararlanabiliriz. Kendi yazdığımız servisler için birer health kontrol noktası eklemiştik ancak sistemimizde RabbitMQ, Redis, Localstack, BaGet vb başka servisler de var. Bu tip hizmetlerin sağlık durumlarını kolayca izleyebiliriz. Bunun için [Microsoft.AspNetCore.HealthChecks Nuget paketi](https://www.nuget.org/packages/AspNetCore.HealthChecks.System) ve nimetlerinden yararlanılabilir. Kendisi birçok servis için hazır builder ve UI içeriyor. SystemAsgard içerisinde yer alan Heimdall isimli uygulama bu paketi kullanan bir monitoring uygulaması. Örneğin sistemdeki Redis ve RabbitMQ servisleri ayakta ise şöyle bir arayüz elde edebiliriz.
+
+![Service monitoring 01](./images/heimdall_01.png)
+
+Servisler çalışır vaziyetteyken de aşağıdaki gibi.
+
+![Service monitoring 02](./images/heimdall_02.png)
 
 ## Bazı Düşünceler _(Some Thoughts)_
 
