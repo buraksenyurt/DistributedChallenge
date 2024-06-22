@@ -22,7 +22,7 @@ add_secret "Development" "HomeGatewayApiAddress" "localhost:5102"
 add_secret "Development" "MessengerApiAddress" "localhost:5234"
 add_secret "Development" "RabbitMQHostName" "localhost"
 add_secret "Development" "RabbitMQUsername" "scothtiger"
-add_secret "Development" "RabbitMQPassword" "P@ssw0rd"
+add_secret "Development" "RabbitMQPassword" "123456"
 add_secret "Development" "RabbitMQPort" "5672"
 add_secret "Development" "KahinReportingGatewayApiAddress" "localhost:5218"
 

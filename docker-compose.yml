@@ -3,7 +3,7 @@ services:
     image: rabbitmq:management
     environment:
       RABBITMQ_DEFAULT_USER: scothtiger
-      RABBITMQ_DEFAULT_PASS: P@ssw0rd
+      RABBITMQ_DEFAULT_PASS: 123456
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -36,6 +36,18 @@ services:
     volumes:
       - baget_data:/var/baget
 
+  postgresql:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: johndoe
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: healthchecksdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
 volumes:
   localstack_data:
   baget_data:
+  postgres_data:
