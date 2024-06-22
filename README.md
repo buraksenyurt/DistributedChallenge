@@ -97,6 +97,8 @@ Envanterimize göre sistemin genel dayanıklılığını test edebileceğimiz ve
 - [ ] Log mesajları veya **Business Response** nesnelerindeki metinsel ifadeler için çoklu dil desteği _(Multilanguage Support)_ getirilebilir.
 - [ ] **SystemHome**'daki **Event Host** uygulaması bir çeşit Pipeline. **Event** yönetiminde ilgili business nesneler çağırılmadan önce ve sonrası için akan veri içeriklerini loglayacak ortak bir mekanizma yazılabilir.
 - [ ] Birçok fonksiyonda standart girdi çıktı loglaması, **exception handling** gibi **Cross-Cutting Concern** olarak da adlandırılan işlemler söz konusu. Bu kullanımda **AOP**_(Aspect Oriented Programming)_ tabanlı bir yaklaşıma gidilebilir belki.
+- [x] Sistemdeki servisleri izlemek için Microsoft HealthCheck paketinden yararlanılan bir arabirim geliştirilebilir.
+- [ ] **SystemAsgard**'daki **Heimdall** uygulamasındaki monitoring bilgileri **Prometheus, Application Insights, Seq, Datadog** gibi dış araçlara gönderilebilir.
 
 ## Runtime _(Standart)_
 
@@ -396,7 +398,7 @@ Envanterimizdeki servislerin sayısı giderek artıyor. Bu servislerin sağlık 
 
 ![Service monitoring 01](./images/heimdall_01.png)
 
-Servisler çalışır vaziyetteyken de aşağıdaki gibi.
+Diğer sistem servislerini ekledikten sonraki duruma da bir bakalım. Aşağıdaki ekran görüntüsünde olduğu gibi servislerin durumlarını izlememiz mümkün.
 
 ![Service monitoring 02](./images/heimdall_02.png)
 
