@@ -1,5 +1,6 @@
 using GamersWorld.WebApp.Utility;
 using JudgeMiddleware;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SecretsAgent;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<MessengerServiceClient>();
 builder.Services.AddSingleton<ISecretStoreService, SecretStoreService>();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -27,6 +29,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseHealthChecks("/health");
 
 app.UseRouting();
 
