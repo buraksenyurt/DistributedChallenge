@@ -1,45 +1,63 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using Heimdall.Services;
+using SecretsAgent;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+var loggerFactory = LoggerFactory.Create(logging =>
+{
+    logging.AddConsole();
+});
+ILogger<SecretStoreService> logger = loggerFactory.CreateLogger<SecretStoreService>();
+IConfiguration configuration = builder.Configuration;
+var secretStoreService = new SecretStoreService(logger, configuration);
+
 builder.Services.AddHealthChecks()
     .AddRedis(
-        redisConnectionString: "localhost:6379"
-        , name: "Redis"
-        , tags: ["Docker-Compose", "Redis"])
+        redisConnectionString: "localhost:6379",
+        name: "Redis",
+        tags: ["Docker-Compose", "Redis"])
     .AddRabbitMQ(
-        rabbitConnectionString: "amqp://scothtiger:123456@localhost:5672/"
-        , name: "RabbitMQ"
-        , tags: ["Docker-Compose", "Rabbit MQ"]
-        )
+        rabbitConnectionString: "amqp://scothtiger:123456@localhost:5672/",
+        name: "RabbitMQ",
+        tags: ["Docker-Compose", "Rabbit MQ"])
     .AddCheck(
-        name: "Eval Audit Api"
-        , instance: new HealthChecker(new Uri("http://localhost:5147/health"))
-        , tags: ["SystemHAL", "REST"]
+        name: "Eval Audit Api",
+        instance: new HealthChecker(
+                    new Uri($"http://{secretStoreService.GetSecretAsync("EvalServiceApiAddress")
+                    .GetAwaiter().GetResult()}/health")),
+        tags: ["SystemHAL", "REST"]
     )
     .AddCheck(
-        name: "GamersWorld Gateway"
-        , instance: new HealthChecker(new Uri("http://localhost:5102/health"))
-        , tags: ["SystemHOME", "REST"]
+        name: "GamersWorld Gateway",
+        instance: new HealthChecker(
+                    new Uri($"http://{secretStoreService.GetSecretAsync("HomeGatewayApiAddress")
+                    .GetAwaiter().GetResult()}/health")),
+        tags: ["SystemHOME", "REST"]
     )
     .AddCheck(
-        name: "GamersWorld Messenger"
-        , instance: new HealthChecker(new Uri("http://localhost:5234/health"))
-        , tags: ["SystemHOME", "REST", "BackendApi"]
+        name: "GamersWorld Messenger",
+        instance: new HealthChecker(
+                    new Uri($"http://{secretStoreService.GetSecretAsync("MessengerApiAddress")
+                    .GetAwaiter().GetResult()}/health")),
+        tags: ["SystemHOME", "REST", "BackendApi"]
     )
     .AddCheck(
-        name: "GamersWorld Web App"
-        , instance: new HealthChecker(new Uri("http://localhost:5093/health"))
-        , tags: ["SystemHOME", "WebApp"]
+        name: "GamersWorld Web App",
+        instance: new HealthChecker(
+                    new Uri($"http://{secretStoreService.GetSecretAsync("HomeWebAppAddress")
+                    .GetAwaiter().GetResult()}/health")),
+        tags: ["SystemHOME", "WebApp"]
     )
     .AddCheck(
-        name: "Kahin Reporting Gateway"
-        , instance: new HealthChecker(new Uri("http://localhost:5218/health"))
-        , tags: ["SystemMIDDLE_EARTH", "REST"]
+        name: "Kahin Reporting Gateway",
+        instance: new HealthChecker(
+                    new Uri($"http://{secretStoreService.GetSecretAsync("KahinReportingGatewayApiAddress")
+                    .GetAwaiter().GetResult()}/health")),
+        tags: ["SystemMIDDLE_EARTH", "REST"]
     );
 
 builder.Services.AddHealthChecksUI(setupSettings =>

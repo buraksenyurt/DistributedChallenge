@@ -21,7 +21,7 @@ public static class DependencyInjection
                 .GetSecretAsync(SecretName.EvalServiceApiAddress)
                 .GetAwaiter()
                 .GetResult();
-            client.BaseAddress = new Uri($"http://{evalApiServiceAddress}");
+            client.BaseAddress = new Uri($"http://{evalApiServiceAddress}/api");
         });
         services.AddTransient<ValidatorClient>();
         services.AddSingleton<IRedisService, RedisService>();
