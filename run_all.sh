@@ -20,3 +20,6 @@ gnome-terminal --title="HOME - Web App" -- bash -c "cd SystemHome/GamersWorld.We
 
 # Start Middle Earth System EventHost
 gnome-terminal --title="MIDDLE EARTH - Event Consumer Host" -- bash -c "cd SystemMiddleEarth/Kahin.EventHost && dotnet run; exec bash"
+
+# Start Asgard System Heimdall
+gnome-terminal --title="ASGARD - Heimdall Monitoring UI" -- bash -c "cd SystemAsgard/Heimdall && dotnet run; exec bash"
