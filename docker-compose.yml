@@ -36,16 +36,16 @@ services:
     volumes:
       - baget_data:/var/baget
 
-  postgresql:
+  postgres:
     image: postgres:latest
     environment:
       POSTGRES_USER: johndoe
-      POSTGRES_PASSWORD: P@ssw0rd
+      POSTGRES_PASSWORD: somew0rds
       POSTGRES_DB: ReportDb
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgres/data
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -55,7 +55,7 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      - postgresql
+      - postgres
 
 volumes:
   localstack_data:

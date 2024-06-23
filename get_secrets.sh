@@ -31,6 +31,7 @@ get_secret $environment "RabbitMQUsername"
 get_secret $environment "RabbitMQPassword"
 get_secret $environment "RabbitMQPort"
 get_secret $environment "KahinReportingGatewayApiAddress"
+get_secret $environment "ReportDbConnStr"
 
 # environment="Test"
 
