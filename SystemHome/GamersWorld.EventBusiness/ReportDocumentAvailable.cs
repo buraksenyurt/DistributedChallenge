@@ -51,7 +51,7 @@ public class ReportDocumentAvailable(
                 DocumentId = getReportResponse.DocumentId,
                 Content = content,
             };
-            var saveResponse = await _documentSaver.SaveTo(docContent);
+            var saveResponse = await _documentSaver.SaveAsync(docContent);
             _logger.LogInformation("Save response is {StatusCode} and message is {Message}"
             , saveResponse.StatusCode, saveResponse.Message);
         }

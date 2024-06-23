@@ -31,4 +31,20 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
 
         return insertedId;
     }
+
+    public async Task<byte[]> ReadDocumentAsync(DocumentReadRequest documentReadRequest)
+    {
+        var connStr = await _secretStoreService.GetSecretAsync("ReportDbConnStr");
+
+        using var dbConnection = new NpgsqlConnection(connStr);
+        dbConnection.Open();
+
+        var sql = @"
+                SELECT Content FROM Documents
+                WHERE DocumentId = @DocumentId";
+
+        var content = await dbConnection.QueryFirstOrDefaultAsync<byte[]>(sql, new { documentReadRequest.DocumentId });
+
+        return content;
+    }
 }

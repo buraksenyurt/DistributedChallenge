@@ -12,6 +12,7 @@ public static class DependencyInjection
     {
         services.AddTransient<IDocumentRepository, DocumentRepository>();
         services.AddTransient<IDocumentWriter, TableSaver>();
+        services.AddTransient<IDocumentReader, TableReader>();
         //services.AddTransient<IDocumentWriter, FileSaver>();
         services.AddTransient<IEventQueueService, RabbitMqService>();
 

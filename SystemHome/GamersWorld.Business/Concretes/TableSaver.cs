@@ -16,7 +16,7 @@ public class TableSaver(ILogger<FileSaver> logger, IEventQueueService eventQueue
     private readonly IEventQueueService _eventQueueService = eventQueueService;
     private readonly IDocumentRepository _documentRepository = documentRepository;
 
-    public async Task<BusinessResponse> SaveTo(DocumentSaveRequest payload)
+    public async Task<BusinessResponse> SaveAsync(DocumentSaveRequest payload)
     {
         if (payload == null || payload.Content == null)
         {
