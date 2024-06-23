@@ -10,6 +10,7 @@
     <ProjectReference Include="..\GamersWorld.MQ\GamersWorld.MQ.csproj" />
     <ProjectReference Include="..\GamersWorld.Events\GamersWorld.Events.csproj" />
     <ProjectReference Include="..\GamersWorld.Common\GamersWorld.Common.csproj" />
+    <ProjectReference Include="..\GamersWorld.Repository\GamersWorld.Repository.csproj" />
   </ItemGroup>
 
  <ItemGroup>
