@@ -17,13 +17,15 @@ var secretStoreService = new SecretStoreService(logger, configuration);
 
 builder.Services.AddHealthChecks()
     .AddRedis(
-        redisConnectionString: "localhost:6379",
+        redisConnectionString: secretStoreService.GetSecretAsync("RedisConnectionString")
+                    .GetAwaiter().GetResult(),
         name: "Redis",
         tags: ["Docker-Compose", "Redis"])
     .AddRabbitMQ(
-        rabbitConnectionString: "amqp://scothtiger:123456@localhost:5672/",
+        rabbitConnectionString: secretStoreService.GetSecretAsync("RabbitAmqpConnectionString")
+                    .GetAwaiter().GetResult(),
         name: "RabbitMQ",
-        tags: ["Docker-Compose", "Rabbit MQ"])
+        tags: ["Docker-Compose", "RabbitMQ"])
     .AddCheck(
         name: "Eval Audit Api",
         instance: new HealthChecker(
