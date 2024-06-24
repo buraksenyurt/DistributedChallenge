@@ -14,6 +14,6 @@ public class SignalrNotificationService(ISecretStoreService secretStoreService)
         var hubAddress = await _secretStoreService.GetSecretAsync("HomeWebAppHubAddress");
         HubConnection hubConnection = new HubConnectionBuilder().WithUrl($"http://{hubAddress}").Build();
         hubConnection.StartAsync().Wait();
-        await hubConnection.SendAsync("StatusMessage", message);
+        await hubConnection.SendAsync("NotifyClient", message);
     }
 }

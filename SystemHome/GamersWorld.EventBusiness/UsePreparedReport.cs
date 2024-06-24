@@ -6,11 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace GamersWorld.EventBusiness;
 
-public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReader documentReader)
+public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReader documentReader, INotificationService notificationService)
     : IEventDriver<ReportIsHereEvent>
 {
     private readonly ILogger<UsePreparedReport> _logger = logger;
     private readonly IDocumentReader _documentReader = documentReader;
+    private readonly INotificationService _notificationService = notificationService;
 
     public async Task Execute(ReportIsHereEvent appEvent)
     {
@@ -25,8 +26,8 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReade
         // QUESTION Sorunlu bir yer. Data byte[]'a convert edilemeyen bir şeyse ne olacak?
         if (response != null && response.Data != null)
         {
-            _logger.LogInformation("Catched {Length} bytes document", ((byte[])response.Data).Length);
-            // QUESTION Rapor içeriği elimizde ise Web App'a veya farklı bir Provider'a gönderebilir miyiz?
+            _logger.LogInformation("Catched {Length} bytes document.", ((byte[])response.Data).Length);
+            await _notificationService.PushAsync($"{appEvent.CreatedReportId} is ready!");
         }
     }
 }
