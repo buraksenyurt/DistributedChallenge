@@ -1,3 +1,4 @@
+using GamersWorld.WebApp;
 using GamersWorld.WebApp.Utility;
 using JudgeMiddleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -11,6 +12,7 @@ builder.Services.AddScoped<MessengerServiceClient>();
 builder.Services.AddSingleton<ISecretStoreService, SecretStoreService>();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
+builder.Services.AddSignalR();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -38,5 +40,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<StatusHub>("notifyHub");
 
 app.Run();

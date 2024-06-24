@@ -1,58 +1,109 @@
 ﻿@model GamersWorld.WebApp.Models.ReportRequestModel
 
-<h2>Gamers World Rapor Talep Ekranı</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gamers World Rapor Talep Ekranı</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+    <style>
+        .notification-popup {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            min-width: 300px;
+            z-index: 1050;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Gamers World Rapor Talep Ekranı</h2>
 
-<form asp-action="SubmitReport" method="post" class="needs-validation" novalidate>
-    <div asp-validation-summary="All" class="text-danger"></div>
+        <form asp-action="SubmitReport" method="post" class="needs-validation" novalidate>
+            <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="mb-3">
-        <label asp-for="Owner.FullName" class="form-label"></label>
-        <input asp-for="Owner.FullName" class="form-control" required />
-        <div asp-validation-for="Owner.FullName" class="text-danger"></div>
-        <div class="invalid-feedback">
-            Rapor talep sahibi adı girilmeli
-        </div>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Owner.Title" class="form-label"></label>
-        <input asp-for="Owner.Title" class="form-control" required />
-        <div asp-validation-for="Owner.Title" class="text-danger"></div>
-        <div class="invalid-feedback">
-            Rapor talep sahibi ünvanı girilmeli
-        </div>
-    </div>
-    <div class="mb-3">
-        <label asp-for="ReportTitle" class="form-label"></label>
-        <input asp-for="ReportTitle" class="form-control" required />
-        <div asp-validation-for="ReportTitle" class="text-danger"></div>
-        <div class="invalid-feedback">
-            Raporu tanımlayan kısa bir tanımlama gerekli
-        </div>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Expression" class="form-label"></label>
-        <input asp-for="Expression" class="form-control" required />
-        <div asp-validation-for="Expression" class="text-danger"></div>
-        <div class="invalid-feedback">
-            İstenilen raporu yazınız
-        </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Gönder</button>
-</form>
+            <div class="mb-3">
+                <label asp-for="Owner.FullName" class="form-label"></label>
+                <input asp-for="Owner.FullName" class="form-control" required />
+                <div asp-validation-for="Owner.FullName" class="text-danger"></div>
+                <div class="invalid-feedback">
+                    Rapor talep sahibi adı girilmeli
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Owner.Title" class="form-label"></label>
+                <input asp-for="Owner.Title" class="form-control" required />
+                <div asp-validation-for="Owner.Title" class="text-danger"></div>
+                <div class="invalid-feedback">
+                    Rapor talep sahibi ünvanı girilmeli
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ReportTitle" class="form-label"></label>
+                <input asp-for="ReportTitle" class="form-control" required />
+                <div asp-validation-for="ReportTitle" class="text-danger"></div>
+                <div class="invalid-feedback">
+                    Raporu tanımlayan kısa bir tanımlama gerekli
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Expression" class="form-label"></label>
+                <input asp-for="Expression" class="form-control" required />
+                <div asp-validation-for="Expression" class="text-danger"></div>
+                <div class="invalid-feedback">
+                    İstenilen raporu yazınız
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Gönder</button>
+        </form>
 
-<script>
-    (function () {
-        'use strict'
-        var forms = document.querySelectorAll('.needs-validation')
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
-</script>
+        <div class="notification-popup alert alert-success" role="alert" id="notificationPopup">
+            <span id="notifyMessage"></span>
+            <button type="button" class="close" aria-label="Close" onclick="closePopup()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder().withUrl("/notifyHub").build();
+
+        connection.on("ReadNotification", function (message) {
+            document.getElementById("notifyMessage").innerText = message;
+            showPopup();
+        });
+
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        function showPopup() {
+            const popup = document.getElementById("notificationPopup");
+            popup.style.display = "block";
+            setTimeout(closePopup, 5000);
+        }
+
+        function closePopup() {
+            const popup = document.getElementById("notificationPopup");
+            popup.style.display = "none";
+        }
+
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+</body>
+</html>
