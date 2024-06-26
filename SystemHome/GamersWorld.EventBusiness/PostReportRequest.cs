@@ -17,18 +17,13 @@ public class PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFac
     public async Task Execute(ReportRequestedEvent appEvent)
     {
         var client = _httpClientFactory.CreateClient(Names.KahinGateway);
-        _logger.LogInformation("{TraceId}, {EmployeeId}, {Title}, {Expression}"
-            , appEvent.TraceId
-            , appEvent.EmployeeId
-            , appEvent.Title
-            , appEvent.Expression);
+        _logger.LogInformation("{TraceId}, {Title}, {Expression}", appEvent.TraceId, appEvent.Title, appEvent.Expression);
 
         var payload = new
         {
             appEvent.TraceId,
             appEvent.Title,
-            appEvent.Expression,
-            appEvent.EmployeeId
+            appEvent.Expression
         };
 
         _logger.LogInformation("Service Uri : {ServiceUri}", client.BaseAddress);

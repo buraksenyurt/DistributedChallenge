@@ -80,12 +80,7 @@ app.MapPost("/", async (
     , ValidatorClient validatorClient
     , IRedisService redisService) =>
 {
-    logger.LogInformation("{TraceId}, {ClientId}, {Title}, {Expression}"
-        , request.TraceId
-        , request.EmployeeId
-        , request.Title
-        , request.Expression);
-
+    logger.LogInformation("{TraceId}, {Title}, {Expression}", request.TraceId, request.Title, request.Expression);
     var validationResults = new List<ValidationResult>();
     var validationContext = new ValidationContext(request);
 
@@ -134,7 +129,6 @@ app.MapPost("/", async (
     var payload = new RedisPayload
     {
         TraceId = request.TraceId,
-        ClientId = request.EmployeeId,
         DocumentId = refDocId,
         Expression = request.Expression,
         EventType = EventType.ReportRequested

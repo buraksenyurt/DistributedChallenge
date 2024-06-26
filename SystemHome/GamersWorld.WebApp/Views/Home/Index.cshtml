@@ -2,7 +2,6 @@
 
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Gamers World Rapor Talep Ekranı</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
@@ -17,7 +16,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <h2>Gamers World Rapor Talep Ekranı</h2>
@@ -25,22 +23,12 @@
         <form asp-action="SubmitReport" method="post" class="needs-validation" novalidate>
             <div asp-validation-summary="All" class="text-danger"></div>
 
-            <input type="hidden" asp-for="Owner.EmployeeId" />
-
             <div class="mb-3">
                 <label asp-for="Owner.FullName" class="form-label"></label>
                 <input asp-for="Owner.FullName" class="form-control" required />
                 <div asp-validation-for="Owner.FullName" class="text-danger"></div>
                 <div class="invalid-feedback">
                     Rapor talep sahibi adı girilmeli
-                </div>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Owner.EmployeeId" class="form-label"></label>
-                <input asp-for="Owner.EmployeeId" class="form-control" required />
-                <div asp-validation-for="Owner.EmployeeId" class="text-danger"></div>
-                <div class="invalid-feedback">
-                    Rapor talep sahibi sicil numarası girilmeli
                 </div>
             </div>
             <div class="mb-3">
@@ -80,34 +68,21 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
     <script>
-        let clientId = localStorage.getItem('sessionId');
-        if (!clientId) {
-            clientId = '@Model.Owner.EmployeeId';
-            localStorage.setItem('clientId', clientId);
-        }
-
-        console.log("Client ID:", clientId);
-
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/notifyHub?clientId=" + clientId)
-            .build();
+        const connection = new signalR.HubConnectionBuilder().withUrl("/notifyHub").build();
 
         connection.on("ReadNotification", function (message) {
-            console.log("On read notification");
             document.getElementById("notifyMessage").innerText = message;
             showPopup();
         });
 
-        connection.start().then(() => {
-            console.log("SignalR connection established.");
-        }).catch(function (err) {
+        connection.start().catch(function (err) {
             return console.error(err.toString());
         });
 
         function showPopup() {
             const popup = document.getElementById("notificationPopup");
             popup.style.display = "block";
-            setTimeout(closePopup, 10000);
+            setTimeout(closePopup, 5000);
         }
 
         function closePopup() {
@@ -131,5 +106,4 @@
         })()
     </script>
 </body>
-
 </html>

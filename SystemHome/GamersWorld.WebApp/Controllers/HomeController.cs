@@ -12,10 +12,10 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
     private readonly ILogger<HomeController> _logger = logger;
     private readonly MessengerServiceClient _messengerServiceClient = messengerServiceClient;
 
+
     public IActionResult Index()
     {
-        var model = new ReportRequestModel();
-        return View(model);
+        return View();
     }
 
     [HttpPost]
@@ -23,14 +23,12 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
     {
         if (ModelState.IsValid)
         {
-            _logger.LogInformation("{ReportOwner} requested a new report. Employee is {EmployeeId}"
-                , report.Owner.ToString(), report.Owner.EmployeeId);
+            _logger.LogInformation("{ReportOwner} requested a new report.", report.Owner.ToString());
 
             var payload = new NewReportRequest
             {
                 Title = report.ReportTitle ?? "None",
                 Expression = report.Expression ?? "None",
-                EmployeeId = report.Owner.EmployeeId
             };
 
             var response = await _messengerServiceClient.SendNewReportRequestAsync(payload);

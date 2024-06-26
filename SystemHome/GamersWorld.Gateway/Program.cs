@@ -48,13 +48,12 @@ app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueServ
             TraceId = traceId,
             Time = DateTime.UtcNow,
             CreatedReportId = request.DocumentId,
-            EmployeeId = request.EmployeeId
         };
 
         eventQueueService.PublishEvent(reportReadyEvent);
         logger.LogInformation(
-            "ReporReadyEvent sent. TraceId: {TraceId}, EmployeeId: {EmployeeId}, DocumentId: {DocumentId}"
-            , traceId, request.EmployeeId, request.DocumentId);
+            "ReporReadyEvent sent. TraceId: {TraceId}, DocumentId: {DocumentId}"
+            , traceId, request.DocumentId);
     }
     else if (request.StatusCode == (int)StatusCode.InvalidExpression)
     {

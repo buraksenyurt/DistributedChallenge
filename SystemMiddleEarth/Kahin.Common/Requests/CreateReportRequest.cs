@@ -6,8 +6,6 @@ public class CreateReportRequest
 {
     [Required]
     public string? TraceId { get; set; }
-    [Required]
-    public string? EmployeeId { get; set; }
 
     [Required]
     [StringLength(30, MinimumLength = 20, ErrorMessage = "Title length must be between 20 and 30 characters.")]
