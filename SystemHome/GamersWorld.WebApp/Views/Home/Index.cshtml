@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Gamers World Rapor Talep Ekranı</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
@@ -16,6 +17,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h2>Gamers World Rapor Talep Ekranı</h2>
@@ -68,7 +70,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
     <script>
-        const connection = new signalR.HubConnectionBuilder().withUrl("/notifyHub").build();
+        const clientId = '@Model.ClientID.ToString()';
+        const connection = new signalR.HubConnectionBuilder().withUrl("/notifyHub?clientId=" + clientId).build();
 
         connection.on("ReadNotification", function (message) {
             document.getElementById("notifyMessage").innerText = message;
@@ -82,7 +85,7 @@
         function showPopup() {
             const popup = document.getElementById("notificationPopup");
             popup.style.display = "block";
-            setTimeout(closePopup, 5000);
+            setTimeout(closePopup, 10000);
         }
 
         function closePopup() {
@@ -106,4 +109,5 @@
         })()
     </script>
 </body>
+
 </html>

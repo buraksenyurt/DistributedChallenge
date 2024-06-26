@@ -12,10 +12,13 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
     private readonly ILogger<HomeController> _logger = logger;
     private readonly MessengerServiceClient _messengerServiceClient = messengerServiceClient;
 
-
     public IActionResult Index()
     {
-        return View();
+        var reportRequestModel = new ReportRequestModel
+        {
+            ClientID = Guid.NewGuid()
+        };
+        return View(reportRequestModel);
     }
 
     [HttpPost]
@@ -29,6 +32,7 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
             {
                 Title = report.ReportTitle ?? "None",
                 Expression = report.Expression ?? "None",
+                ClientId = report.ClientID
             };
 
             var response = await _messengerServiceClient.SendNewReportRequestAsync(payload);

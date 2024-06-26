@@ -41,6 +41,7 @@ public class Worker(
                             StatusCode = (int)StatusCode.ReportReady,
                             StatusMessage = "Report is ready and live for 60 minutes",
                             DocumentId = eventData.DocumentId.ToString(),
+                            ClientId = eventData.ClientId,
                             Detail = ""
                         };
                         var response = await _httpGatewayClient.Post(payload);
@@ -62,7 +63,7 @@ public class Worker(
         {
             await Task.Delay(TimeCop.WaitFactor * TimeCop.OneMilisecond, cancellationToken); // Sembolik olarak bir gecikme söz konusu
         }
-        
+
         payload.EventType = EventType.ReportReady;
         await redisService.AddReportPayloadAsync(Names.EventStream, payload, TimeSpan.FromMinutes(TimeCop.SixtyMinutes));
     }
