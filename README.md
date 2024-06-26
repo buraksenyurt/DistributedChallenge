@@ -97,8 +97,9 @@ Envanterimize göre sistemin genel dayanıklılığını test edebileceğimiz ve
 - [ ] Log mesajları veya **Business Response** nesnelerindeki metinsel ifadeler için çoklu dil desteği _(Multilanguage Support)_ getirilebilir.
 - [ ] **SystemHome**'daki **Event Host** uygulaması bir çeşit Pipeline. **Event** yönetiminde ilgili business nesneler çağırılmadan önce ve sonrası için akan veri içeriklerini loglayacak ortak bir mekanizma yazılabilir.
 - [ ] Birçok fonksiyonda standart girdi çıktı loglaması, **exception handling** gibi **Cross-Cutting Concern** olarak da adlandırılan işlemler söz konusu. Bu kullanımda **AOP**_(Aspect Oriented Programming)_ tabanlı bir yaklaşıma gidilebilir belki.
-- [x] Sistemdeki servisleri izlemek için Microsoft HealthCheck paketinden yararlanılan bir arabirim geliştirilebilir.
+- [x] Sistemdeki servisleri izlemek için Microsoft **HealthCheck** paketinden yararlanılan bir arabirim geliştirilebilir.
 - [ ] **SystemAsgard**'daki **Heimdall** uygulamasındaki monitoring bilgileri **Prometheus, Application Insights, Seq, Datadog** gibi dış araçlara gönderilebilir.
+- [ ] SystemHome tarafındaki web uygulaması için kimlik ve yetki kontrol mekanizması ilave edilip SignalR mesajlarının belirli kullanıcılar için çıkması sağlanabilir.
 
 ## Runtime _(Standart)_
 
