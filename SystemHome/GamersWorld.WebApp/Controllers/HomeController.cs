@@ -15,14 +15,25 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
 
     public IActionResult Index()
     {
-        var employeeIdList = new string[] { "CTO-12", "CEO-10", "ADMIN-66" };
-        var model = new ReportRequestModel();
-        var random = new Random();
-        int randomIndex = random.Next(employeeIdList.Length);
-        model.Owner = new OwnerModel
+        var ownerFullName = HttpContext.Session.GetString("OwnerFullName");
+        var ownerTitle = HttpContext.Session.GetString("OwnerTitle");
+        var ownerEmployeeId = HttpContext.Session.GetString("OwnerEmployeeId");
+
+        if (string.IsNullOrEmpty(ownerEmployeeId))
         {
-            EmployeeId = employeeIdList[randomIndex]
+            return RedirectToAction("Lobby");
+        }
+
+        var model = new ReportRequestModel
+        {
+            Owner = new OwnerModel
+            {
+                FullName = ownerFullName,
+                Title = ownerTitle,
+                EmployeeId = ownerEmployeeId
+            }
         };
+
         return View(model);
     }
 
@@ -31,7 +42,7 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
     {
         if (ModelState.IsValid)
         {
-            _logger.LogInformation("{ReportOwner} requested a new report.", report.Owner.ToString());
+            _logger.LogInformation("'{ReportOwner}' requested a new report.", report.Owner.EmployeeId);
 
             var payload = new NewReportRequest
             {
@@ -78,5 +89,30 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
     public IActionResult RequestConfirmed()
     {
         return View();
+    }
+
+    public IActionResult Lobby()
+    {
+        var model = new OwnerModel();
+        return View(model);
+    }
+
+    [HttpPost]
+    public IActionResult Entry(OwnerModel owner)
+    {
+        if (ModelState.IsValid)
+        {
+            HttpContext.Session.SetString("OwnerFullName", owner.FullName ?? "John Doe");
+            HttpContext.Session.SetString("OwnerTitle", owner.Title ?? "CTO");
+            HttpContext.Session.SetString("OwnerEmployeeId", owner.EmployeeId ?? "CTO-1001");
+            return RedirectToAction("Index");
+        }
+        return View(owner);
+    }
+
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+        return RedirectToAction("Lobby");
     }
 }

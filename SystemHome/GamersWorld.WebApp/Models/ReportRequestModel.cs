@@ -5,12 +5,7 @@ namespace GamersWorld.WebApp.Models;
 public class ReportRequestModel
 {
     [Required]
-    public OwnerModel Owner { get; set; } = new OwnerModel
-    {
-        FullName = "Anonymous",
-        Title = "Last Sales Report",
-        EmployeeId = "CTO-66"
-    };
+    public OwnerModel Owner { get; set; }
     [Required]
     public string? ReportTitle { get; set; }
     [Required]
