@@ -1,0 +1,33 @@
+@model GamersWorld.WebApp.Models.OwnerModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lobby</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Please fill the informations</h2>
+        <form asp-action="Entry" method="post" class="needs-validation" novalidate>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label"></label>
+                <input asp-for="FullName" class="form-control" required />
+                <div asp-validation-for="FullName" class="text-danger"></div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" required />
+                <div asp-validation-for="Title" class="text-danger"></div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EmployeeId" class="form-label"></label>
+                <input asp-for="EmployeeId" class="form-control" required />
+                <div asp-validation-for="EmployeeId" class="text-danger"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Continue</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -2,51 +2,36 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Gamers World Rapor Talep Ekranı</title>
+    <title>Report Request</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
     <style>
         .notification-popup {
             position: fixed;
             top: 25px;
             right: 25px;
-            min-width: 300px;
+            min-width: 250px;
+            min-height: 50px;
             z-index: 1050;
             display: none;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h2>Gamers World Rapor Talep Ekranı</h2>
-
+        <h2>Report Request Form</h2>
         <form asp-action="SubmitReport" method="post" class="needs-validation" novalidate>
             <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="mb-3">
+                <p class="form-control-plaintext">@Model.Owner.ToString()</p>
+            </div>
 
-            <div class="mb-3">
-                <label asp-for="Owner.FullName" class="form-label"></label>
-                <input asp-for="Owner.FullName" class="form-control" required />
-                <div asp-validation-for="Owner.FullName" class="text-danger"></div>
-                <div class="invalid-feedback">
-                    Rapor talep sahibi adı girilmeli
-                </div>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Owner.EmployeeId" class="form-label"></label>
-                <input asp-for="Owner.EmployeeId" class="form-control" required />
-                <div asp-validation-for="Owner.EmployeeId" class="text-danger"></div>
-                <div class="invalid-feedback">
-                    Rapor talep sahibi sicil numarası girilmeli
-                </div>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Owner.Title" class="form-label"></label>
-                <input asp-for="Owner.Title" class="form-control" required />
-                <div asp-validation-for="Owner.Title" class="text-danger"></div>
-                <div class="invalid-feedback">
-                    Rapor talep sahibi ünvanı girilmeli
-                </div>
-            </div>
+            <input type="hidden" asp-for="Owner.FullName" />
+            <input type="hidden" asp-for="Owner.EmployeeId" />
+            <input type="hidden" asp-for="Owner.Title" />
+
             <div class="mb-3">
                 <label asp-for="ReportTitle" class="form-label"></label>
                 <input asp-for="ReportTitle" class="form-control" required />
@@ -65,22 +50,19 @@
             </div>
             <button type="submit" class="btn btn-primary">Gönder</button>
         </form>
-
         <div class="notification-popup alert alert-success" role="alert" id="notificationPopup">
-            <span id="notifyMessage"></span>
-            <button type="button" class="close" aria-label="Close" onclick="closePopup()">
+            <span id="notifyMessage"></span><button type="button" class="close" aria-label="Close"
+                onclick="closePopup()">
                 <span aria-hidden="true">&times;</span>
             </button>
+            <br />
+            <a href="reports">Please click to show report</a>
         </div>
-
-        <input type="hidden" asp-for="Owner.EmployeeId" />
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
     <script>
-        //const connection = new signalR.HubConnectionBuilder().withUrl("/notifyHub").build();
         const employeeId = '@Model.Owner.EmployeeId';
-        console.log("Employee ID:", employeeId);
 
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/notifyHub?employeeId=" + employeeId)
@@ -125,4 +107,5 @@
         })()
     </script>
 </body>
+
 </html>
