@@ -2,5 +2,5 @@ namespace GamersWorld.Business.Contracts;
 
 public interface INotificationService
 {
-    Task PushAsync(string message);
+    Task PushAsync(string clientId, string message);
 }

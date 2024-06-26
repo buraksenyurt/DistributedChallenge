@@ -37,6 +37,7 @@ public class TableSaver(ILogger<FileSaver> logger, IEventQueueService eventQueue
                 Time = DateTime.Now,
                 TraceId = payload.TraceId,
                 CreatedReportId = payload.DocumentId,
+                ClientId = payload.ClientId
             };
             _eventQueueService.PublishEvent(reportIsHereEvent);
 
