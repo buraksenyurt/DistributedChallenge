@@ -11,4 +11,5 @@ public class NewReportRequest
     [Required(ErrorMessage = "Expression must be filled.")]
     [StringLength(100, MinimumLength = 30, ErrorMessage = "Expression length must be between 30 and 100 characters.")]
     public string? Expression { get; set; }
+    public Guid ClientId { get; set; }
 }

@@ -6,6 +6,7 @@ using Kahin.Common.Enums;
 public class RedisPayload
 {
     public string? TraceId { get; set; }
+    public string? ClientId { get; set; }
     public ReferenceDocumentId DocumentId { get; set; }
     public string? Expression { get; set; }
     public EventType EventType { get; set; }
@@ -18,6 +19,7 @@ public class RedisPayload
     public static RedisPayload Default() => new()
     {
         TraceId = null,
+        ClientId = null,
         DocumentId = new ReferenceDocumentId(),
         Expression = null,
         EventType = EventType.NotActive

@@ -11,4 +11,5 @@ public class ReportRequestModel
     [Required]
     public string? Expression { get; set; }
     public DateTime RequestTime { get; set; } = DateTime.Now;
+    public Guid ClientID { get; set; }
 }
