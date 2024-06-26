@@ -21,8 +21,9 @@ services:
     environment:
       - SERVICES=secretsmanager
       - DEBUG=1
+      - DATA_DIR=/var/lib/localstack/data
     volumes:
-      - "localstack_data:/var/lib/localstack"
+      - localstack_data:/var/lib/localstack
 
   baget:
     image: loicsharma/baget:latest
