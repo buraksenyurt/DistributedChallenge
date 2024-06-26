@@ -8,4 +8,9 @@ public class StatusHub : Hub
     {
         await Clients.All.SendAsync("ReadNotification", message);
     }
+
+    public async Task NotifyEmployee(string employeeId, string message)
+    {
+        await Clients.User(employeeId).SendAsync("ReadNotification", message);
+    }
 }

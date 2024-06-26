@@ -15,7 +15,15 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
 
     public IActionResult Index()
     {
-        return View();
+        var employeeIdList = new string[] { "CTO-12", "CEO-10", "ADMIN-66" };
+        var model = new ReportRequestModel();
+        var random = new Random();
+        int randomIndex = random.Next(employeeIdList.Length);
+        model.Owner = new OwnerModel
+        {
+            EmployeeId = employeeIdList[randomIndex]
+        };
+        return View(model);
     }
 
     [HttpPost]
@@ -29,6 +37,7 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
             {
                 Title = report.ReportTitle ?? "None",
                 Expression = report.Expression ?? "None",
+                EmployeeId = report.Owner.EmployeeId,
             };
 
             var response = await _messengerServiceClient.SendNewReportRequestAsync(payload);

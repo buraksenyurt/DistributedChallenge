@@ -23,7 +23,8 @@ public class PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFac
         {
             appEvent.TraceId,
             appEvent.Title,
-            appEvent.Expression
+            appEvent.Expression,
+            appEvent.EmployeeId
         };
 
         _logger.LogInformation("Service Uri : {ServiceUri}", client.BaseAddress);

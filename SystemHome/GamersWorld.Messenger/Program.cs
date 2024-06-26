@@ -63,6 +63,7 @@ app.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService
     var reportRequestedEvent = new ReportRequestedEvent
     {
         TraceId = Guid.NewGuid(),
+        EmployeeId = request.EmployeeId,
         Title = request.Title ?? "Last Sales Report",
         Expression = request.Expression ?? "Güncel ülke bazlı satış raporlarının özet dökümü.",
         Time = DateTime.Now,

@@ -48,6 +48,7 @@ public class ReportDocumentAvailable(
             var docContent = new DocumentSaveRequest
             {
                 TraceId = appEvent.TraceId,
+                EmployeeId = appEvent.EmployeeId,
                 DocumentId = getReportResponse.DocumentId,
                 Content = content,
             };

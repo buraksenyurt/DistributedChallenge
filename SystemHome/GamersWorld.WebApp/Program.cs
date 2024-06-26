@@ -1,6 +1,7 @@
 using GamersWorld.WebApp;
 using GamersWorld.WebApp.Utility;
 using JudgeMiddleware;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SecretsAgent;
 
@@ -10,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<MessengerServiceClient>();
 builder.Services.AddSingleton<ISecretStoreService, SecretStoreService>();
+builder.Services.AddSingleton<IUserIdProvider, EmployeeUserIdProvider>();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Services.AddSignalR();

@@ -32,6 +32,14 @@
                 </div>
             </div>
             <div class="mb-3">
+                <label asp-for="Owner.EmployeeId" class="form-label"></label>
+                <input asp-for="Owner.EmployeeId" class="form-control" required />
+                <div asp-validation-for="Owner.EmployeeId" class="text-danger"></div>
+                <div class="invalid-feedback">
+                    Rapor talep sahibi sicil numarası girilmeli
+                </div>
+            </div>
+            <div class="mb-3">
                 <label asp-for="Owner.Title" class="form-label"></label>
                 <input asp-for="Owner.Title" class="form-control" required />
                 <div asp-validation-for="Owner.Title" class="text-danger"></div>
@@ -64,25 +72,36 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+
+        <input type="hidden" asp-for="Owner.EmployeeId" />
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
     <script>
-        const connection = new signalR.HubConnectionBuilder().withUrl("/notifyHub").build();
+        //const connection = new signalR.HubConnectionBuilder().withUrl("/notifyHub").build();
+        const employeeId = '@Model.Owner.EmployeeId';
+        console.log("Employee ID:", employeeId);
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notifyHub?employeeId=" + employeeId)
+            .build();
 
         connection.on("ReadNotification", function (message) {
+            console.log("On read notification");
             document.getElementById("notifyMessage").innerText = message;
             showPopup();
         });
 
-        connection.start().catch(function (err) {
+        connection.start().then(() => {
+            console.log("SignalR connection established.");
+        }).catch(function (err) {
             return console.error(err.toString());
         });
 
         function showPopup() {
             const popup = document.getElementById("notificationPopup");
             popup.style.display = "block";
-            setTimeout(closePopup, 5000);
+            setTimeout(closePopup, 10000);
         }
 
         function closePopup() {

@@ -27,7 +27,9 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReade
         if (response != null && response.Data != null)
         {
             _logger.LogInformation("Catched {Length} bytes document.", ((byte[])response.Data).Length);
-            await _notificationService.PushAsync($"{appEvent.CreatedReportId} is ready!");
+            //await _notificationService.PushAsync($"{appEvent.CreatedReportId} is ready!");
+
+            await _notificationService.PushToUserAsync(appEvent.EmployeeId, $"{appEvent.CreatedReportId} is ready!");
         }
     }
 }

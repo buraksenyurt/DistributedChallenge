@@ -130,6 +130,7 @@ app.MapPost("/", async (
     {
         TraceId = request.TraceId,
         DocumentId = refDocId,
+        EmployeeId = request.EmployeeId,
         Expression = request.Expression,
         EventType = EventType.ReportRequested
     };
