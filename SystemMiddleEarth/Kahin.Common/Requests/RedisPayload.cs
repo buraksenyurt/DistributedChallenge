@@ -13,7 +13,7 @@ public class RedisPayload
 
     override public string ToString()
     {
-        return string.Format($"TraceId: {TraceId},EventType: {EventType}, ReferenceDocumentId: {DocumentId}");
+        return string.Format($"TraceId: {TraceId},EventType: {EventType}, ReferenceDocumentId: {DocumentId}, ClientId: {ClientId}");
     }
 
     public static RedisPayload Default() => new()

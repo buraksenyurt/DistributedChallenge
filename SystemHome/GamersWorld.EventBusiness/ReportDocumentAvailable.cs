@@ -50,7 +50,7 @@ public class ReportDocumentAvailable(
                 TraceId = appEvent.TraceId,
                 DocumentId = getReportResponse.DocumentId,
                 Content = content,
-                ClientId = appEvent.ClientId,
+                EmployeeId = appEvent.EmployeeId,
             };
             var saveResponse = await _documentSaver.SaveAsync(docContent);
             _logger.LogInformation("Save response is {StatusCode} and message is {Message}"

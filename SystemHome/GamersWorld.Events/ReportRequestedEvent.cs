@@ -8,5 +8,5 @@ public class ReportRequestedEvent : IEvent
     public string Title { get; set; } = "Default";
     public string Expression { get; set; } = "Select * From TopSalariesView Order By Amount";
     public DateTime Time { get; set; }
-    public Guid ClientId { get; set; }
+    public string? EmployeeId { get; set; }
 }

@@ -15,7 +15,7 @@ public class StatusHub(ILogger<StatusHub> logger)
         if (context != null && context.Request != null)
         {
             var clientId = context.Request.Query["clientId"].ToString();
-            _logger.LogInformation("{ClientId} has been connected", clientId);
+            _logger.LogInformation("Client '{ClientId}' has been connected", clientId);
             _connections[Context.ConnectionId] = clientId;
         }
         await base.OnConnectedAsync();
@@ -24,12 +24,17 @@ public class StatusHub(ILogger<StatusHub> logger)
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         _connections.TryRemove(Context.ConnectionId, out var clientId);
-        _logger.LogInformation("{ClientId} has been connected", clientId);
+        _logger.LogInformation("Client '{ClientId}' has been disconnected", clientId);
         await base.OnDisconnectedAsync(exception);
     }
 
     public async Task NotifyClient(string clientId, string message)
     {
-        await Clients.Client(clientId).SendAsync("ReadNotification", message);
+        var connectionId = _connections.FirstOrDefault(x => x.Value == clientId).Key;
+        if (connectionId != null)
+        {
+            _logger.LogWarning("Notification on '{ConnectionId}' with '{Message}'", connectionId, message);            
+            await Clients.Client(connectionId).SendAsync("ReadNotification", message);
+        }
     }
 }

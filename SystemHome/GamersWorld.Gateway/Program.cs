@@ -36,9 +36,7 @@ app.MapHealthChecks("/health");
 
 app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
 {
-    if (!Guid.TryParse(request.TraceId, out var traceId)
-        || !Guid.TryParse(request.ClientId, out var clientId)
-        )
+    if (!Guid.TryParse(request.TraceId, out var traceId))
     {
         return Results.BadRequest();
     }
@@ -50,13 +48,13 @@ app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueServ
             TraceId = traceId,
             Time = DateTime.UtcNow,
             CreatedReportId = request.DocumentId,
-            ClientId = clientId
+            EmployeeId = request.EmployeeId
         };
 
         eventQueueService.PublishEvent(reportReadyEvent);
         logger.LogInformation(
-            "ReporReadyEvent sent. TraceId: {TraceId}, DocumentId: {DocumentId}"
-            , traceId, request.DocumentId);
+            "ReporReadyEvent sent. TraceId: {TraceId}, EmployeeId: {EmployeeId}, DocumentId: {DocumentId}"
+            , traceId, request.EmployeeId, request.DocumentId);
     }
     else if (request.StatusCode == (int)StatusCode.InvalidExpression)
     {

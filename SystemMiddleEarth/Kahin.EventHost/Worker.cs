@@ -41,7 +41,7 @@ public class Worker(
                             StatusCode = (int)StatusCode.ReportReady,
                             StatusMessage = "Report is ready and live for 60 minutes",
                             DocumentId = eventData.DocumentId.ToString(),
-                            ClientId = eventData.ClientId,
+                            EmployeeId = eventData.ClientId,
                             Detail = ""
                         };
                         var response = await _httpGatewayClient.Post(payload);

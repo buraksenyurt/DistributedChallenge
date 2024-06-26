@@ -66,13 +66,13 @@ app.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService
         Title = request.Title ?? "Last Sales Report",
         Expression = request.Expression ?? "Güncel ülke bazlı satış raporlarının özet dökümü.",
         Time = DateTime.Now,
-        ClientId = request.ClientId
+        EmployeeId = request.EmployeeId
     };
 
     eventQueueService.PublishEvent(reportRequestedEvent);
     logger.LogInformation(
-        "ReportRequestedEvent sent. TraceId: {TraceId}, Expression: {Expression}"
-        , reportRequestedEvent.TraceId, reportRequestedEvent.Expression);
+        "ReportRequestedEvent sent. TraceId: {TraceId}, EmployeeId: {EmployeeId}, Expression: {Expression}"
+        , reportRequestedEvent.TraceId, reportRequestedEvent.EmployeeId, reportRequestedEvent.Expression);
 
     var response = new BusinessResponse
     {
