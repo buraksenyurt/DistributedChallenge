@@ -13,18 +13,15 @@ public class TableReader(ILogger<FileSaver> logger, IDocumentRepository document
     private readonly ILogger<FileSaver> _logger = logger;
     private readonly IDocumentRepository _documentRepository = documentRepository;
 
-    public async Task<BusinessResponse> ReadAsync(DocumentReadRequest payload)
+    public async Task<BusinessResponse> GetLength(DocumentReadRequest payload)
     {
         try
         {
-            var content = await _documentRepository.ReadDocumentAsync(payload);
-
-            // QUESTION Rapor dosyasını taşıyan içeriği Data özelliği üzerinden sistemde taşımak doğru mu?
+            var contentLength = await _documentRepository.GetDocumentLength(payload);
             return new BusinessResponse
             {
-                StatusCode = StatusCode.DocumentRead,
-                Message = $"{content.Length} bytes read from database table.",
-                Data = content
+                StatusCode = StatusCode.DocumentReadable,
+                Message = $"{contentLength} bytes length document is ready."
             };
         }
         catch (Exception excp)

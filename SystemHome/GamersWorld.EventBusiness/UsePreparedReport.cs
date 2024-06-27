@@ -1,4 +1,5 @@
 ﻿using GamersWorld.Business.Contracts;
+using GamersWorld.Common.Enums;
 using GamersWorld.Common.Requests;
 using GamersWorld.Events;
 using GamersWorld.SDK;
@@ -18,15 +19,14 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReade
         _logger.LogInformation("Document Accepted, Trace Id : {TraceId}, Document Id : {CreatedReportId}"
             , appEvent.TraceId, appEvent.CreatedReportId);
 
-        var response = await _documentReader.ReadAsync(new DocumentReadRequest
+        var response = await _documentReader.GetLength(new DocumentReadRequest
         {
             DocumentId = appEvent.CreatedReportId,
             TraceId = appEvent.TraceId
         });
-        // QUESTION Sorunlu bir yer. Data byte[]'a convert edilemeyen bir şeyse ne olacak?
-        if (response != null && response.Data != null)
+        if (response != null && response.StatusCode == StatusCode.DocumentReadable)
         {
-            _logger.LogInformation("Catched {Length} bytes document.", ((byte[])response.Data).Length);
+            _logger.LogInformation("{Message}", response.Message);
             //await _notificationService.PushAsync($"{appEvent.CreatedReportId} is ready!");
 
             await _notificationService.PushToUserAsync(appEvent.EmployeeId, $"{appEvent.CreatedReportId} is ready!");
