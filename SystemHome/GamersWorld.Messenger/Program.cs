@@ -38,17 +38,18 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapHealthChecks("/health");
 
-app.MapGet("/", async ([FromBody] GetReportsByEmployeeRequest request, IDocumentRepository repository, ILogger<Program> logger) =>
+app.MapGet("/", async ([FromQuery] string employeeId, IDocumentRepository repository, ILogger<Program> logger) =>
 {
     var documents = await repository.GetAllDocumentsByEmployeeAsync(new DocumentReadRequest
     {
-        EmployeeId = request.EmployeeId,
+        EmployeeId = employeeId,
     });
 
     return Results.Json(documents);
 })
 .WithName("GetReportsByEmployee")
 .WithOpenApi();
+
 
 app.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
 {

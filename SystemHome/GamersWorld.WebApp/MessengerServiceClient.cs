@@ -1,6 +1,7 @@
 namespace GamersWorld.WebApp.Utility;
 
 using GamersWorld.Common.Constants;
+using GamersWorld.Common.Data;
 using GamersWorld.Common.Requests;
 using GamersWorld.Common.Responses;
 using SecretsAgent;
@@ -10,6 +11,14 @@ public class MessengerServiceClient(HttpClient httpClient, ISecretStoreService s
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<MessengerServiceClient> _logger = logger;
     private readonly ISecretStoreService _secretStoreService = secretStoreService;
+
+    public async Task<IEnumerable<ReportDocument>> GetReportDocumentsByEmployeeAsync(GetReportsByEmployeeRequest request)
+    {
+        var messengerApiAddress = await _secretStoreService.GetSecretAsync(SecretName.MessengerApiAddress);
+        var url = $"http://{messengerApiAddress}?EmployeeId={request.EmployeeId}";
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<ReportDocument>>(url);
+        return response;
+    }
 
     public async Task<BusinessResponse> SendNewReportRequestAsync(NewReportRequest request)
     {
