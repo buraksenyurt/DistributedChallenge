@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using GamersWorld.WebApp.Models;
 using GamersWorld.Common.Requests;
-using GamersWorld.WebApp.Utility;
 using GamersWorld.Common.Responses;
+using GamersWorld.WebApp.Services;
 
 namespace GamersWorld.WebApp.Controllers;
 

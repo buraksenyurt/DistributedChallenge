@@ -1,4 +1,4 @@
-namespace GamersWorld.WebApp.Utility;
+namespace GamersWorld.WebApp.Services;
 
 using GamersWorld.Common.Constants;
 using GamersWorld.Common.Data;
