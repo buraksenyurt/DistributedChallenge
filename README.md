@@ -1,10 +1,12 @@
 # Distributed Challenge
 
-Bu repoda aslında asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problemi oluşturmaya ve bu problemin çözümünü uygulamaya çalışıyorum. Öncelikle vakanın temel senaryosu ile işe başlamak lazım. Hangi enstrümanları ve platformları kullanacağımıza sonrasında karar verebiliriz.
+Bu repoda aslında asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problemi oluşturmaya ve bu problemin çözümünü uygulamaya çalışıyorum. Çözüm üzerinde ilerledikçe Youtube kanalına bazı anlatımlar da ekliyorum.
 
-## Katkı Vermek İçin
-
-Projeye katkı vermek isteyenler dev branch'inden yeni bir branch açıp ilerleyebilirler. Çalışma zamanı testlerinde bir sorun olmazsa açılan feature branch'ten dev branch'ine bir pull request açılarak ilerlenebilir.
+- [.Net 8 ile Distributed Systems Challenge - 01 - Tanıtım](https://www.youtube.com/watch?v=gMo8D2vUKR4)
+- [.Net 8 ile Distributed Systems Challenge - 02 - Event Mekanizması](https://www.youtube.com/watch?v=iOPHGECy5bU)
+- [.Net 8 ile Distributed Systems Challenge - 03 - Secrets Management](https://www.youtube.com/watch?v=kozb3c37f9k)
+- [.Net 8 ile Distributed Systems Challenge - 04 - Güncel Durum Değerlendirmesi](https://www.youtube.com/watch?v=LvZOCmnqujE)
+- ...
 
 ## Vaka Senaryosu
 
@@ -411,3 +413,8 @@ Diğer sistem servislerini ekledikten sonraki duruma da bir bakalım. Aşağıda
 - **gRPC Taşımaları :** Sistem içerisinde koşan servislerden bazılarını **REST** tabanlı tasarlamak yerine **gRPC** gibi de tasarlayabiliriz. **SystemMiddleEarth** ile **SystemHome**'ün aralarında Internet olduğunu düşünürsek buradaki haberleşme kanalları pekala **REST** Api'ler ile tesis edilebilir.
 - **Resilience Durumları :** Her iki sistemde de ağ üzerinden HTTP protokolleri ile erişilen servisler söz konusu. Bu servislere erişilememe, beklenen sürede cevap alamama gibi durumlar oluşabilir. Dağıtık mimarilerin doğası gereği bunlar olası. Dolayısıyla Resilience stratejilerini de işin içerisine katmak gerekebilir. Bu sürecin ilerki aşamalarında değerlendirebileceğim bir mevzu.
 - **Performans İyileştirmeleri :** Benzer raporlar şirket kademesindeki farklı personeller tarafından talep edilebilir. Raporun geçerliliğine göre kabul edilebilir bir zaman dilim boyunca rapor taleplerinin **SystemMiddleEarth** tarafında cache'lenerek saklanması düşünülebilir. **SystemHome** tarafından yapılan bir rapor talebi bilindiği üzere Kahin sistemine ulaştığında 3ncü parti bir servis sağlayıcı API'si kullanılarak geçerli bir sorgu ifadesine de dönüştürülüyor. Bu kısımda yapılan **Evaluate** işlemini aynı türde talepler için bir cache mekanizması ile pekala destekleyebiliriz. Bu **Gen AI** bazlı yorumlayıcının gereksiz yere çağrılmasının da önüne geçer ve hem kaynak tüketimi hem de hızlı reaksiyon verilmesi babında işleri iyileştirir.
+
+## Üzerinde Konuşulabilecek Problemler
+
+- System HOME çözümündeki proje izolasyonu bir mimari stile oturtulabilir mi? Clean Architecture, Vertical Slice Architecture vs
+- Service operasyonları değiştiğinde ThunderClient veya Postman gibi test araçlarındaki koleksiyonların güncellenmesi unutulduğunda servis dokümantasyonları tutarsızlaşabiliyor. Nasıl mücadele edilebilir.
