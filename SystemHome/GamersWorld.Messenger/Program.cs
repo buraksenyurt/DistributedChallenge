@@ -7,11 +7,14 @@ using GamersWorld.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SecretsAgent;
 using JudgeMiddleware;
+using GamersWorld.Repository;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<IDocumentRepository, DocumentRepository>();
 builder.Services.AddSingleton<ISecretStoreService, SecretStoreService>();
 builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
@@ -34,6 +37,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapHealthChecks("/health");
+
+app.MapGet("/", async ([FromBody] GetReportsByEmployeeRequest request, IDocumentRepository repository, ILogger<Program> logger) =>
+{
+    var documents = await repository.GetAllDocumentsByEmployeeAsync(new DocumentReadRequest
+    {
+        EmployeeId = request.EmployeeId,
+    });
+
+    return Results.Json(documents);
+})
+.WithName("GetReportsByEmployee")
+.WithOpenApi();
 
 app.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
 {

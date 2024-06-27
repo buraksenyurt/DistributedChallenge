@@ -33,3 +33,7 @@ Accept: application/json
 }
 
 ###
+
+GET {{GamersWorld.Messenger_HostAddress}}/
+
+###
