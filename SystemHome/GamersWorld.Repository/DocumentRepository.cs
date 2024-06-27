@@ -10,20 +10,23 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
     : IDocumentRepository
 {
     private readonly ISecretStoreService _secretStoreService = secretStoreService;
-
-    //QUESTION int döndürmek yerine daha anlamlı bir veri yapısı dönülemez mi?
-    public async Task<int> InsertDocumentAsync(DocumentSaveRequest documentSaveRequest)
+    
+    private async Task<NpgsqlConnection> GetOpenConnectionAsync()
     {
         var connStr = await _secretStoreService.GetSecretAsync("ReportDbConnStr");
+        var dbConnection = new NpgsqlConnection(connStr);
+        await dbConnection.OpenAsync();
+        return dbConnection;
+    }
 
-        using var dbConnection = new NpgsqlConnection(connStr);
-        dbConnection.Open();
-
-        var sql = @"
+    public async Task<int> InsertDocumentAsync(DocumentSaveRequest documentSaveRequest)
+    {
+        const string sql = @"
                 INSERT INTO Documents (TraceId, EmployeeId, DocumentId, Content)
                 VALUES (@TraceId, @EmployeeId, @DocumentId, @Content)
                 RETURNING Id";
 
+        await using var dbConnection = await GetOpenConnectionAsync();
         var insertedId = await dbConnection.ExecuteScalarAsync<int>(sql, new
         {
             documentSaveRequest.TraceId,
@@ -35,36 +38,27 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
         return insertedId;
     }
 
-    //QUESTION byte[] array döndürmek yerine daha anlamlı bir veri yapısı dönülemez mi?
-
     public async Task<ReportDocument> ReadDocumentAsync(DocumentReadRequest documentReadRequest)
     {
-        var connStr = await _secretStoreService.GetSecretAsync("ReportDbConnStr");
+        const string sql = @"
+                SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
+                FROM Documents
+                WHERE DocumentId = @DocumentId";
 
-        await using var dbConnection = new NpgsqlConnection(connStr);
-        await dbConnection.OpenAsync();
-
-        var sql = @"
-            SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
-            FROM Documents
-            WHERE DocumentId = @DocumentId";
-
+        await using var dbConnection = await GetOpenConnectionAsync();
         var reportDocument = await dbConnection.QueryFirstOrDefaultAsync<ReportDocument>(sql, new { documentReadRequest.DocumentId });
 
         return reportDocument;
     }
 
-
     public async Task<int> GetDocumentLength(DocumentReadRequest documentReadRequest)
     {
-        var connStr = await _secretStoreService.GetSecretAsync("ReportDbConnStr");
-        await using var dbConnection = new NpgsqlConnection(connStr);
-        await dbConnection.OpenAsync();
-        var sql = @"
-            SELECT LENGTH(Content) AS ContentLength
-            FROM Documents
-            WHERE DocumentId = @DocumentId";
+        const string sql = @"
+                SELECT LENGTH(Content) AS ContentLength
+                FROM Documents
+                WHERE DocumentId = @DocumentId";
 
+        await using var dbConnection = await GetOpenConnectionAsync();
         var length = await dbConnection.QueryFirstOrDefaultAsync<int>(sql, new { documentReadRequest.DocumentId });
 
         return length;
@@ -72,16 +66,12 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
 
     public async Task<IEnumerable<ReportDocument>> GetAllDocumentsAsync()
     {
-        var connStr = await _secretStoreService.GetSecretAsync("ReportDbConnStr");
+        const string sql = @"
+                SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
+                FROM Documents
+                ORDER BY InsertTime";
 
-        await using var dbConnection = new NpgsqlConnection(connStr);
-        await dbConnection.OpenAsync();
-
-        var sql = @"
-            SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
-            FROM Documents
-            ORDER BY InsertTime";
-
+        await using var dbConnection = await GetOpenConnectionAsync();
         var documents = await dbConnection.QueryAsync<ReportDocument>(sql);
 
         return documents;
@@ -89,17 +79,13 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
 
     public async Task<IEnumerable<ReportDocument>> GetAllDocumentsByEmployeeAsync(DocumentReadRequest documentReadRequest)
     {
-        var connStr = await _secretStoreService.GetSecretAsync("ReportDbConnStr");
+        const string sql = @"
+                SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
+                FROM Documents
+                WHERE EmployeeId = @EmployeeId
+                ORDER BY InsertTime";
 
-        await using var dbConnection = new NpgsqlConnection(connStr);
-        await dbConnection.OpenAsync();
-
-        var sql = @"
-            SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
-            FROM Documents
-            WHERE EmployeeId = @EmployeeId
-            ORDER BY InsertTime";
-
+        await using var dbConnection = await GetOpenConnectionAsync();
         var documents = await dbConnection.QueryAsync<ReportDocument>(sql, new { documentReadRequest.EmployeeId });
 
         return documents;
