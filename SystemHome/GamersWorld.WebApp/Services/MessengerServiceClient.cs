@@ -1,9 +1,9 @@
 namespace GamersWorld.WebApp.Services;
 
-using GamersWorld.Common.Constants;
-using GamersWorld.Common.Data;
-using GamersWorld.Common.Requests;
-using GamersWorld.Common.Responses;
+using GamersWorld.Domain.Constants;
+using GamersWorld.Domain.Data;
+using GamersWorld.Domain.Requests;
+using GamersWorld.Domain.Responses;
 using SecretsAgent;
 
 public class MessengerServiceClient(HttpClient httpClient, ISecretStoreService secretStoreService, ILogger<MessengerServiceClient> logger)
@@ -40,7 +40,7 @@ public class MessengerServiceClient(HttpClient httpClient, ISecretStoreService s
 
             return errorResponse ?? new BusinessResponse
             {
-                StatusCode = Common.Enums.StatusCode.Fail,
+                StatusCode = Domain.Enums.StatusCode.Fail,
                 Message = "Not OK(200)"
             };
         }
@@ -51,7 +51,7 @@ public class MessengerServiceClient(HttpClient httpClient, ISecretStoreService s
             {
                 return new BusinessResponse
                 {
-                    StatusCode = Common.Enums.StatusCode.Fail,
+                    StatusCode = Domain.Enums.StatusCode.Fail,
                     Message = "Not OK(200)"
                 };
             }

@@ -1,6 +1,6 @@
 using Dapper;
-using GamersWorld.Common.Data;
-using GamersWorld.Common.Requests;
+using GamersWorld.Domain.Data;
+using GamersWorld.Domain.Requests;
 using Npgsql;
 using SecretsAgent;
 

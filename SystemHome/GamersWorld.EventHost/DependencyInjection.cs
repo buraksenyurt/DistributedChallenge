@@ -4,7 +4,7 @@ using GamersWorld.EventHost.Factory;
 using GamersWorld.SDK;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
-using GamersWorld.Common.Constants;
+using GamersWorld.Domain.Constants;
 using SecretsAgent;
 
 namespace GamersWorld.EventHost;

@@ -1,4 +1,4 @@
-namespace GamersWorld.Common.Requests;
+namespace GamersWorld.Domain.Requests;
 
 using System.ComponentModel.DataAnnotations;
 

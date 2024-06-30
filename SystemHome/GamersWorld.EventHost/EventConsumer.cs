@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using GamersWorld.Common.Constants;
+using GamersWorld.Domain.Constants;
 
 namespace GamersWorld.EventHost;
 

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using GamersWorld.WebApp.Models;
-using GamersWorld.Common.Requests;
-using GamersWorld.Common.Responses;
+using GamersWorld.Domain.Requests;
+using GamersWorld.Domain.Responses;
 using GamersWorld.WebApp.Services;
 
 namespace GamersWorld.WebApp.Controllers;
@@ -53,7 +53,7 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
 
             var response = await _messengerServiceClient.SendNewReportRequestAsync(payload);
             _logger.LogInformation("Messenger service response is '{Response}'", response);
-            if (response.StatusCode == Common.Enums.StatusCode.Success)
+            if (response.StatusCode == Domain.Enums.StatusCode.Success)
             {
                 return RedirectToAction("RequestConfirmed");
             }

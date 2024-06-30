@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using GamersWorld.Common.Requests;
-using GamersWorld.Common.Responses;
-using GamersWorld.Common.Enums;
+using GamersWorld.Domain.Requests;
+using GamersWorld.Domain.Responses;
+using GamersWorld.Domain.Enums;
 using GamersWorld.Events;
 using GamersWorld.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;

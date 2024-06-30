@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace GamersWorld.Common.Data;
+namespace GamersWorld.Domain.Data;
 
 public class ReportDocument
 {

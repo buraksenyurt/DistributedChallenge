@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GamersWorld.SDK\GamersWorld.SDK.csproj" />
-    <ProjectReference Include="..\GamersWorld.Common\GamersWorld.Common.csproj" />
+    <ProjectReference Include="..\GamersWorld.Domain\GamersWorld.Domain.csproj" />
     <ProjectReference Include="..\GamersWorld.Events\GamersWorld.Events.csproj" />
     <ProjectReference Include="..\GamersWorld.Business\GamersWorld.Business.csproj" />
   </ItemGroup>

@@ -1,4 +1,4 @@
-using GamersWorld.Common.Constants;
+using GamersWorld.Domain.Constants;
 using RabbitMQ.Client;
 using SecretsAgent;
 using System.Text.Json;

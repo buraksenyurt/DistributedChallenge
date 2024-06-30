@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.ReportingGateway", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Gateway", "SystemHome\GamersWorld.Gateway\GamersWorld.Gateway.csproj", "{4B566CB1-6CAD-44A9-871B-7E9464184CF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Common", "SystemHome\GamersWorld.Common\GamersWorld.Common.csproj", "{C28DFA91-3E85-4576-84AC-243015666538}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Domain", "SystemHome\GamersWorld.Domain\GamersWorld.Domain.csproj", "{C28DFA91-3E85-4576-84AC-243015666538}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.WebApp", "SystemHome\GamersWorld.WebApp\GamersWorld.WebApp.csproj", "{BC847687-F59A-42B3-8C56-57E1CF34D0FD}"
 EndProject

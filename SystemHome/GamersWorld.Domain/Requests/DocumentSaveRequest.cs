@@ -1,4 +1,4 @@
-namespace GamersWorld.Common.Requests;
+namespace GamersWorld.Domain.Requests;
 
 public class DocumentSaveRequest
 {

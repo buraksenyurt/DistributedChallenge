@@ -1,4 +1,4 @@
-namespace GamersWorld.Common.Enums;
+namespace GamersWorld.Domain.Enums;
 public enum StatusCode
 {
     Success = 1,

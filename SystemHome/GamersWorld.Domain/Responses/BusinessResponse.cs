@@ -1,6 +1,6 @@
-using GamersWorld.Common.Enums;
+using GamersWorld.Domain.Enums;
 
-namespace GamersWorld.Common.Responses;
+namespace GamersWorld.Domain.Responses;
 
 public class BusinessResponse
 {

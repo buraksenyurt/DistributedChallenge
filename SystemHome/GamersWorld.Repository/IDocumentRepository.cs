@@ -1,5 +1,5 @@
-﻿using GamersWorld.Common.Data;
-using GamersWorld.Common.Requests;
+﻿using GamersWorld.Domain.Data;
+using GamersWorld.Domain.Requests;
 
 namespace GamersWorld.Repository;
 

@@ -1,6 +1,6 @@
 ﻿using GamersWorld.Business.Contracts;
-using GamersWorld.Common.Enums;
-using GamersWorld.Common.Requests;
+using GamersWorld.Domain.Enums;
+using GamersWorld.Domain.Requests;
 using GamersWorld.Events;
 using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;

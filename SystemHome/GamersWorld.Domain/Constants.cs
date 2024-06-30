@@ -1,4 +1,4 @@
-namespace GamersWorld.Common.Constants;
+namespace GamersWorld.Domain.Constants;
 
 public static class SecretName
 {

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GamersWorld.Common\GamersWorld.Common.csproj" />
+    <ProjectReference Include="..\GamersWorld.Domain\GamersWorld.Domain.csproj" />
   </ItemGroup>
 
 </Project>

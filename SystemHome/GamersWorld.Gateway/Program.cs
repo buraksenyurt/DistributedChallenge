@@ -1,6 +1,6 @@
 using GamersWorld.Events;
-using GamersWorld.Common.Enums;
-using GamersWorld.Common.Requests;
+using GamersWorld.Domain.Enums;
+using GamersWorld.Domain.Requests;
 using GamersWorld.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SecretsAgent;

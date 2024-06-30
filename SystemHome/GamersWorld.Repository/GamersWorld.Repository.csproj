@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\GamersWorld.Common\GamersWorld.Common.csproj" />
+    <ProjectReference Include="..\GamersWorld.Domain\GamersWorld.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

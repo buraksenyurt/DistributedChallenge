@@ -3,7 +3,7 @@ using GamersWorld.Business;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using GamersWorld.Common.Constants;
+using GamersWorld.Domain.Constants;
 using SecretsAgent;
 
 // RabbitMq ayarlarını da ele alacağımız için appSettings konfigurasyonu için bir builder nesnesi örnekledik

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace GamersWorld.Common.Requests;
+namespace GamersWorld.Domain.Requests;
 
 public class GetReportsByEmployeeRequest
 {
