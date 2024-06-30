@@ -1,4 +1,4 @@
-namespace GamersWorld.SDK;
+namespace GamersWorld.Application.Contracts.Events;
 
 public interface IEventDriver<TEvent> where TEvent : IEvent
 {

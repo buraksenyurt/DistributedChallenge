@@ -2,13 +2,15 @@ using System.ComponentModel.DataAnnotations;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
 using GamersWorld.Domain.Enums;
-using GamersWorld.Events;
-using GamersWorld.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SecretsAgent;
 using JudgeMiddleware;
 using GamersWorld.Repository;
 using Microsoft.AspNetCore.Mvc;
+using GamersWorld.Application.Contracts.Document;
+using GamersWorld.Application.Contracts.MessageQueue;
+using GamersWorld.Application.MessageQueue;
+using GamersWorld.Application.Contracts.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,4 @@
-namespace GamersWorld.Business.Contracts;
+namespace GamersWorld.Application.Contracts.Notification;
 
 public interface INotificationService
 {

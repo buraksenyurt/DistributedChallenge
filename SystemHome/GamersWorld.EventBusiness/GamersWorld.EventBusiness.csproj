@@ -1,10 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\GamersWorld.SDK\GamersWorld.SDK.csproj" />
+    <ProjectReference Include="..\GamersWorld.Application\GamersWorld.Application.csproj" />
     <ProjectReference Include="..\GamersWorld.Domain\GamersWorld.Domain.csproj" />
-    <ProjectReference Include="..\GamersWorld.Events\GamersWorld.Events.csproj" />
-    <ProjectReference Include="..\GamersWorld.Business\GamersWorld.Business.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-namespace GamersWorld.MQ;
+namespace GamersWorld.Application.Contracts.MessageQueue;
 
 public interface IEventQueueService
 {

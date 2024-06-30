@@ -1,11 +1,11 @@
 using System.Text.Json;
-using GamersWorld.Events;
 using GamersWorld.EventHost.Factory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using GamersWorld.Domain.Constants;
+using GamersWorld.Application.Contracts.Events;
 
 namespace GamersWorld.EventHost;
 

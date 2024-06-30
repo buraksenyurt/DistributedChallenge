@@ -1,12 +1,11 @@
 ﻿using System.Net.Http.Json;
-using GamersWorld.Events;
-using GamersWorld.Business.Contracts;
 using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Responses;
-using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Constants;
+using GamersWorld.Application.Contracts.Events;
+using GamersWorld.Application.Contracts.Document;
 
 namespace GamersWorld.EventBusiness;
 

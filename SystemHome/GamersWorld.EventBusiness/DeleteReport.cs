@@ -1,6 +1,5 @@
-﻿using GamersWorld.Events;
-using GamersWorld.SDK;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using GamersWorld.Application.Contracts.Events;
 
 namespace GamersWorld.EventBusiness;
 

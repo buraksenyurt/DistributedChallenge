@@ -1,8 +1,5 @@
-﻿using GamersWorld.SDK;
-
-namespace GamersWorld.Events;
-
-public class ReportIsHereEvent : IEvent
+﻿namespace GamersWorld.Application.Contracts.Events;
+public class ReportReadyEvent : IEvent
 {
     public Guid TraceId { get; set; }
     public string? EmployeeId { get; set; }

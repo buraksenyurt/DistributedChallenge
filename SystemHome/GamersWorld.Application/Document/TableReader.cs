@@ -1,11 +1,10 @@
-using GamersWorld.Business.Contracts;
+using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
-using GamersWorld.Repository;
 using Microsoft.Extensions.Logging;
 
-namespace GamersWorld.Business.Concretes;
+namespace GamersWorld.Application.Document;
 
 public class TableReader(ILogger<FileSaver> logger, IDocumentRepository documentRepository)
     : IDocumentReader

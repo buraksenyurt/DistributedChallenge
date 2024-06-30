@@ -1,11 +1,10 @@
 using GamersWorld.EventBusiness;
-using GamersWorld.Events;
 using GamersWorld.EventHost.Factory;
-using GamersWorld.SDK;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using GamersWorld.Domain.Constants;
 using SecretsAgent;
+using GamersWorld.Application.Contracts.Events;
 
 namespace GamersWorld.EventHost;
 

@@ -1,4 +1,4 @@
-using GamersWorld.SDK;
+using GamersWorld.Application.Contracts.Events;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GamersWorld.EventHost.Factory;

@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using GamersWorld.Events;
+using GamersWorld.Application.Contracts.Events;
 using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Responses;
 using Microsoft.Extensions.Logging;

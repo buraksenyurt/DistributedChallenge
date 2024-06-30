@@ -1,4 +1,5 @@
 using Dapper;
+using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Domain.Data;
 using GamersWorld.Domain.Requests;
 using Npgsql;

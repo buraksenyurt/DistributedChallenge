@@ -1,9 +1,10 @@
+using System.Text.Json;
+using GamersWorld.Application.Contracts.MessageQueue;
 using GamersWorld.Domain.Constants;
 using RabbitMQ.Client;
 using SecretsAgent;
-using System.Text.Json;
 
-namespace GamersWorld.MQ;
+namespace GamersWorld.Application.MessageQueue;
 
 /*
     RabbitMq tarafına mesaj göndermek için kullanılan servis sınıfı

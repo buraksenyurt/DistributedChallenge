@@ -1,12 +1,12 @@
-using GamersWorld.Business.Contracts;
+using GamersWorld.Application.Contracts.Document;
+using GamersWorld.Application.Contracts.Events;
+using GamersWorld.Application.Contracts.MessageQueue;
 using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
-using GamersWorld.Events;
-using GamersWorld.MQ;
 using Microsoft.Extensions.Logging;
 
-namespace GamersWorld.Business.Concretes;
+namespace GamersWorld.Application.Document;
 
 public class FileSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueService)
     : IDocumentWriter

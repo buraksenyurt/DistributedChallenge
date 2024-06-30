@@ -1,10 +1,11 @@
 ﻿using GamersWorld.EventHost;
-using GamersWorld.Business;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using GamersWorld.Domain.Constants;
 using SecretsAgent;
+using GamersWorld.Application;
+using GamersWorld.Repository;
 
 // RabbitMq ayarlarını da ele alacağımız için appSettings konfigurasyonu için bir builder nesnesi örnekledik
 var configuration = new ConfigurationBuilder()
@@ -23,9 +24,9 @@ services.AddLogging(cfg =>
 });
 services.AddSingleton<ISecretStoreService, SecretStoreService>();
 
-// Olay sürücüleri, RabbitMq ve Loglama gibi bileşenler DI servislerine yüklenir
+services.AddApplication();
 services.AddEventDrivers();
-services.AddBusinessDrivers();
+services.AddData();
 services.AddRabbitMq();
 services.AddHttpClient(Names.KahinGateway, (serviceProvider, client) =>
 {

@@ -1,6 +1,4 @@
-﻿using GamersWorld.SDK;
-
-namespace GamersWorld.Events;
+﻿namespace GamersWorld.Application.Contracts.Events;
 
 public class ReportProcessCompletedEvent : IEvent
 {

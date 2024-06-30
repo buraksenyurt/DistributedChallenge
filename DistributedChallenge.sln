@@ -3,12 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.SDK", "SystemHome\GamersWorld.SDK\GamersWorld.SDK.csproj", "{0EBBFDDE-478F-49BF-9640-175926F7AFE1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Events", "SystemHome\GamersWorld.Events\GamersWorld.Events.csproj", "{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventBusiness", "SystemHome\GamersWorld.EventBusiness\GamersWorld.EventBusiness.csproj", "{000D5101-CB24-44CC-B9FB-2239CD3DF739}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventHost", "SystemHome\GamersWorld.EventHost\GamersWorld.EventHost.csproj", "{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.ReportingGateway", "SystemMiddleEarth\Kahin.ReportingGateway\Kahin.ReportingGateway.csproj", "{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}"
@@ -20,8 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.WebApp", "SystemHome\GamersWorld.WebApp\GamersWorld.WebApp.csproj", "{BC847687-F59A-42B3-8C56-57E1CF34D0FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Messenger", "SystemHome\GamersWorld.Messenger\GamersWorld.Messenger.csproj", "{51B22735-0CE9-4F1F-939B-7618FE9CDF39}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.MQ", "SystemHome\GamersWorld.MQ\GamersWorld.MQ.csproj", "{75DADA2D-7137-403D-85C1-936BE7A7959D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1637ED5C-ED57-47EE-9F92-3E5C9946D31B}"
 EndProject
@@ -45,13 +37,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.EventHost", "SystemMi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemHome", "SystemHome", "{91F564C9-09D8-465B-8980-DAEE8065B13B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Business", "SystemHome\GamersWorld.Business\GamersWorld.Business.csproj", "{7F6CF924-E6C1-46FD-957F-18B0505053AB}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemAsgard", "SystemAsgard", "{22618023-450C-43E2-B494-0CA0D83EE4D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heimdall", "SystemAsgard\Heimdall\Heimdall.csproj", "{92457251-FDC3-4059-8EB2-0A286F9B846C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Repository", "SystemHome\GamersWorld.Repository\GamersWorld.Repository.csproj", "{2474DF83-9303-4512-9225-4A5338D309A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Application", "SystemHome\GamersWorld.Application\GamersWorld.Application.csproj", "{F90E52EA-C274-414B-903F-4114931E342C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventBusiness", "SystemHome\GamersWorld.EventBusiness\GamersWorld.EventBusiness.csproj", "{18CA149E-8E2E-4E9D-B72C-C6AB56A421C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,18 +56,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0EBBFDDE-478F-49BF-9640-175926F7AFE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EBBFDDE-478F-49BF-9640-175926F7AFE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EBBFDDE-478F-49BF-9640-175926F7AFE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EBBFDDE-478F-49BF-9640-175926F7AFE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7E42D5B-1189-4AAC-9551-A16FC9472D6C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{000D5101-CB24-44CC-B9FB-2239CD3DF739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{000D5101-CB24-44CC-B9FB-2239CD3DF739}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{000D5101-CB24-44CC-B9FB-2239CD3DF739}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{000D5101-CB24-44CC-B9FB-2239CD3DF739}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -98,10 +80,6 @@ Global
 		{51B22735-0CE9-4F1F-939B-7618FE9CDF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51B22735-0CE9-4F1F-939B-7618FE9CDF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51B22735-0CE9-4F1F-939B-7618FE9CDF39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75DADA2D-7137-403D-85C1-936BE7A7959D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC152A8D-EA72-4159-872F-C97D2A37B9C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC152A8D-EA72-4159-872F-C97D2A37B9C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC152A8D-EA72-4159-872F-C97D2A37B9C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -130,10 +108,6 @@ Global
 		{30997B83-2EAB-4B7D-B0DC-DFBDDA704DC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30997B83-2EAB-4B7D-B0DC-DFBDDA704DC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30997B83-2EAB-4B7D-B0DC-DFBDDA704DC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F6CF924-E6C1-46FD-957F-18B0505053AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F6CF924-E6C1-46FD-957F-18B0505053AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F6CF924-E6C1-46FD-957F-18B0505053AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F6CF924-E6C1-46FD-957F-18B0505053AB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{92457251-FDC3-4059-8EB2-0A286F9B846C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{92457251-FDC3-4059-8EB2-0A286F9B846C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92457251-FDC3-4059-8EB2-0A286F9B846C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -142,6 +116,14 @@ Global
 		{2474DF83-9303-4512-9225-4A5338D309A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2474DF83-9303-4512-9225-4A5338D309A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2474DF83-9303-4512-9225-4A5338D309A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F90E52EA-C274-414B-903F-4114931E342C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F90E52EA-C274-414B-903F-4114931E342C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F90E52EA-C274-414B-903F-4114931E342C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F90E52EA-C274-414B-903F-4114931E342C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18CA149E-8E2E-4E9D-B72C-C6AB56A421C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18CA149E-8E2E-4E9D-B72C-C6AB56A421C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18CA149E-8E2E-4E9D-B72C-C6AB56A421C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18CA149E-8E2E-4E9D-B72C-C6AB56A421C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AC152A8D-EA72-4159-872F-C97D2A37B9C2} = {1637ED5C-ED57-47EE-9F92-3E5C9946D31B}
@@ -149,8 +131,9 @@ Global
 		{C00C3ED4-2B98-4A44-AAD3-F75FF7186836} = {73DF06C9-01BC-45B0-B2CE-A14F50407AC0}
 		{7A6AB394-0EA5-4C29-8571-ACF5060B5E01} = {240FFDD2-9F18-4446-B05D-FE0411C6C2B6}
 		{30997B83-2EAB-4B7D-B0DC-DFBDDA704DC6} = {240FFDD2-9F18-4446-B05D-FE0411C6C2B6}
-		{7F6CF924-E6C1-46FD-957F-18B0505053AB} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
 		{92457251-FDC3-4059-8EB2-0A286F9B846C} = {22618023-450C-43E2-B494-0CA0D83EE4D2}
 		{2474DF83-9303-4512-9225-4A5338D309A3} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
+		{F90E52EA-C274-414B-903F-4114931E342C} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
+		{18CA149E-8E2E-4E9D-B72C-C6AB56A421C6} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
 	EndGlobalSection
 EndGlobal

@@ -1,9 +1,9 @@
-using GamersWorld.Business.Contracts;
+using GamersWorld.Application.Contracts.Notification;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using SecretsAgent;
 
-namespace GamersWorld.Business.Concretes;
+namespace GamersWorld.Application.Notification;
 
 public class SignalrNotificationService(ISecretStoreService secretStoreService, ILogger<SignalrNotificationService> logger)
         : INotificationService

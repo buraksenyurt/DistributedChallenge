@@ -22,9 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SystemHome\GamersWorld.Events\GamersWorld.Events.csproj" />
     <ProjectReference Include="..\..\SystemHome\GamersWorld.EventBusiness\GamersWorld.EventBusiness.csproj" />
     <ProjectReference Include="..\..\SystemHome\GamersWorld.Domain\GamersWorld.Domain.csproj" />
+    <ProjectReference Include="..\..\SystemHome\GamersWorld.Application\GamersWorld.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,9 @@
-﻿using GamersWorld.Business.Contracts;
-using GamersWorld.Domain.Enums;
+﻿using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Requests;
-using GamersWorld.Events;
-using GamersWorld.SDK;
 using Microsoft.Extensions.Logging;
+using GamersWorld.Application.Contracts.Events;
+using GamersWorld.Application.Contracts.Document;
+using GamersWorld.Application.Contracts.Notification;
 
 namespace GamersWorld.EventBusiness;
 

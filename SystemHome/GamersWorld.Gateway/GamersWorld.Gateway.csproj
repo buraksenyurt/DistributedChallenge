@@ -8,9 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="JudgeMiddleware" Version="1.0.8" />
-    <ProjectReference Include="..\GamersWorld.Events\GamersWorld.Events.csproj" />
+    <ProjectReference Include="..\GamersWorld.Application\GamersWorld.Application.csproj" />
     <ProjectReference Include="..\GamersWorld.Domain\GamersWorld.Domain.csproj" />
-    <ProjectReference Include="..\GamersWorld.MQ\GamersWorld.MQ.csproj" />
   </ItemGroup>
 
   <ItemGroup>

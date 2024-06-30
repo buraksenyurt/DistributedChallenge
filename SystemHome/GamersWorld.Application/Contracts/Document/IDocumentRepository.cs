@@ -1,7 +1,7 @@
 ﻿using GamersWorld.Domain.Data;
 using GamersWorld.Domain.Requests;
 
-namespace GamersWorld.Repository;
+namespace GamersWorld.Application.Contracts.Document;
 
 public interface IDocumentRepository
 {

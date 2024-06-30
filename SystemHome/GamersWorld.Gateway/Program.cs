@@ -1,10 +1,11 @@
-using GamersWorld.Events;
 using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Requests;
-using GamersWorld.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SecretsAgent;
 using JudgeMiddleware;
+using GamersWorld.Application.Contracts.MessageQueue;
+using GamersWorld.Application.MessageQueue;
+using GamersWorld.Application.Contracts.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
