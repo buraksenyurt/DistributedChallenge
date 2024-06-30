@@ -56,8 +56,8 @@ Senaryodaki adımları da aşağıdaki gibi tarifleyelim.
 3. **Event Trigger Service**'in tek işi gelen içeriği **ReportRequestedEvent** isimli bir olay mesajı olarak hazırlayıp kuyruğa bırakmaktır.
 4. Şimdilik **Event Consumer/Publisher Gateway(Gamersworld.EventHost)** diye adlandırdığımız başka bir process olayları dinlemek ve bazı aksiyonlar almakla görevlidir. **ReportRequestedEvent** isimli olayları dinleyen thread'leri vardır.
 5. **Event Consumer/Publisher Gateway(Gamersworld.EventHost)** servisi bir **ReportRequestedEvent** yakaladığında **Reporting App Service(Kahin.Gateway)** isimli bir başka servise **POST** çağrısı gönderir. **Reporting App Service(Kahin.Gateway)**'in gelen rapor taleplerini toplayan bir başka process olduğunu ifade edebiliriz.
-6. İç çalışma dinamiğini pek bilmediğimiz **Reporting App Service(Kahin.Gateway)** belli bir zaman diliminde raporun hazırlanmasından sorumludur. Hazırlanan raporu kendi **Local Storage** alanında saklar ve hazır olduğunda bunun için şimdilik **External Reader Service(GamersWorld.Gateway)** olarak adlandırılan ve kendi Process'i içinde çalışan bir diğer servise **POST** bildiriminde bulunur.
-7. **External Reader Service(GamersWorld.Gateway)**, raporun hazır olduğuna dair **ReportReadyEvent** isimli yeni bir olay mesajı hazırlar ve bunu kuyruğa bırakır.
+6. İç çalışma dinamiğini pek bilmediğimiz **Reporting App Service(Kahin.Gateway)** belli bir zaman diliminde raporun hazırlanmasından sorumludur. Hazırlanan raporu kendi **Local Storage** alanında saklar ve hazır olduğunda bunun için şimdilik **External Reader Service(GamersWorld.Service.Gateway)** olarak adlandırılan ve kendi Process'i içinde çalışan bir diğer servise **POST** bildiriminde bulunur.
+7. **External Reader Service(GamersWorld.Service.Gateway)**, raporun hazır olduğuna dair **ReportReadyEvent** isimli yeni bir olay mesajı hazırlar ve bunu kuyruğa bırakır.
 8. **Event Consumer/Publisher(Gamersworld.EventHost)** tarafındaki Process **ReportReadyEvent** isimli olayları dinler.
 9. **Event Consumer/Publisher(Gamersworld.EventHost)** tarafında **ReportReadyEvent** yakalandığında yine farklı bir process'te çalışan **Reporting File Service** hizmeti **GET** ile çağrılır ve üretilen rapora ait PDF çıktısı çekilir.
 10. Servisten çekilen PDF içeriği bu sefer **Back Office** uygulamasının bulunduğu ağ tarafındaki **local storage**'e aktarılır. Aynı anda bu sefer **ReportIsHereEvent** isimli bir başka olay mesajı kuyruğa bırakılır.
@@ -74,8 +74,8 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 | **Sistem**     | **Servis**             | **Tür**     | **Görev**                                            | **Dev Adres**  |
 |----------------|------------------------|-------------|------------------------------------------------------|----------------|
 | HAL            | Eval.AuditApi          | REST        | Rapor talebindeki ifadeyi denetlemek                 | localhost:5147 |
-| HOME           | GamersWorld.Gateway    | REST        | Middle Earth için rapor statü güncelleme hizmeti     | localhost:5102 |
-| HOME           | GamersWorld.Messenger  | REST        | Web önyüz için backend servisi                       | localhost:5234 |
+| HOME           | GamersWorld.Service.Gateway    | REST        | Middle Earth için rapor statü güncelleme hizmeti     | localhost:5102 |
+| HOME           | GamersWorld.Service.Messenger  | REST        | Web önyüz için backend servisi                       | localhost:5234 |
 | HOME           | GamersWorld.WebApp     | Self Hosted | Web uygulaması                                       | localhost:5093 |
 | HOME           | GamersWorld.EventHost  | Self Hosted | Home sistemindeki event yönetim hizmeti              | N/A            |
 | MIDDLE EARTH   | Kahin.ReportingGateway | REST        | Rapor hazırlama, yollama ve durum güncellemesi       | localhost:5218 |
@@ -100,7 +100,7 @@ Envanterimize göre sistemin genel dayanıklılığını test edebileceğimiz ve
 - [ ] Rapor talebi System MiddleEarth'e gönderilmek istenir. Kahin.ReportingGateway cevap veremez durumdadır.
 - [ ] Kahin.ReportingGateway talebi alır, AuditApi cevap veremez durumdadır.
 - [ ] Kahin.ReportingGateway talebi alır. AuditApi ifadeyi onaylar. Redis aşağı inmiş haldedir.
-- [ ] WebApp rapor talep eder. Messenger servis talebi alır. Event nesnesi oluşur. Rapor talebi Kahin.ReportingGateway'e ulaşır. AuditApi ifadeyi onaylar. Rapor hazır hale gelir. Geri bildirim için GamersWorld.Gateway servisi çağrılır. GamersWorld.Gateway ayakta ama talep fazlalığı sebebiyle cevap verebilir konumda değildir.
+- [ ] WebApp rapor talep eder. Messenger servis talebi alır. Event nesnesi oluşur. Rapor talebi Kahin.ReportingGateway'e ulaşır. AuditApi ifadeyi onaylar. Rapor hazır hale gelir. Geri bildirim için GamersWorld.Service.Gateway servisi çağrılır. GamersWorld.Service.Gateway ayakta ama talep fazlalığı sebebiyle cevap verebilir konumda değildir.
 - [ ] AWS Secrets Manager herhangi bir anda aşağıya iner.
 - [ ] System MiddleEarth servislerinin cevap verme sürelerinde _(Response Times)_ gecikmeler söz konusudur ve belirgin bir darboğaz oluşmaya başlar.
 - [ ] System MiddleEarth'teki Redis servisi herhangi bir zamanda çöker.
@@ -154,13 +154,13 @@ Solution içerisinde yer alan uygulamaları tek seferde çalıştırmak için ru
 gnome-terminal --title="MIDDLE EARTH - Reporting Gateway" -- bash -c "cd ../SystemMiddleEarth/Kahin.ReportingGateway && dotnet run; exec bash"
 
 # Start Messenger
-gnome-terminal --title="HOME - Messenger Service" -- bash -c "cd ../SystemHome/GamersWorld.Messenger && dotnet run; exec bash"
+gnome-terminal --title="HOME - Messenger Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Messenger && dotnet run; exec bash"
 
 # Start Home EventHost
 gnome-terminal --title="HOME - Event Consumer Host" -- bash -c "cd ../SystemHome/GamersWorld.EventHost && dotnet run; exec bash"
 
 # Start Home Gateway
-gnome-terminal --title="HOME - Gateway Service" -- bash -c "cd ../SystemHome/GamersWorld.Gateway && dotnet run; exec bash"
+gnome-terminal --title="HOME - Gateway Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Gateway && dotnet run; exec bash"
 
 # Start Eval.Api
 gnome-terminal --title="HAL - Expression Auditor" -- bash -c "cd ../SystemHAL/Eval.AuditApi && dotnet run; exec bash"
