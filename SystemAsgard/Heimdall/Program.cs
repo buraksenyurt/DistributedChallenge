@@ -26,6 +26,11 @@ builder.Services.AddHealthChecks()
                     .GetAwaiter().GetResult(),
         name: "RabbitMQ",
         tags: ["Docker-Compose", "RabbitMQ"])
+    .AddNpgSql(connectionString: secretStoreService.GetSecretAsync("ReportDbConnStr")
+                    .GetAwaiter().GetResult(),
+        name: "Report Db",
+        tags: ["Docker-Compose", "PostgreSQL", "Database"]
+    )
     .AddCheck(
         name: "Eval Audit Api",
         instance: new HealthChecker(
