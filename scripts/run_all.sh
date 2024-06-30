@@ -4,13 +4,13 @@
 gnome-terminal --title="MIDDLE EARTH - Reporting Gateway" -- bash -c "cd ../SystemMiddleEarth/Kahin.ReportingGateway && dotnet run; exec bash"
 
 # Start Messenger
-gnome-terminal --title="HOME - Messenger Service" -- bash -c "cd ../SystemHome/GamersWorld.Messenger && dotnet run; exec bash"
+gnome-terminal --title="HOME - Messenger Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Messenger && dotnet run; exec bash"
 
 # Start Home EventHost
 gnome-terminal --title="HOME - Event Consumer Host" -- bash -c "cd ../SystemHome/GamersWorld.EventHost && dotnet run; exec bash"
 
 # Start Home Gateway
-gnome-terminal --title="HOME - Gateway Service" -- bash -c "cd ../SystemHome/GamersWorld.Gateway && dotnet run; exec bash"
+gnome-terminal --title="HOME - Gateway Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Gateway && dotnet run; exec bash"
 
 # Start Eval.Api
 gnome-terminal --title="HAL - Expression Auditor" -- bash -c "cd ../SystemHAL/Eval.AuditApi && dotnet run; exec bash"

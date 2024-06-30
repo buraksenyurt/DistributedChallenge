@@ -7,13 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventHost", "Sy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.ReportingGateway", "SystemMiddleEarth\Kahin.ReportingGateway\Kahin.ReportingGateway.csproj", "{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Gateway", "SystemHome\GamersWorld.Gateway\GamersWorld.Gateway.csproj", "{4B566CB1-6CAD-44A9-871B-7E9464184CF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Service.Gateway", "SystemHome\GamersWorld.Service.Gateway\GamersWorld.Service.Gateway.csproj", "{4B566CB1-6CAD-44A9-871B-7E9464184CF2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Domain", "SystemHome\GamersWorld.Domain\GamersWorld.Domain.csproj", "{C28DFA91-3E85-4576-84AC-243015666538}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.WebApp", "SystemHome\GamersWorld.WebApp\GamersWorld.WebApp.csproj", "{BC847687-F59A-42B3-8C56-57E1CF34D0FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Messenger", "SystemHome\GamersWorld.Messenger\GamersWorld.Messenger.csproj", "{51B22735-0CE9-4F1F-939B-7618FE9CDF39}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Service.Messenger", "SystemHome\GamersWorld.Service.Messenger\GamersWorld.Service.Messenger.csproj", "{51B22735-0CE9-4F1F-939B-7618FE9CDF39}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1637ED5C-ED57-47EE-9F92-3E5C9946D31B}"
 EndProject
