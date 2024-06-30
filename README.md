@@ -84,6 +84,7 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 | DOCKER COMPOSE | Redis                  |             | Distributed Key Value Store                          | localhost:6379 |
 | DOCKER COMPOSE | LocalStack             |             | Local AWS Secrets Manager                            | localhost:4566 |
 | DOCKER COMPOSE | BaGet                  |             | Local NuGet Server                                   | localhost:5000 |
+| DOCKER COMPOSE | Postgresql             |             | Rapor veritabanı                                     | N/A            |
 | SYSTEM ASGARD  | Heimdall               | Self Hosted | Servis izleme uygulaması                             | localhost:5247 |
 
 **NOT: Yeni servisler ilave edildikçe burası güncellenmelidir.**
