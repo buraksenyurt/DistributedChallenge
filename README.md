@@ -457,8 +457,9 @@ Diğer sistem servislerini ekledikten sonraki duruma da bir bakalım. Aşağıda
 
 Kodlar üzerinde ilerledikçe çözüm gittikçe büyümeye ve karmaşıklaşmaya başladı. Bazı önemli mevzulara ait anlatımları Youtube kanalında bulabilirsiniz.
 
-- [.Net 8 ile Distributed Systems Challenge - 01 - Tanıtım](https://www.youtube.com/watch?v=gMo8D2vUKR4)
-- [.Net 8 ile Distributed Systems Challenge - 02 - Event Mekanizması](https://www.youtube.com/watch?v=iOPHGECy5bU)
-- [.Net 8 ile Distributed Systems Challenge - 03 - Secrets Management](https://www.youtube.com/watch?v=kozb3c37f9k)
-- [.Net 8 ile Distributed Systems Challenge - 04 - Güncel Durum Değerlendirmesi](https://www.youtube.com/watch?v=LvZOCmnqujE)
+- [.Net 8 ile Distributed Systems Challenge - 01 - Tanıtım](https://youtu.be/gMo8D2vUKR4)
+- [.Net 8 ile Distributed Systems Challenge - 02 - Event Mekanizması](https://youtu.be/iOPHGECy5bU)
+- [.Net 8 ile Distributed Systems Challenge - 03 - Secrets Management](https://youtu.be/kozb3c37f9k)
+- [.Net 8 ile Distributed Systems Challenge - 04 - Güncel Durum Değerlendirmesi](https://youtu.be/LvZOCmnqujE)
+- [.Net 8 ile Distributed Systems Challenge - 05 - Health Checks](https://youtu.be/dtiTMet4qFM)
 - ...
