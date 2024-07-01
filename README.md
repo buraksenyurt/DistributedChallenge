@@ -463,3 +463,4 @@ Kodlar üzerinde ilerledikçe çözüm gittikçe büyümeye ve karmaşıklaşmay
 - [.Net 8 ile Distributed Systems Challenge - 04 - Güncel Durum Değerlendirmesi](https://youtu.be/LvZOCmnqujE)
 - [.Net 8 ile Distributed Systems Challenge - 05 - Health Checks](https://youtu.be/dtiTMet4qFM)
 - ...
+
