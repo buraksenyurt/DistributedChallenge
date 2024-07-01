@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SystemMiddleEarth\Kahin.Common\Kahin.Common.csproj" />
+    <ProjectReference Include="..\..\Kahin.Common\Kahin.Common.csproj" />
   </ItemGroup>
 
 </Project>
