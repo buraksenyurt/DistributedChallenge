@@ -17,11 +17,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Service.Messeng
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1637ED5C-ED57-47EE-9F92-3E5C9946D31B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventBusiness.Tests", "Test\GamersWorld.EventBusiness.Tests\GamersWorld.EventBusiness.Tests.csproj", "{AC152A8D-EA72-4159-872F-C97D2A37B9C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventBusiness.Tests", "SystemHome\Test\GamersWorld.EventBusiness.Tests\GamersWorld.EventBusiness.Tests.csproj", "{AC152A8D-EA72-4159-872F-C97D2A37B9C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.Common", "SystemMiddleEarth\Kahin.Common\Kahin.Common.csproj", "{4D90FFA4-F212-48F8-ABDF-B9515963D5AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.Comon.Tests", "Test\Kahin.Comon.Tests\Kahin.Comon.Tests.csproj", "{B14122BB-A5EE-453F-A8B2-7260BAA2C430}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.Comon.Tests", "SystemMiddleEarth\Test\Kahin.Comon.Tests\Kahin.Comon.Tests.csproj", "{B14122BB-A5EE-453F-A8B2-7260BAA2C430}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eval.AuditApi", "SystemHAL\Eval.AuditApi\Eval.AuditApi.csproj", "{9963C2D0-671F-496C-89F8-79579C3DFB91}"
 EndProject
