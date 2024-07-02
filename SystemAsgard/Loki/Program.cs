@@ -27,14 +27,26 @@ var targets = new List<Target>
     new() {
         Name="Kahin Reporting Gatewaw Api",
         Action="Get Report",
-        //Uri=new Uri($"http://{await secretService.GetSecretAsync("KahinReportingGatewayApiAddress")}/getReport"),
-        Uri=new Uri($"http://localhost:5218/getReport"),
+        Uri=new Uri($"http://{await secretService.GetSecretAsync("KahinReportingGatewayApiAddress")}/getReport"),
+        //Uri=new Uri($"http://localhost:5218/getReport"),
         Payload=new GetReportRequest
                 {
                     DocumentId = $"1001-abc-{Guid.NewGuid()}"
                 }
+    },
+    new() {
+        Name="Kahin Reporting Gatewaw Api",
+        Action="New Report Request",
+        Uri=new Uri($"http://{await secretService.GetSecretAsync("KahinReportingGatewayApiAddress")}/"),
+        //Uri=new Uri($"http://localhost:5218/"),
+        Payload=new CreateReportRequest
+                {
+                    TraceId=Guid.NewGuid().ToString(),
+                    EmployeeId="BRK-1903",
+                    Expression="SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc",
+                    Title="Sales from the last 4 period"
+                }
     }
-    //"http://localhost:5228/",
 };
 
 int numberOfRequests = args.Length > 0 ? int.Parse(args[0]) : 10000;
