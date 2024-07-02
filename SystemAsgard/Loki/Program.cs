@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SecretsAgent;
 using Loki.Requests.Kahin;
+using Loki.Model;
 
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -21,9 +22,18 @@ var serviceProvider = new ServiceCollection()
 var logger = serviceProvider.GetService<ILogger<Program>>();
 var secretService = serviceProvider.GetService<ISecretStoreService>();
 
-var urls = new List<string>
+var targets = new List<Target>
 {
-    $"http://{await secretService.GetSecretAsync("KahinReportingGatewayApiAddress")}/getReport",
+    new() {
+        Name="Kahin Reporting Gatewaw Api",
+        Action="Get Report",
+        //Uri=new Uri($"http://{await secretService.GetSecretAsync("KahinReportingGatewayApiAddress")}/getReport"),
+        Uri=new Uri($"http://localhost:5218/getReport"),
+        Payload=new GetReportRequest
+                {
+                    DocumentId = $"1001-abc-{Guid.NewGuid()}"
+                }
+    }
     //"http://localhost:5228/",
 };
 
@@ -35,17 +45,17 @@ logger.LogInformation(
     , numberOfRequests
     , degreeOfParallelism);
 
-foreach (var url in urls)
+foreach (var target in targets)
 {
-    logger.LogInformation("Starting DDoS simulation on {Url}", url);
-    await StartDdosAttack(url, numberOfRequests, degreeOfParallelism, logger);
-    logger.LogInformation("Simulation completed for {Url}", url);
+    logger.LogInformation("Starting DDoS simulation on {Url}", target.Uri);
+    await StartDdosAttack(target, numberOfRequests, degreeOfParallelism, logger);
+    logger.LogInformation("Simulation completed for {Url}", target.Uri);
 }
 
 logger.LogInformation("All simulations completed...");
 
 async Task StartDdosAttack(
-    string url
+    Target service
     , int numberOfRequests
     , int degreeOfParallelism
     , ILogger logger)
@@ -59,21 +69,20 @@ async Task StartDdosAttack(
         {
             for (int reqId = 0; reqId < numberOfRequests / degreeOfParallelism; reqId++)
             {
-                var request = new GetReportRequest
+                if (service.HttpMethod == HttpMethod.Post)
                 {
-                    DocumentId = $"1001-abc-{Guid.NewGuid()}"
-                };
-                string json = JsonSerializer.Serialize(request);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    string json = JsonSerializer.Serialize(service.Payload);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                try
-                {
-                    var response = await client.PostAsync(url, content);
-                    logger.LogInformation("Request {ReqId}: {StatusCode}", reqId, response.StatusCode);
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "Request {ReqId} failed", reqId);
+                    try
+                    {
+                        var response = await client.PostAsync(service.Uri.ToString(), content);
+                        logger.LogInformation("Request {ReqId}: {StatusCode}", reqId, response.StatusCode);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "Request {ReqId} failed", reqId);
+                    }
                 }
             }
         });
