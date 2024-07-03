@@ -8,21 +8,22 @@ public class NetworkFailureBehavior
 {
     private readonly RequestDelegate _next;
     private readonly Random _random;
+    private readonly int _failureProbability;
     private readonly ILogger<NetworkFailureBehavior> _logger;
 
-    public NetworkFailureBehavior(RequestDelegate next, ILogger<NetworkFailureBehavior> logger)
+    public NetworkFailureBehavior(RequestDelegate next, NetworkFailureProbability failureProbability, ILogger<NetworkFailureBehavior> logger)
     {
         _next = next;
         _random = new Random();
+        _failureProbability = (int)failureProbability;
         _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
-        // Simulate network failure with a 10% probability
-        if (_random.Next(1, 11) <= 1)
+        if (_random.Next(1, 101) <= _failureProbability)
         {
-            _logger.LogWarning("Simulated newtwork failure...");
+            _logger.LogWarning("Simulated newtwork failure with HTTP 500 code.");
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             await context.Response.WriteAsync("Simulated network failure.");
         }
