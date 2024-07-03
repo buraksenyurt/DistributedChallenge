@@ -4,20 +4,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Resistance;
 
-public class NetworkFailureBehavior
+public class NetworkFailureBehavior(RequestDelegate next, NetworkFailureProbability failureProbability, ILogger<NetworkFailureBehavior> logger)
 {
-    private readonly RequestDelegate _next;
-    private readonly Random _random;
-    private readonly int _failureProbability;
-    private readonly ILogger<NetworkFailureBehavior> _logger;
-
-    public NetworkFailureBehavior(RequestDelegate next, NetworkFailureProbability failureProbability, ILogger<NetworkFailureBehavior> logger)
-    {
-        _next = next;
-        _random = new Random();
-        _failureProbability = (int)failureProbability;
-        _logger = logger;
-    }
+    private readonly RequestDelegate _next = next;
+    private readonly Random _random = new Random();
+    private readonly int _failureProbability = (int)failureProbability;
+    private readonly ILogger<NetworkFailureBehavior> _logger = logger;
 
     public async Task InvokeAsync(HttpContext context)
     {
