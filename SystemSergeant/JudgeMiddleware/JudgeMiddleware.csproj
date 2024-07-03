@@ -9,7 +9,7 @@
   <PropertyGroup>
     <PackageId>JudgeMiddleware</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>apiMiddleware performance logging middleware</PackageTags>
+    <PackageTags>apiMiddleware;performance;logging;middleware</PackageTags>
     <Version>1.0.8</Version>
     <Authors>Burak Selim Senyurt</Authors>
     <Company>Maybe Later Mefrüşat, Hırdavat, Yazılım Geliştirme</Company>
