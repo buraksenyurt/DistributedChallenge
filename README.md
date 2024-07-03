@@ -20,6 +20,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Local NuGet Entegrasyonu](#local-nuget-entegrasyonu)
     - [Github Actions ve Local Nuget Repo Problemi](#github-actions-ve-local-nuget-repo-problemi)
     - [Servisler için HealthCheck Uygulaması](#servisler-için-healthcheck-uygulaması)
+    - [Resiliency Deneyleri](#resiliency-deneyleri)
   - [Bazı Düşünceler](#bazı-düşünceler)
   - [Tartışılabilecek Problemler](#tartışılabilecek-problemler)
   - [Youtube Anlatımları](#youtube-anlatımları)
@@ -438,6 +439,18 @@ Envanterimizdeki servislerin sayısı giderek artıyor. Bu servislerin sağlık 
 Diğer sistem servislerini ekledikten sonraki duruma da bir bakalım. Aşağıdaki ekran görüntüsünde olduğu gibi servislerin durumlarını izlememiz mümkün.
 
 ![Service monitoring 02](./images/heimdall_02.png)
+
+### Resiliency Deneyleri
+
+Dağıtık sistemlerini dayanıklılığını(Resiliency) artırmak için servislerin, ağın, fiziki kapasitelerin belli koşullar altında kalarak hatalara sebebiyet vermesi ve bu durumda sistemin nasıl davranış sergileyeceğinin gözlemlenmesi önemli. Bu tip testler ile sistemin dayanıklılığını artıracak ve baş ağrıtan hataların önüne geçecek şekilde tedbirler alınabilir. Bu amaçla sistemlerdeki servislerde bazı deneylerin başlatılması için SystemSergeant altına yeni bir NuGet paketi açıldı. Resistance isimli bu pakette Api çalışm zamanı hattına monte edilecek farklı türde Middleware nesneleri var. Bu paket sayesinde aşağıdaki durumları simüle edebiliriz.
+
+- **Network Failure:** 500 Internal Server Error ile Network Failure durumunun oluşturulması
+- **Service Outage:** Belli aralıklarla tekrar edecek şekilde 503 Service Unavailable durumunun oluşturulması
+- **Latency:** Service cevap sürelerinin kasıtlı olarak geciktirilmesi
+- **Resource Contention:** HTTP 429 Too Many Request durumunun oluşturulması
+- **Data Inconsistency:** Veri tutarsızlığı durumunun oluşturulması
+
+Pek tabii bu manuel operasyonar haricinde [Shopify Toxiproxy](https://github.com/Shopify/toxiproxy) hazır paketler de kullanılabilir. Ben hafifsiklet bir çözüm ile ilerlemeyi düşünüyorum.
 
 ## Bazı Düşünceler
 
