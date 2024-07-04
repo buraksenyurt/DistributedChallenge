@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 
 namespace JudgeMiddleware;
 
-public class PerformanceBehavior(RequestDelegate next, ILogger<PerformanceBehavior> logger, MetricOptions metricOptions)
+public class PerformanceBehavior(RequestDelegate next, ILogger<PerformanceBehavior> logger, Options options)
 {
     private readonly RequestDelegate _next = next;
     private readonly ILogger<PerformanceBehavior> _logger = logger;
-    private readonly MetricOptions _metricOptions = metricOptions;
+    private readonly Options _options = options;
 
     public async Task Invoke(HttpContext context)
     {
@@ -19,10 +19,10 @@ public class PerformanceBehavior(RequestDelegate next, ILogger<PerformanceBehavi
         stopwatch.Stop();
         var responseTime = stopwatch.ElapsedMilliseconds;
 
-        if (responseTime > _metricOptions.DurationThreshold.TotalMilliseconds)
+        if (responseTime > _options.DurationThreshold.TotalMilliseconds)
         {
             _logger.LogWarning("Request {Method} {Path} took {ResponseTime}(ms) which is above the threshold of {Threshold}(ms)",
-                context.Request.Method, context.Request.Path, responseTime, _metricOptions.DurationThreshold.TotalMilliseconds);
+                context.Request.Method, context.Request.Path, responseTime, _options.DurationThreshold.TotalMilliseconds);
         }
         else
         {

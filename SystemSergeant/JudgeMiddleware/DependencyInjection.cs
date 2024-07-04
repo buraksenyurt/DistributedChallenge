@@ -11,13 +11,13 @@ public static class DependencyInjection
 
         return app;
     }
-    public static IApplicationBuilder AddJudgeMiddleware(this IApplicationBuilder app, MetricOptions metricOptions)
+    public static IApplicationBuilder AddJudgeMiddleware(this IApplicationBuilder app, Options options)
     {
-        if (!metricOptions.DeactivatePerformanceBehavior)
-            app.UseMiddleware<PerformanceBehavior>(metricOptions);
+        if (!options.DeactivatePerformanceBehavior)
+            app.UseMiddleware<PerformanceBehavior>(options);
 
-        if (!metricOptions.DeactivateInputOutputBehavior)
-            app.UseMiddleware<InputOutputBehavior>();
+        if (!options.DeactivateInputOutputBehavior)
+            app.UseMiddleware<InputOutputBehavior>(options);
 
         return app;
     }
