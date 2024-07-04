@@ -7,7 +7,7 @@ using Kahin.Common.Requests;
 using Kahin.Common.Responses;
 using Kahin.Common.Validation;
 using Kahin.MQ;
-using Kahin.ReportingGateway;
+using Kahin.Service.ReportingGateway;
 
 var builder = WebApplication.CreateBuilder(args);
 
