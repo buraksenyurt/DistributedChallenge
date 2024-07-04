@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>      
-    <PackageReference Include="JudgeMiddleware" Version="1.0.8" />      
+    <PackageReference Include="JudgeMiddleware" Version="1.0.9" />      
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>

@@ -4,13 +4,20 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-public class InputOutputBehavior(RequestDelegate next, ILogger<InputOutputBehavior> logger)
+public class InputOutputBehavior(RequestDelegate next, ILogger<InputOutputBehavior> logger, Options options)
 {
     private readonly RequestDelegate _next = next;
     private readonly ILogger<InputOutputBehavior> _logger = logger;
+    private readonly Options _options = options;
 
     public async Task Invoke(HttpContext context)
     {
+        if (_options.ExcludedPaths.Any(path => context.Request.Path.StartsWithSegments(path)))
+        {
+            await _next(context);
+            return;
+        }
+
         var request = await FormatRequest(context.Request);
         _logger.LogInformation("Request: {Request}", request);
         var body = context.Response.Body;
