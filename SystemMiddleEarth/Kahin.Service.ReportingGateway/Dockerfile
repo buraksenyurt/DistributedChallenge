@@ -13,4 +13,4 @@ COPY --from=build /app/out .
 
 EXPOSE 80
 
-ENTRYPOINT ["dotnet", "Kahin.ReportingService.dll"]
+ENTRYPOINT ["dotnet", "Kahin.Service.ReportingGateway.dll"]
