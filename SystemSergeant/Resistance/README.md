@@ -10,6 +10,10 @@ Api çağrılarında belli bir yüzdeye göre HTTP 500 InternalServerError dön�
 
 Api çağrılarında cevap sürelerinin belli mili saniye değerlerinde geciktirilmesini sağlar.
 
+## ResourceRaceBehavior
+
+Eş zamanlı istek sayısının ayarlanarak HTTP 429 TooManyRequest probleminin oluşturulmasını sağlar.
+
 ## Usage
 
 Normal şartlarda tüm simülasyon reçeteleri pasiftir. Etkinleştirmek için açık bir şekilde IsActive özelliklerine true değerlerinin atanması gerekir. Bazı reçeteler kendi özel parametrelerine ihtiyaç duyabilir.

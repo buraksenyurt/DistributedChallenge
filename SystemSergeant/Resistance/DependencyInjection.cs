@@ -12,6 +12,9 @@ public static class DependencyInjection
         if (options.LatencyIsActive)
             app.UseMiddleware<LatencyBehavior>(options.LatencyPeriod);
 
+        if (options.ResourceRaceIsActive)
+            app.UseMiddleware<ResourceRaceBehavior>(options.ResourceRaceUpperLimit);
+
         return app;
     }
 }

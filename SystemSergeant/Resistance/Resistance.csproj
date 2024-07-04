@@ -9,12 +9,14 @@
     <PropertyGroup>
     <PackageId>Resistance</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>resiliance;webApi;distributedSystems</PackageTags>
-    <Version>1.0.0</Version>
+    <PackageTags>resilience;webApi;distributedSystems;simulation;middleware;aspNet;dotNetCore</PackageTags>
+    <Version>1.0.1</Version>
     <Authors>Burak Selim Senyurt</Authors>
     <Company>Maybe Later Mefrüşat, Hırdavat, Yazılım Geliştirme</Company>
     <Description>A few Middleware functionality for Asp.Net Web Api Projects to simulate Resiliance problems</Description>
-    <TargetFramework>net8.0</TargetFramework>    
+    <TargetFramework>net8.0</TargetFramework>
+    <Title>Resilience Simulation Middleware</Title>
+    <RepositoryUrl>https://github.com/buraksenyurt/DistributedChallenge/tree/main/SystemSergeant/Resistance</RepositoryUrl>    
   </PropertyGroup>
 
   <ItemGroup>
