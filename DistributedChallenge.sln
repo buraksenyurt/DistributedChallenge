@@ -3,59 +3,64 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventHost", "SystemHome\GamersWorld.EventHost\GamersWorld.EventHost.csproj", "{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.EventHost", "SystemHome\GamersWorld.EventHost\GamersWorld.EventHost.csproj", "{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.ReportingGateway", "SystemMiddleEarth\Kahin.ReportingGateway\Kahin.ReportingGateway.csproj", "{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kahin.ReportingGateway", "SystemMiddleEarth\Kahin.ReportingGateway\Kahin.ReportingGateway.csproj", "{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Service.Gateway", "SystemHome\GamersWorld.Service.Gateway\GamersWorld.Service.Gateway.csproj", "{4B566CB1-6CAD-44A9-871B-7E9464184CF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.Service.Gateway", "SystemHome\GamersWorld.Service.Gateway\GamersWorld.Service.Gateway.csproj", "{4B566CB1-6CAD-44A9-871B-7E9464184CF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Domain", "SystemHome\GamersWorld.Domain\GamersWorld.Domain.csproj", "{C28DFA91-3E85-4576-84AC-243015666538}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.Domain", "SystemHome\GamersWorld.Domain\GamersWorld.Domain.csproj", "{C28DFA91-3E85-4576-84AC-243015666538}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.WebApp", "SystemHome\GamersWorld.WebApp\GamersWorld.WebApp.csproj", "{BC847687-F59A-42B3-8C56-57E1CF34D0FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.WebApp", "SystemHome\GamersWorld.WebApp\GamersWorld.WebApp.csproj", "{BC847687-F59A-42B3-8C56-57E1CF34D0FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Service.Messenger", "SystemHome\GamersWorld.Service.Messenger\GamersWorld.Service.Messenger.csproj", "{51B22735-0CE9-4F1F-939B-7618FE9CDF39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.Service.Messenger", "SystemHome\GamersWorld.Service.Messenger\GamersWorld.Service.Messenger.csproj", "{51B22735-0CE9-4F1F-939B-7618FE9CDF39}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1637ED5C-ED57-47EE-9F92-3E5C9946D31B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.EventBusiness.Tests", "SystemHome\Test\GamersWorld.EventBusiness.Tests\GamersWorld.EventBusiness.Tests.csproj", "{AC152A8D-EA72-4159-872F-C97D2A37B9C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventBusiness.Tests", "SystemHome\Test\GamersWorld.EventBusiness.Tests\GamersWorld.EventBusiness.Tests.csproj", "{AC152A8D-EA72-4159-872F-C97D2A37B9C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kahin.Common", "SystemMiddleEarth\Kahin.Common\Kahin.Common.csproj", "{4D90FFA4-F212-48F8-ABDF-B9515963D5AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.Common", "SystemMiddleEarth\Kahin.Common\Kahin.Common.csproj", "{4D90FFA4-F212-48F8-ABDF-B9515963D5AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kahin.Comon.Tests", "SystemMiddleEarth\Test\Kahin.Comon.Tests\Kahin.Comon.Tests.csproj", "{B14122BB-A5EE-453F-A8B2-7260BAA2C430}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.Comon.Tests", "SystemMiddleEarth\Test\Kahin.Comon.Tests\Kahin.Comon.Tests.csproj", "{B14122BB-A5EE-453F-A8B2-7260BAA2C430}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eval.AuditApi", "SystemHAL\Eval.AuditApi\Eval.AuditApi.csproj", "{9963C2D0-671F-496C-89F8-79579C3DFB91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eval.AuditApi", "SystemHAL\Eval.AuditApi\Eval.AuditApi.csproj", "{9963C2D0-671F-496C-89F8-79579C3DFB91}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemHAL", "SystemHAL", "{73DF06C9-01BC-45B0-B2CE-A14F50407AC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eval.AuditLib", "SystemHAL\Eval.AuditLib\Eval.AuditLib.csproj", "{C00C3ED4-2B98-4A44-AAD3-F75FF7186836}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eval.AuditLib", "SystemHAL\Eval.AuditLib\Eval.AuditLib.csproj", "{C00C3ED4-2B98-4A44-AAD3-F75FF7186836}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemMiddleEarth", "SystemMiddleEarth", "{240FFDD2-9F18-4446-B05D-FE0411C6C2B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.MQ", "SystemMiddleEarth\Kahin.MQ\Kahin.MQ.csproj", "{7A6AB394-0EA5-4C29-8571-ACF5060B5E01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kahin.MQ", "SystemMiddleEarth\Kahin.MQ\Kahin.MQ.csproj", "{7A6AB394-0EA5-4C29-8571-ACF5060B5E01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kahin.EventHost", "SystemMiddleEarth\Kahin.EventHost\Kahin.EventHost.csproj", "{30997B83-2EAB-4B7D-B0DC-DFBDDA704DC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kahin.EventHost", "SystemMiddleEarth\Kahin.EventHost\Kahin.EventHost.csproj", "{30997B83-2EAB-4B7D-B0DC-DFBDDA704DC6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemHome", "SystemHome", "{91F564C9-09D8-465B-8980-DAEE8065B13B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemAsgard", "SystemAsgard", "{22618023-450C-43E2-B494-0CA0D83EE4D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heimdall", "SystemAsgard\Heimdall\Heimdall.csproj", "{92457251-FDC3-4059-8EB2-0A286F9B846C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heimdall", "SystemAsgard\Heimdall\Heimdall.csproj", "{92457251-FDC3-4059-8EB2-0A286F9B846C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Repository", "SystemHome\GamersWorld.Repository\GamersWorld.Repository.csproj", "{2474DF83-9303-4512-9225-4A5338D309A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.Repository", "SystemHome\GamersWorld.Repository\GamersWorld.Repository.csproj", "{2474DF83-9303-4512-9225-4A5338D309A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Application", "SystemHome\GamersWorld.Application\GamersWorld.Application.csproj", "{F90E52EA-C274-414B-903F-4114931E342C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.Application", "SystemHome\GamersWorld.Application\GamersWorld.Application.csproj", "{F90E52EA-C274-414B-903F-4114931E342C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.EventBusiness", "SystemHome\GamersWorld.EventBusiness\GamersWorld.EventBusiness.csproj", "{18CA149E-8E2E-4E9D-B72C-C6AB56A421C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.EventBusiness", "SystemHome\GamersWorld.EventBusiness\GamersWorld.EventBusiness.csproj", "{18CA149E-8E2E-4E9D-B72C-C6AB56A421C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loki", "SystemAsgard\Loki\Loki.csproj", "{815A443B-8463-4D1B-B2FB-7E4F46D7EA23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loki", "SystemAsgard\Loki\Loki.csproj", "{815A443B-8463-4D1B-B2FB-7E4F46D7EA23}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{DE1218CE-D25F-4FD2-995C-4E13D33EACDB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{B126D807-BA40-4C7E-929C-EDCEEA33995E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{930E2157-01E6-4DF4-A30B-AEAF65CBDF8A}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -131,9 +136,20 @@ Global
 		{815A443B-8463-4D1B-B2FB-7E4F46D7EA23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{815A443B-8463-4D1B-B2FB-7E4F46D7EA23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{AC152A8D-EA72-4159-872F-C97D2A37B9C2} = {1637ED5C-ED57-47EE-9F92-3E5C9946D31B}
-		{B14122BB-A5EE-453F-A8B2-7260BAA2C430} = {1637ED5C-ED57-47EE-9F92-3E5C9946D31B}
+		{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
+		{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE} = {240FFDD2-9F18-4446-B05D-FE0411C6C2B6}
+		{4B566CB1-6CAD-44A9-871B-7E9464184CF2} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
+		{C28DFA91-3E85-4576-84AC-243015666538} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
+		{BC847687-F59A-42B3-8C56-57E1CF34D0FD} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
+		{51B22735-0CE9-4F1F-939B-7618FE9CDF39} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
+		{AC152A8D-EA72-4159-872F-C97D2A37B9C2} = {DE1218CE-D25F-4FD2-995C-4E13D33EACDB}
+		{4D90FFA4-F212-48F8-ABDF-B9515963D5AB} = {240FFDD2-9F18-4446-B05D-FE0411C6C2B6}
+		{B14122BB-A5EE-453F-A8B2-7260BAA2C430} = {B126D807-BA40-4C7E-929C-EDCEEA33995E}
+		{9963C2D0-671F-496C-89F8-79579C3DFB91} = {73DF06C9-01BC-45B0-B2CE-A14F50407AC0}
 		{C00C3ED4-2B98-4A44-AAD3-F75FF7186836} = {73DF06C9-01BC-45B0-B2CE-A14F50407AC0}
 		{7A6AB394-0EA5-4C29-8571-ACF5060B5E01} = {240FFDD2-9F18-4446-B05D-FE0411C6C2B6}
 		{30997B83-2EAB-4B7D-B0DC-DFBDDA704DC6} = {240FFDD2-9F18-4446-B05D-FE0411C6C2B6}
@@ -142,5 +158,10 @@ Global
 		{F90E52EA-C274-414B-903F-4114931E342C} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
 		{18CA149E-8E2E-4E9D-B72C-C6AB56A421C6} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
 		{815A443B-8463-4D1B-B2FB-7E4F46D7EA23} = {22618023-450C-43E2-B494-0CA0D83EE4D2}
+		{DE1218CE-D25F-4FD2-995C-4E13D33EACDB} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
+		{B126D807-BA40-4C7E-929C-EDCEEA33995E} = {240FFDD2-9F18-4446-B05D-FE0411C6C2B6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {27DE64F9-8957-49D0-9C64-45382EB49614}
 	EndGlobalSection
 EndGlobal
