@@ -4,7 +4,7 @@ using Kahin.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SecretsAgent;
 
-namespace Kahin.ReportingGateway;
+namespace Kahin.Service.ReportingGateway;
 
 public static class DependencyInjection
 {

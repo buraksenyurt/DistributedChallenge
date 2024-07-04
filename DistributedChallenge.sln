@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.EventHost", "SystemHome\GamersWorld.EventHost\GamersWorld.EventHost.csproj", "{9CF7EEF6-E7C4-4DBF-9E71-ACDB77DC276F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kahin.ReportingGateway", "SystemMiddleEarth\Kahin.ReportingGateway\Kahin.ReportingGateway.csproj", "{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kahin.Service.ReportingGateway", "SystemMiddleEarth\Kahin.ReportingGateway\Kahin.Service.ReportingGateway.csproj", "{178D1E07-E1E3-4ACE-95E6-1BA640A1E1FE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.Service.Gateway", "SystemHome\GamersWorld.Service.Gateway\GamersWorld.Service.Gateway.csproj", "{4B566CB1-6CAD-44A9-871B-7E9464184CF2}"
 EndProject

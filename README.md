@@ -72,21 +72,21 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 
 Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulamalara ait envanter aşağıdaki gibidir.
 
-| **Sistem**     | **Servis**             | **Tür**     | **Görev**                                            | **Dev Adres**  |
-|----------------|------------------------|-------------|------------------------------------------------------|----------------|
-| HAL            | Eval.AuditApi          | REST        | Rapor talebindeki ifadeyi denetlemek                 | localhost:5147 |
-| HOME           | GamersWorld.Service.Gateway    | REST        | Middle Earth için rapor statü güncelleme hizmeti     | localhost:5102 |
-| HOME           | GamersWorld.Service.Messenger  | REST        | Web önyüz için backend servisi                       | localhost:5234 |
-| HOME           | GamersWorld.WebApp     | Self Hosted | Web uygulaması                                       | localhost:5093 |
-| HOME           | GamersWorld.EventHost  | Self Hosted | Home sistemindeki event yönetim hizmeti              | N/A            |
-| MIDDLE EARTH   | Kahin.ReportingGateway | REST        | Rapor hazırlama, yollama ve durum güncellemesi       | localhost:5218 |
-| MIDDLE EARTH   | Kahin.EventHost        | Self Hosted | Middle Earth tarafında çalışan event yönetim hizmeti | N/A            |
-| DOCKER COMPOSE | RabbitMQ               |             | Async Event Queue                                    | localhost:5672 |
-| DOCKER COMPOSE | Redis                  |             | Distributed Key Value Store                          | localhost:6379 |
-| DOCKER COMPOSE | LocalStack             |             | Local AWS Secrets Manager                            | localhost:4566 |
-| DOCKER COMPOSE | BaGet                  |             | Local NuGet Server                                   | localhost:5000 |
-| DOCKER COMPOSE | Postgresql             |             | Rapor veritabanı                                     | N/A            |
-| SYSTEM ASGARD  | Heimdall               | Self Hosted | Servis izleme uygulaması                             | localhost:5247 |
+| **Sistem**     | **Servis**                       | **Tür**     | **Görev**                                            | **Dev Adres**  |
+|----------------|----------------------------------|-------------|------------------------------------------------------|----------------|
+| HAL            | Eval.AuditApi                    | REST        | Rapor talebindeki ifadeyi denetlemek                 | localhost:5147 |
+| HOME           | GamersWorld.Service.Gateway      | REST        | Middle Earth için rapor statü güncelleme hizmeti     | localhost:5102 |
+| HOME           | GamersWorld.Service.Messenger    |  REST        | Web önyüz için backend servisi                       | localhost:5234 |
+| HOME           | GamersWorld.WebApp               | Self Hosted | Web uygulaması                                       | localhost:5093 |
+| HOME           | GamersWorld.EventHost            | Self Hosted | Home sistemindeki event yönetim hizmeti              | N/A            |
+| MIDDLE EARTH   | Kahin.Service.ReportingGateway   | REST        | Rapor hazırlama, yollama ve durum güncellemesi       | localhost:5218 |
+| MIDDLE EARTH   | Kahin.EventHost                  | Self Hosted | Middle Earth tarafında çalışan event yönetim hizmeti | N/A            |
+| DOCKER COMPOSE | RabbitMQ                         |             | Async Event Queue                                    | localhost:5672 |
+| DOCKER COMPOSE | Redis                            |             | Distributed Key Value Store                          | localhost:6379 |
+| DOCKER COMPOSE | LocalStack                       |             | Local AWS Secrets Manager                            | localhost:4566 |
+| DOCKER COMPOSE | BaGet                            |             | Local NuGet Server                                   | localhost:5000 |
+| DOCKER COMPOSE | Postgresql                       |             | Rapor veritabanı                                     | N/A            |
+| SYSTEM ASGARD  | Heimdall                         | Self Hosted | Servis izleme uygulaması                             | localhost:5247 |
 
 **NOT: Yeni servisler ilave edildikçe burası güncellenmelidir.**
 
@@ -99,10 +99,10 @@ Envanterimize göre sistemin genel dayanıklılığını test edebileceğimiz ve
 - [ ] WebApp rapor talep eder. Messenger servis cevap veremez durumdadır.
 - [ ] WebApp rapor talep eder. Messenge servis talebi alır. Event nesnesi oluşur. Event Host uygulaması kapalıdır.
 - [ ] WebApp rapor talep eder. Messenge servis talebi alır. Event nesnesi oluşur ama RabbitMQ aşağı inmiş haldedir.
-- [ ] Rapor talebi System MiddleEarth'e gönderilmek istenir. Kahin.ReportingGateway cevap veremez durumdadır.
-- [ ] Kahin.ReportingGateway talebi alır, AuditApi cevap veremez durumdadır.
-- [ ] Kahin.ReportingGateway talebi alır. AuditApi ifadeyi onaylar. Redis aşağı inmiş haldedir.
-- [ ] WebApp rapor talep eder. Messenger servis talebi alır. Event nesnesi oluşur. Rapor talebi Kahin.ReportingGateway'e ulaşır. AuditApi ifadeyi onaylar. Rapor hazır hale gelir. Geri bildirim için GamersWorld.Service.Gateway servisi çağrılır. GamersWorld.Service.Gateway ayakta ama talep fazlalığı sebebiyle cevap verebilir konumda değildir.
+- [ ] Rapor talebi System MiddleEarth'e gönderilmek istenir. Kahin.Service.ReportingGateway cevap veremez durumdadır.
+- [ ] Kahin.Service.ReportingGateway talebi alır, AuditApi cevap veremez durumdadır.
+- [ ] Kahin.Service.ReportingGateway talebi alır. AuditApi ifadeyi onaylar. Redis aşağı inmiş haldedir.
+- [ ] WebApp rapor talep eder. Messenger servis talebi alır. Event nesnesi oluşur. Rapor talebi Kahin.Service.ReportingGateway'e ulaşır. AuditApi ifadeyi onaylar. Rapor hazır hale gelir. Geri bildirim için GamersWorld.Service.Gateway servisi çağrılır. GamersWorld.Service.Gateway ayakta ama talep fazlalığı sebebiyle cevap verebilir konumda değildir.
 - [ ] AWS Secrets Manager herhangi bir anda aşağıya iner.
 - [ ] System MiddleEarth servislerinin cevap verme sürelerinde _(Response Times)_ gecikmeler söz konusudur ve belirgin bir darboğaz oluşmaya başlar.
 - [ ] System MiddleEarth'teki Redis servisi herhangi bir zamanda çöker.
@@ -153,7 +153,7 @@ Solution içerisinde yer alan uygulamaları tek seferde çalıştırmak için ru
 #!/bin/bash
 
 # Start ReportingGateway
-gnome-terminal --title="MIDDLE EARTH - Reporting Gateway" -- bash -c "cd ../SystemMiddleEarth/Kahin.ReportingGateway && dotnet run; exec bash"
+gnome-terminal --title="MIDDLE EARTH - Reporting Gateway" -- bash -c "cd ../SystemMiddleEarth/Kahin.Service.ReportingGateway && dotnet run; exec bash"
 
 # Start Messenger
 gnome-terminal --title="HOME - Messenger Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Messenger && dotnet run; exec bash"
@@ -235,7 +235,7 @@ Rapordaki ifadede ihlal var taklidi yapan bir mesaj.
 
 ### Redis Stream Entgrasyonu (9 Haziran 2024)
 
-**System MiddleEarth** içerisinde yer alan **Kahin.ReportingGateway**, gelen bir rapor talebini aldıktan sonra raporun hazırlanması için bir süreç başlatır. Bu süreç muhtemelen uzun sürebilecek bir iştir. Bu nedenle **System MiddleEarth** içinde bir mesajlaşma kuyruğu söz konusudur. Bu sefer **RabbitMQ** yerine **Redis** kullanılmıştır. Redis tarafı in-memory de çalışabilen dağıtık bir key:value store olarak düşünülür ancak aynı zamanda **Pub/Sub** modelini de destekler. Dolayısıyla gelen rapor talebini burada kuyruğa bırakıp bir dinleyicinin almasını ve işlemleri ilerletmesini sağlayabiliriz. **Redis** tarafı yine **docker-compose** içerisinde konuşlandırılmıştır. Sistemde bir docker imajı olarak ayağa kalkar. Web uygulamasından geçerli bir rapor **talebi Kahin.ReportingGateway**'e ulaştığında redis'e düşen mesaj kabaca aşağıdaki komutlar ile yakalanabilir.
+**System MiddleEarth** içerisinde yer alan **Kahin.Service.ReportingGateway**, gelen bir rapor talebini aldıktan sonra raporun hazırlanması için bir süreç başlatır. Bu süreç muhtemelen uzun sürebilecek bir iştir. Bu nedenle **System MiddleEarth** içinde bir mesajlaşma kuyruğu söz konusudur. Bu sefer **RabbitMQ** yerine **Redis** kullanılmıştır. Redis tarafı in-memory de çalışabilen dağıtık bir key:value store olarak düşünülür ancak aynı zamanda **Pub/Sub** modelini de destekler. Dolayısıyla gelen rapor talebini burada kuyruğa bırakıp bir dinleyicinin almasını ve işlemleri ilerletmesini sağlayabiliriz. **Redis** tarafı yine **docker-compose** içerisinde konuşlandırılmıştır. Sistemde bir docker imajı olarak ayağa kalkar. Web uygulamasından geçerli bir rapor **talebi Kahin.Service.ReportingGateway**'e ulaştığında redis'e düşen mesaj kabaca aşağıdaki komutlar ile yakalanabilir.
 
 ```bash
 # Önce redis client terminale girilir
@@ -284,7 +284,7 @@ Tarama yaklaşık 1200 satır kod tespiti yapmış. Bunun %3.1'inin tekrarlı ko
 
 ### Secure Vault Entegrasyonu
 
-Solution içerisinde yer alan birçok parametre genelde appsettings konfigurasyonlarından besleniyor. Burada URL, username, password gibi birçok hassas bilgi yer alabilir. Bu bilgileri daha güvenli bir ortamda tutmak tercih edilen bir yöntemdir. Hatta secret bilgileri dev,test,pre-prod ve prod gibi farklı dağıtım ortamları için farklılaştırılabilir. Cloud provider'larda bu amaçla kullanılabilecek birçok Vault ürünü söz konusu. Bunlardan birisi ve ilk denediğim **Hashicorp**'un **Vault** ürünü idi. Ancak bir sebepten VaultSharp nuget aracından eklenen key değerlerini çekmeyi başaramadım. Bunun üzerine alternatif bir yaklaşım aradım ve [LocalStack'te](https://github.com/localstack/localstack) karar kıldım. Bu ortam development testleri için yeterli. Localstack kısaca bir **Cloud Service Emulator** olarak tanımlanıyor. Örneğin **AWS Cloud Provider**'a bağlanmadan local ortamda **AWS**'nin birçok özelliğini kullanabiliyoruz. Ben AWS'nin **Secrets Manager** hizmetini local ortamda kullanmaktayım _(Bir SaaS - Software as a Service çözümü)_. İlk denemeyi **System Middle Earth**'teki **Kahin.ReportingGateway** üzerinde yaptım. Bu uygulama **Redis** ve **SystemHAL**'deki **EvalApi** adres bilgilerini normal şartlarda appsettings dosyasında okuyor. Bunların vault üstünden karşılanması için gerekli değişiklikler yapıldı.
+Solution içerisinde yer alan birçok parametre genelde appsettings konfigurasyonlarından besleniyor. Burada URL, username, password gibi birçok hassas bilgi yer alabilir. Bu bilgileri daha güvenli bir ortamda tutmak tercih edilen bir yöntemdir. Hatta secret bilgileri dev,test,pre-prod ve prod gibi farklı dağıtım ortamları için farklılaştırılabilir. Cloud provider'larda bu amaçla kullanılabilecek birçok Vault ürünü söz konusu. Bunlardan birisi ve ilk denediğim **Hashicorp**'un **Vault** ürünü idi. Ancak bir sebepten VaultSharp nuget aracından eklenen key değerlerini çekmeyi başaramadım. Bunun üzerine alternatif bir yaklaşım aradım ve [LocalStack'te](https://github.com/localstack/localstack) karar kıldım. Bu ortam development testleri için yeterli. Localstack kısaca bir **Cloud Service Emulator** olarak tanımlanıyor. Örneğin **AWS Cloud Provider**'a bağlanmadan local ortamda **AWS**'nin birçok özelliğini kullanabiliyoruz. Ben AWS'nin **Secrets Manager** hizmetini local ortamda kullanmaktayım _(Bir SaaS - Software as a Service çözümü)_. İlk denemeyi **System Middle Earth**'teki **Kahin.Service.ReportingGateway** üzerinde yaptım. Bu uygulama **Redis** ve **SystemHAL**'deki **EvalApi** adres bilgilerini normal şartlarda appsettings dosyasında okuyor. Bunların vault üstünden karşılanması için gerekli değişiklikler yapıldı.
 
 ```bash
 # LocalStack docker-compose ile ayağa kalktıktan sonra aws komut satırı aracı ile yönetilebilir
