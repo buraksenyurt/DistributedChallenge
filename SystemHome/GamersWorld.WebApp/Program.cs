@@ -23,7 +23,7 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-app.AddJudgeMiddleware(new MetricOptions
+app.AddJudgeMiddleware(new Options
 {
     DurationThreshold = TimeSpan.FromSeconds(2),
     DeactivateInputOutputBehavior = true,

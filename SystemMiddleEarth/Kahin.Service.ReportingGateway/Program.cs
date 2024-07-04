@@ -16,9 +16,13 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 var app = builder.Build();
-app.AddJudgeMiddleware(new MetricOptions
+app.AddJudgeMiddleware(new Options
 {
-    DurationThreshold = TimeSpan.FromSeconds(2)
+    DurationThreshold = TimeSpan.FromSeconds(2),
+    ExcludedPaths =
+    [
+        "/swagger"
+    ]
 });
 
 if (app.Environment.IsDevelopment())
