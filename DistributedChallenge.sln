@@ -57,6 +57,44 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{7397ACA6-C1B3-4A4F-A240-BA9363B1BB16}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\add_secrets.sh = scripts\add_secrets.sh
+		scripts\DbScripts.sql = scripts\DbScripts.sql
+		scripts\get_secrets.sh = scripts\get_secrets.sh
+		scripts\run_all.sh = scripts\run_all.sh
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "thunder", "thunder", "{401B0105-91BB-4700-857A-A78A1B919978}"
+	ProjectSection(SolutionItems) = preProject
+		thunder\thunder-collection_Eval.Api.json = thunder\thunder-collection_Eval.Api.json
+		thunder\thunder-collection_Gamersworld.Gateway.json = thunder\thunder-collection_Gamersworld.Gateway.json
+		thunder\thunder-collection_GamersWorld.Messenger.json = thunder\thunder-collection_GamersWorld.Messenger.json
+		thunder\thunder-collection_Kahin.ReporingGateway.json = thunder\thunder-collection_Kahin.ReporingGateway.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{8D8E097D-AE7F-48D5-8BDE-02560AA14D24}"
+	ProjectSection(SolutionItems) = preProject
+		images\current_inventory.png = images\current_inventory.png
+		images\first_test.png = images\first_test.png
+		images\heimdall_01.png = images\heimdall_01.png
+		images\heimdall_02.png = images\heimdall_02.png
+		images\high_level_design.png = images\high_level_design.png
+		images\local_nuget_01.png = images\local_nuget_01.png
+		images\local_nuget_02.png = images\local_nuget_02.png
+		images\local_nuget_03.png = images\local_nuget_03.png
+		images\ngrok_01.png = images\ngrok_01.png
+		images\runtime_01.png = images\runtime_01.png
+		images\runtime_02.png = images\runtime_02.png
+		images\runtime_03.png = images\runtime_03.png
+		images\runtime_04.png = images\runtime_04.png
+		images\runtime_05.png = images\runtime_05.png
+		images\runtime_06.png = images\runtime_06.png
+		images\second_test.png = images\second_test.png
+		images\sonar_scanner_day_1.png = images\sonar_scanner_day_1.png
+		images\vault_01.png = images\vault_01.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
