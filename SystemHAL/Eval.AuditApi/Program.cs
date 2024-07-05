@@ -27,7 +27,7 @@ app.AddJudgeMiddleware(new Options
     ]
 });
 
-app.AddResistance(new ResistanceOptions
+app.UseResistance(new ResistanceOptions
 {
     LatencyIsActive = true,
     LatencyPeriod = new LatencyPeriod
