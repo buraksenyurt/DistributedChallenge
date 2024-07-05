@@ -4,7 +4,7 @@ namespace Resistance;
 
 public static class DependencyInjection
 {
-    public static IApplicationBuilder AddResistance(this IApplicationBuilder app, Options options)
+    public static IApplicationBuilder AddResistance(this IApplicationBuilder app, ResistanceOptions options)
     {
         if (options.NetworkFailureIsActive)
             app.UseMiddleware<NetworkFailureBehavior>(options.NetworkFailureProbability);

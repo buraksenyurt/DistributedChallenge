@@ -1,6 +1,6 @@
 namespace Resistance;
 
-public class Options
+public class ResistanceOptions
 {
     public bool NetworkFailureIsActive { get; set; } = false;
     public NetworkFailureProbability NetworkFailureProbability { get; set; } = NetworkFailureProbability.Percent10;
