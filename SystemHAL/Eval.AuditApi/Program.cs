@@ -6,6 +6,10 @@ using Eval.Lib;
 using JudgeMiddleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Resistance;
+using Resistance.Inconsistency;
+using Resistance.Latency;
+using Resistance.NetworkFailure;
+using Resistance.Outage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,13 +31,46 @@ app.AddJudgeMiddleware(new Options
     ]
 });
 
+// Latency 500 millisecdons - 2500 milliseconds
+//app.UseResistance(new ResistanceOptions
+//{
+//    LatencyIsActive = true,
+//    LatencyPeriod = new LatencyPeriod
+//    {
+//        MinDelayMs = TimeSpan.FromMilliseconds(500),
+//        MaxDelayMs = TimeSpan.FromMilliseconds(2500)
+//    }
+//});
+
+//// Network Failure (HTTP 500 Internal Service Error with %25 probility)
+//app.UseResistance(new ResistanceOptions
+//{
+//    NetworkFailureIsActive = true,
+//    NetworkFailureProbability = NetworkFailureProbability.Percent25
+//});
+
+//// Produce HTTP 429 Too Many Request scenario with 3 concurrent request
+//app.UseResistance(new ResistanceOptions
+//{
+//    ResourceRaceIsActive = true,
+//    ResourceRaceUpperLimit = 3
+//});
+
+//// Manipulating response data with %50 probability (MUST BE TESTED AGAIN)
+//app.UseResistance(new ResistanceOptions
+//{
+//    DataInconsistencyIsActive = true,
+//    DataInconsistencyProbability = DataInconsistencyProbability.Percent20
+//});
+
+// Produce HTTP 503 Service Unavailable 10 seconds per minute
 app.UseResistance(new ResistanceOptions
 {
-    LatencyIsActive = true,
-    LatencyPeriod = new LatencyPeriod
+    OutageIsActive = true,
+    OutagePeriod = new OutagePeriod
     {
-        MinDelayMs = TimeSpan.FromMilliseconds(500),
-        MaxDelayMs = TimeSpan.FromMilliseconds(2500)
+        Duration = TimeSpan.FromSeconds(10),
+        Frequency = TimeSpan.FromMinutes(1)
     }
 });
 
