@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using System.Text;
 
 namespace Resistance.Inconsistency;
 public class DataInconsistencyBehavior(RequestDelegate next, DataInconsistencyProbability inconsistencyProbability, ILogger<DataInconsistencyBehavior> logger)
 {
     private readonly RequestDelegate _next = next;
-    private readonly Random _random = new Random();
+    private readonly Random _random = new();
     private readonly DataInconsistencyProbability _inconsistencyProbability = inconsistencyProbability;
     private readonly ILogger<DataInconsistencyBehavior> _logger = logger;
 
@@ -25,12 +27,42 @@ public class DataInconsistencyBehavior(RequestDelegate next, DataInconsistencyPr
         var responseBody = await new StreamReader(responseBodyStream).ReadToEndAsync();
         responseBodyStream.Seek(0, SeekOrigin.Begin);
 
-        if (isInconsistent)
+        if (isInconsistent && context.Response.ContentType == "application/json")
         {
             _logger.LogWarning("Simulating Data Inconsistency");
-            responseBody += "\n<!-- Inconsistent Data -->";
+            responseBody = AddSomething(responseBody);
         }
 
         await context.Response.WriteAsync(responseBody);
+    }
+
+    private string AddSomething(string originalData)
+    {
+        try
+        {
+            using var jsonDocument = JsonDocument.Parse(originalData);
+            var jsonObject = jsonDocument.RootElement.Clone();
+
+            using var stream = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(stream))
+            {
+                writer.WriteStartObject();
+
+                foreach (var property in jsonObject.EnumerateObject())
+                {
+                    property.WriteTo(writer);
+                }
+
+                writer.WriteString("Message", "You Shall Not Pass !!!");
+                writer.WriteEndObject();
+            }
+
+            return Encoding.UTF8.GetString(stream.ToArray());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while adding extra json data.");
+            return originalData;
+        }
     }
 }

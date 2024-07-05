@@ -6,34 +6,83 @@ Bu pakette, Web Api servislerine eklenebilecek ve çeşitli Resilience durumlar�
 
 Api çağrılarında belli bir yüzdeye göre HTTP 500 InternalServerError dönülmesine neden olur.
 
+```csharp
+var app = builder.Build();
+
+// Network Failure (HTTP 500 Internal Service Error with %25 probility)
+app.UseResistance(new ResistanceOptions
+{
+    NetworkFailureIsActive = true,
+    NetworkFailureProbability = NetworkFailureProbability.Percent25
+});
+```
+
 ## LatencyBehavior
 
 Api çağrılarında cevap sürelerinin belli mili saniye değerlerinde geciktirilmesini sağlar.
+
+```csharp
+var app = builder.Build();
+
+// Produce Latency between 500 and 2500 milliseconds
+app.UseResistance(new ResistanceOptions
+{
+    LatencyIsActive = true,
+    LatencyPeriod = new LatencyPeriod
+    {
+        MinDelayMs = TimeSpan.FromMilliseconds(500),
+        MaxDelayMs = TimeSpan.FromMilliseconds(2500)
+    }
+});
+```
 
 ## ResourceRaceBehavior
 
 Eş zamanlı istek sayısının ayarlanarak HTTP 429 TooManyRequest probleminin oluşturulmasını sağlar.
 
+```csharp
+var app = builder.Build();
+
+// Produce HTTP 429 Too Many Request scenario with 3 concurrent request
+app.UseResistance(new ResistanceOptions
+{
+    ResourceRaceIsActive = true,
+    ResourceRaceUpperLimit = 3
+});
+```
+
 ## OutageBehavior
 
 Belli zaman aralıklarında HTTP 503 Service Unavailable ile belli süreliğine kesinti oluşturmak için kullanılabilir.
+
+```csharp
+var app = builder.Build();
+
+// Produce HTTP 503 Service Unavailable 10 seconds per minute
+app.UseResistance(new ResistanceOptions
+{
+    OutageIsActive = true,
+    OutagePeriod = new OutagePeriod { 
+        Duration = TimeSpan.FromSeconds(10)
+        , Frequency = TimeSpan.FromMinutes(1) }
+});
+```
 
 ## DataInconsistencyBehavior
 
 Parametre olarak verilen olasılık değerine göre veriyi manipüle eder ve response body sonuna basit bir yorum satırı ekler. Ayrıca header kısmına da simülasyon yapıldığına dair bir bilgilendirme mesajı ilave edilir.
 
-## Usage
-
-Normal şartlarda tüm simülasyon reçeteleri pasiftir. Etkinleştirmek için açık bir şekilde IsActive özelliklerine true değerlerinin atanması gerekir. Bazı reçeteler kendi özel parametrelerine ihtiyaç duyabilir.
-
 ```csharp
 var app = builder.Build();
 
-// Returns HTTP 500 with %25 probability for Network Failure simulation
-app.AddResistance(new Options
+// Manipulating response data with %50 probability
+app.UseResistance(new ResistanceOptions
 {
-    NetworkFailureIsActive = true,
-    NetworkFailureProbability = FailureProbability.Percent25,
+    DataInconsistencyIsActive = true,
+    DataInconsistencyProbability = DataInconsistencyProbability.Percent50
 });
-
 ```
+
+## Usage
+
+Normal şartlarda tüm simülasyon reçeteleri pasiftir. Etkinleştirmek için açık bir şekilde IsActive özelliklerine true değerlerinin atanması gerekir. Bazı reçeteler kendi özel parametrelerine ihtiyaç duyabilir.
