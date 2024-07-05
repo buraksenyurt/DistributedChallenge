@@ -8,4 +8,6 @@ public class ResistanceOptions
     public LatencyPeriod LatencyPeriod { get; set; } = new LatencyPeriod();
     public bool ResourceRaceIsActive { get; set; } = false;
     public ushort ResourceRaceUpperLimit { get; set; } = 2;
+    public bool OutageIsActive { get; set; } = false;
+    public OutagePeriod OutagePeriod { get; set; } = new OutagePeriod();
 }
