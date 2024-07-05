@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Net;
 
-namespace Resistance;
+namespace Resistance.Outage;
 
 public class OutageBehavior(RequestDelegate next, ILogger<OutageBehavior> logger, OutagePeriod outagePeriod)
 {

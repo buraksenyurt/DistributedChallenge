@@ -1,4 +1,4 @@
-namespace Resistance;
+namespace Resistance.Latency;
 
 public class LatencyPeriod
 {

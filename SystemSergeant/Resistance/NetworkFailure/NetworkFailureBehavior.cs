@@ -2,7 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Resistance;
+namespace Resistance.NetworkFailure;
 
 public class NetworkFailureBehavior(RequestDelegate next, NetworkFailureProbability failureProbability, ILogger<NetworkFailureBehavior> logger)
 {
