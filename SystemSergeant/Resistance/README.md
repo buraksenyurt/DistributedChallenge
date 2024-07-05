@@ -14,6 +14,10 @@ Api çağrılarında cevap sürelerinin belli mili saniye değerlerinde geciktir
 
 Eş zamanlı istek sayısının ayarlanarak HTTP 429 TooManyRequest probleminin oluşturulmasını sağlar.
 
+## OutageBehavior
+
+Belli zaman aralıklarında HTTP 503 Service Unavailable ile belli süreliğine kesinti oluşturmak için kullanılabilir.
+
 ## Usage
 
 Normal şartlarda tüm simülasyon reçeteleri pasiftir. Etkinleştirmek için açık bir şekilde IsActive özelliklerine true değerlerinin atanması gerekir. Bazı reçeteler kendi özel parametrelerine ihtiyaç duyabilir.
