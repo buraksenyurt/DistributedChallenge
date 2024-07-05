@@ -1,4 +1,4 @@
-namespace Resistance;
+namespace Resistance.NetworkFailure;
 
 public enum NetworkFailureProbability
 {

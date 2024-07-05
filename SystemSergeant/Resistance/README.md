@@ -18,6 +18,10 @@ Eş zamanlı istek sayısının ayarlanarak HTTP 429 TooManyRequest probleminin 
 
 Belli zaman aralıklarında HTTP 503 Service Unavailable ile belli süreliğine kesinti oluşturmak için kullanılabilir.
 
+## DataInconsistencyBehavior
+
+Parametre olarak verilen olasılık değerine göre veriyi manipüle eder ve response body sonuna basit bir yorum satırı ekler. Ayrıca header kısmına da simülasyon yapıldığına dair bir bilgilendirme mesajı ilave edilir.
+
 ## Usage
 
 Normal şartlarda tüm simülasyon reçeteleri pasiftir. Etkinleştirmek için açık bir şekilde IsActive özelliklerine true değerlerinin atanması gerekir. Bazı reçeteler kendi özel parametrelerine ihtiyaç duyabilir.

@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.Builder;
+using Resistance.Latency;
+using Resistance.NetworkFailure;
+using Resistance.Outage;
+using Resistance.ResourceRace;
 
 namespace Resistance;
 

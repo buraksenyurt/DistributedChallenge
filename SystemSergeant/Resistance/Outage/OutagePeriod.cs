@@ -1,4 +1,4 @@
-﻿namespace Resistance;
+﻿namespace Resistance.Outage;
 
 public class OutagePeriod
 {

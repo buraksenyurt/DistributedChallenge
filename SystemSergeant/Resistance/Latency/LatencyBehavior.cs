@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Resistance;
+namespace Resistance.Latency;
 
 public class LatencyBehavior(RequestDelegate next, LatencyPeriod period, ILogger<LatencyBehavior> logger)
 {
@@ -13,7 +13,7 @@ public class LatencyBehavior(RequestDelegate next, LatencyPeriod period, ILogger
     public async Task InvokeAsync(HttpContext context)
     {
         _logger.LogWarning("Latency simulation applied");
-        
+
         var minDelayMs = (int)_period.MinDelayMs.TotalMilliseconds;
         var maxDelayMs = (int)_period.MaxDelayMs.TotalMilliseconds;
 

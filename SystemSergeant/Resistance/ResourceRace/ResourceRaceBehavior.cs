@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Net;
 
-namespace Resistance;
+namespace Resistance.ResourceRace;
 public class ResourceRaceBehavior
 {
     private readonly RequestDelegate _next;
