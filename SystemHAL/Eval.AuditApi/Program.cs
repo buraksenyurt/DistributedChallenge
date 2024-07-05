@@ -5,6 +5,7 @@ using Eval.AuditLib.Model;
 using Eval.Lib;
 using JudgeMiddleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Resistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,16 @@ app.AddJudgeMiddleware(new Options
     ]
 });
 
+app.AddResistance(new ResistanceOptions
+{
+    LatencyIsActive = true,
+    LatencyPeriod = new LatencyPeriod
+    {
+        MinDelayMs = TimeSpan.FromMilliseconds(500),
+        MaxDelayMs = TimeSpan.FromMilliseconds(2500)
+    }
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -34,13 +45,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapHealthChecks("/health");
-
-/*
-    Bu servis Kahin tarafından kullanılan ve sembolik olarak
-    talep edilen rapora ait ifadeyi güya kontrol edip geçerli olup
-    olmadığına dair bilgi veren bir hizmet sağlar. Söz gelimi rapor ifadesinde
-    bilgi güvenliğine aykırı bir durum varsa bunu kontrol eder vb
-*/
 
 app.MapPost("/api", (ExpressionCheckRequest request, ILogger<Program> logger, IExpressionValidator validator) =>
 {
