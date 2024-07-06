@@ -12,7 +12,6 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
     private readonly ILogger<HomeController> _logger = logger;
     private readonly MessengerServiceClient _messengerServiceClient = messengerServiceClient;
 
-
     public IActionResult Index()
     {
         var ownerFullName = HttpContext.Session.GetString("OwnerFullName");
