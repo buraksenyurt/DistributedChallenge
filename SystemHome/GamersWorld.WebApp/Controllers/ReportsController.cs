@@ -38,4 +38,20 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
         }
         return View(data);
     }
+
+    [HttpGet("Reports/Download")]
+    public async Task<IActionResult> Download(string documentId)
+    {
+        var document = await _messengerServiceClient
+            .GetReportDocumentByIdAsync(new GetReportDocumentByIdRequest
+            {
+                DocumentId = documentId
+            });
+        if (document?.Base64Content != null)
+        {
+            var content = Convert.FromBase64String(document.Base64Content);
+            return File(content, "application/octet-stream", $"{documentId}.txt");
+        }
+        return NotFound();
+    }
 }

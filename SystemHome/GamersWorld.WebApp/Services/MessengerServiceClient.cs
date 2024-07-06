@@ -12,12 +12,34 @@ public class MessengerServiceClient(HttpClient httpClient, ISecretStoreService s
     private readonly ILogger<MessengerServiceClient> _logger = logger;
     private readonly ISecretStoreService _secretStoreService = secretStoreService;
 
-    public async Task<IEnumerable<ReportDocument>> GetReportDocumentsByEmployeeAsync(GetReportsByEmployeeRequest request)
+    public async Task<IEnumerable<Document>> GetReportDocumentsByEmployeeAsync(GetReportsByEmployeeRequest request)
     {
         var messengerApiAddress = await _secretStoreService.GetSecretAsync(SecretName.MessengerApiAddress);
         var url = $"http://{messengerApiAddress}?EmployeeId={request.EmployeeId}";
-        var response = await _httpClient.GetFromJsonAsync<IEnumerable<ReportDocument>>(url);
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<Document>>(url);
+        if (response == null)
+        {
+            _logger.LogWarning("There are no reports for {EmployeeId}", request.EmployeeId);
+            return [];
+        }
         return response;
+    }
+
+    public async Task<DocumentContent?> GetReportDocumentByIdAsync(GetReportDocumentByIdRequest request)
+    {
+        var messengerApiAddress = await _secretStoreService.GetSecretAsync(SecretName.MessengerApiAddress);
+        var url = $"http://{messengerApiAddress}/document?DocumentId={request.DocumentId}";
+        var response = await _httpClient.GetFromJsonAsync<DocumentContent>(url);
+        if (response == null || response.Base64Content == null)
+        {
+            _logger.LogWarning("Requested {DocumentId} is null", request.DocumentId);
+            return null;
+        }
+        return new DocumentContent
+        {
+            Base64Content = response.Base64Content,
+            ContentSize = response.Base64Content.Length
+        };
     }
 
     public async Task<BusinessResponse> SendNewReportRequestAsync(NewReportRequest request)
