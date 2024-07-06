@@ -46,6 +46,7 @@ app.MapHealthChecks("/health");
 
 app.MapGet("/", async ([FromQuery] string employeeId, IDocumentRepository repository, ILogger<Program> logger) =>
 {
+    logger.LogInformation("Request reports data for {EmployeeId}", employeeId);
     var documents = await repository.GetAllDocumentsByEmployeeAsync(new DocumentReadRequest
     {
         EmployeeId = employeeId,
@@ -54,6 +55,19 @@ app.MapGet("/", async ([FromQuery] string employeeId, IDocumentRepository reposi
     return Results.Json(documents);
 })
 .WithName("GetReportsByEmployee")
+.WithOpenApi();
+
+app.MapGet("/document", async ([FromQuery] string documentId, IDocumentRepository repository, ILogger<Program> logger) =>
+{
+    logger.LogInformation("Request report content for {DocumentId}", documentId);
+    var document = await repository.ReadDocumentContentByIdAsync(
+        new DocumentReadRequest
+        {
+            DocumentId = documentId
+        });
+    return Results.Json(document);
+})
+.WithName("GetReportContentById")
 .WithOpenApi();
 
 

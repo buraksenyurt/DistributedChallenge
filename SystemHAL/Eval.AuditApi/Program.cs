@@ -63,16 +63,16 @@ app.AddJudgeMiddleware(new Options
 //    DataInconsistencyProbability = DataInconsistencyProbability.Percent20
 //});
 
-// Produce HTTP 503 Service Unavailable 10 seconds per minute
-app.UseResistance(new ResistanceOptions
-{
-    OutageIsActive = true,
-    OutagePeriod = new OutagePeriod
-    {
-        Duration = TimeSpan.FromSeconds(10),
-        Frequency = TimeSpan.FromMinutes(1)
-    }
-});
+//// Produce HTTP 503 Service Unavailable 10 seconds per minute
+//app.UseResistance(new ResistanceOptions
+//{
+//    OutageIsActive = true,
+//    OutagePeriod = new OutagePeriod
+//    {
+//        Duration = TimeSpan.FromSeconds(10),
+//        Frequency = TimeSpan.FromMinutes(1)
+//    }
+//});
 
 if (app.Environment.IsDevelopment())
 {

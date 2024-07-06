@@ -1,4 +1,5 @@
 ﻿using GamersWorld.Domain.Requests;
+using GamersWorld.WebApp.Models;
 using GamersWorld.WebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +26,32 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
             EmployeeId = ownerEmployeeId
         };
         var reportDocuments = await _messengerServiceClient.GetReportDocumentsByEmployeeAsync(request);
-        return View(reportDocuments);
+        var data = new List<ReportModel>();
+        foreach (var reportDocument in reportDocuments)
+        {
+            data.Add(new ReportModel
+            {
+                Id = reportDocument.Id,
+                DocumentId = reportDocument.DocumentId,
+                InsertTime = reportDocument.InsertTime,
+            });
+        }
+        return View(data);
+    }
+
+    [HttpGet("Reports/Download")]
+    public async Task<IActionResult> Download(string documentId)
+    {
+        var document = await _messengerServiceClient
+            .GetReportDocumentByIdAsync(new GetReportDocumentByIdRequest
+            {
+                DocumentId = documentId
+            });
+        if (document?.Base64Content != null)
+        {
+            var content = Convert.FromBase64String(document.Base64Content);
+            return File(content, "application/octet-stream", $"{documentId}.txt");
+        }
+        return NotFound();
     }
 }

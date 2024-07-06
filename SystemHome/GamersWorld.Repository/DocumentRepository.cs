@@ -11,7 +11,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
     : IDocumentRepository
 {
     private readonly ISecretStoreService _secretStoreService = secretStoreService;
-    
+
     private async Task<NpgsqlConnection> GetOpenConnectionAsync()
     {
         var connStr = await _secretStoreService.GetSecretAsync("ReportDbConnStr");
@@ -39,7 +39,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
         return insertedId;
     }
 
-    public async Task<ReportDocument> ReadDocumentAsync(DocumentReadRequest documentReadRequest)
+    public async Task<Document> ReadDocumentAsync(DocumentReadRequest documentReadRequest)
     {
         const string sql = @"
                 SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
@@ -47,9 +47,26 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
                 WHERE DocumentId = @DocumentId";
 
         await using var dbConnection = await GetOpenConnectionAsync();
-        var reportDocument = await dbConnection.QueryFirstOrDefaultAsync<ReportDocument>(sql, new { documentReadRequest.DocumentId });
+        var reportDocument = await dbConnection.QueryFirstOrDefaultAsync<Document>(sql, new { documentReadRequest.DocumentId });
 
         return reportDocument;
+    }
+
+    public async Task<DocumentContent> ReadDocumentContentByIdAsync(DocumentReadRequest documentReadRequest)
+    {
+        const string sql = @"
+                SELECT Content
+                FROM Documents
+                WHERE DocumentId = @DocumentId";
+
+        await using var dbConnection = await GetOpenConnectionAsync();
+        var content = await dbConnection.QueryFirstOrDefaultAsync<byte[]>(sql, new { documentReadRequest.DocumentId });
+
+        return new DocumentContent
+        {
+            Base64Content = Convert.ToBase64String(content),
+            ContentSize = content.Length
+        };
     }
 
     public async Task<int> GetDocumentLength(DocumentReadRequest documentReadRequest)
@@ -65,7 +82,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
         return length;
     }
 
-    public async Task<IEnumerable<ReportDocument>> GetAllDocumentsAsync()
+    public async Task<IEnumerable<Document>> GetAllDocumentsAsync()
     {
         const string sql = @"
                 SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
@@ -73,12 +90,12 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
                 ORDER BY InsertTime";
 
         await using var dbConnection = await GetOpenConnectionAsync();
-        var documents = await dbConnection.QueryAsync<ReportDocument>(sql);
+        var documents = await dbConnection.QueryAsync<Document>(sql);
 
         return documents;
     }
 
-    public async Task<IEnumerable<ReportDocument>> GetAllDocumentsByEmployeeAsync(DocumentReadRequest documentReadRequest)
+    public async Task<IEnumerable<Document>> GetAllDocumentsByEmployeeAsync(DocumentReadRequest documentReadRequest)
     {
         const string sql = @"
                 SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
@@ -87,7 +104,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
                 ORDER BY InsertTime";
 
         await using var dbConnection = await GetOpenConnectionAsync();
-        var documents = await dbConnection.QueryAsync<ReportDocument>(sql, new { documentReadRequest.EmployeeId });
+        var documents = await dbConnection.QueryAsync<Document>(sql, new { documentReadRequest.EmployeeId });
 
         return documents;
     }

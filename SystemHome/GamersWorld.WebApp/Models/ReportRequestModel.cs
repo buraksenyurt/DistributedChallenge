@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GamersWorld.WebApp.Models;
 
-public class ReportRequestModel
+public record ReportRequestModel
 {
     [Required]
     public OwnerModel Owner { get; set; }
