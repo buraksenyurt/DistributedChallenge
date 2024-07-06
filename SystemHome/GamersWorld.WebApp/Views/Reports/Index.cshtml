@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GamersWorld.Domain.Data.ReportDocument>
+﻿@model IEnumerable<GamersWorld.WebApp.Models.ReportModel>
 
 @{
     ViewData["Title"] = "Requested Reports";
@@ -10,9 +10,6 @@
     <thead>
         <tr>
             <th>Id</th>
-            <th>Trace Id</th>
-            <th>Employee Id</th>
-            <th>Document Id</th>
             <th>Insert Time</th>
             <th>Action</th>
         </tr>
@@ -22,9 +19,6 @@
         {
                 <tr>
                     <td>@report.Id</td>
-                    <td>@report.TraceId</td>
-                    <td>@report.EmployeeId</td>
-                    <td>@report.DocumentId</td>
                     <td>@report.InsertTime</td>
                     <td>
                         <a href="@Url.Action("Download", "Reports", new { documentId = report.DocumentId })" class="btn btn-primary">Download</a>
