@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using GamersWorld.Application.Contracts.Events;
 using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Application.Contracts.Notification;
+using System.Text.Json;
+using GamersWorld.Domain.Dtos;
 
 namespace GamersWorld.EventBusiness;
 
@@ -27,9 +29,15 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReade
         if (response != null && response.StatusCode == StatusCode.DocumentReadable)
         {
             _logger.LogInformation("{Message}", response.Message);
-            //await _notificationService.PushAsync($"{appEvent.CreatedReportId} is ready!");
 
-            await _notificationService.PushToUserAsync(appEvent.EmployeeId, $"{appEvent.CreatedReportId} is ready!");
+            //await _notificationService.PushAsync($"{appEvent.CreatedReportId} is ready!");
+            var notificationData = new ReportNotification
+            {
+                DocumentId = appEvent.CreatedReportId,
+                Title = appEvent.Title
+            };
+
+            await _notificationService.PushToUserAsync(appEvent.EmployeeId, JsonSerializer.Serialize(notificationData));
         }
     }
 }
