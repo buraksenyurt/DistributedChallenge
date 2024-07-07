@@ -30,6 +30,7 @@ public class ReportDocumentAvailable(
         };
         var response = await client.PostAsJsonAsync("/getReport", payload);
         _logger.LogInformation("GetReport call status code is {StatusCode}", response.StatusCode);
+
         // QUESTION: Doküman çekilen servise ulaşılamadı. Akış nasıl devam etmeli?
         if (!response.IsSuccessStatusCode)
         {
@@ -47,6 +48,7 @@ public class ReportDocumentAvailable(
             var docContent = new DocumentSaveRequest
             {
                 TraceId = appEvent.TraceId,
+                ReportTitle = appEvent.Title,
                 EmployeeId = appEvent.EmployeeId,
                 DocumentId = getReportResponse.DocumentId,
                 Content = content,

@@ -7,6 +7,7 @@ public class RedisPayload
 {
     public string? TraceId { get; set; }
     public string? EmployeeId { get; set; }
+    public string? ReportTitle { get; set; }
     public ReferenceDocumentId DocumentId { get; set; }
     public string? Expression { get; set; }
     public EventType EventType { get; set; }

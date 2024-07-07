@@ -19,9 +19,8 @@ public class HomeGatewayClientService(
     public async Task<string> Post(ReportStatusRequest request)
     {
         var url = await _secretStoreService.GetSecretAsync(SecretName.HomeGatewayApiAddress);
-        // Enable this with JsonSerializer.Serialize if you want to see the payload
-        // _logger.LogInformation("Payload for sending {Payload}", payload);
-        
+        _logger.LogInformation("'{ReportTitle}'-{DocumentId} is sending", request.ReportTitle, request.DocumentId);
+
         var response = await _httpClient.PostAsJsonAsync($"http://{url}", request);
         response.EnsureSuccessStatusCode();
 

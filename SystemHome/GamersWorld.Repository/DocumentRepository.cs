@@ -23,14 +23,15 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
     public async Task<int> InsertDocumentAsync(DocumentSaveRequest documentSaveRequest)
     {
         const string sql = @"
-                INSERT INTO Documents (TraceId, EmployeeId, DocumentId, Content)
-                VALUES (@TraceId, @EmployeeId, @DocumentId, @Content)
+                INSERT INTO Documents (TraceId, ReportTitle, EmployeeId, DocumentId, Content)
+                VALUES (@TraceId, @ReportTitle, @EmployeeId, @DocumentId, @Content)
                 RETURNING Id";
 
         await using var dbConnection = await GetOpenConnectionAsync();
         var insertedId = await dbConnection.ExecuteScalarAsync<int>(sql, new
         {
             documentSaveRequest.TraceId,
+            documentSaveRequest.ReportTitle,
             documentSaveRequest.EmployeeId,
             documentSaveRequest.DocumentId,
             documentSaveRequest.Content
@@ -42,7 +43,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
     public async Task<Document> ReadDocumentAsync(DocumentReadRequest documentReadRequest)
     {
         const string sql = @"
-                SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
+                SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime
                 FROM Documents
                 WHERE DocumentId = @DocumentId";
 
@@ -85,7 +86,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
     public async Task<IEnumerable<Document>> GetAllDocumentsAsync()
     {
         const string sql = @"
-                SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
+                SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime
                 FROM Documents
                 ORDER BY InsertTime";
 
@@ -98,7 +99,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
     public async Task<IEnumerable<Document>> GetAllDocumentsByEmployeeAsync(DocumentReadRequest documentReadRequest)
     {
         const string sql = @"
-                SELECT Id, TraceId, EmployeeId, DocumentId, Content, InsertTime
+                SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime
                 FROM Documents
                 WHERE EmployeeId = @EmployeeId
                 ORDER BY InsertTime";

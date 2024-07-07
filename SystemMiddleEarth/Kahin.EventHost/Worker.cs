@@ -39,6 +39,7 @@ public class Worker(
                         {
                             TraceId = eventData.TraceId,
                             EmployeeId = eventData.EmployeeId,
+                            ReportTitle = eventData.ReportTitle,
                             StatusCode = (int)StatusCode.ReportReady,
                             StatusMessage = "Report is ready and live for 60 minutes",
                             DocumentId = eventData.DocumentId.ToString(),

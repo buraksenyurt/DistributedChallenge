@@ -133,6 +133,7 @@ app.MapPost("/", async (
     var payload = new RedisPayload
     {
         TraceId = request.TraceId,
+        ReportTitle = request.Title,
         DocumentId = refDocId,
         EmployeeId = request.EmployeeId,
         Expression = request.Expression,
