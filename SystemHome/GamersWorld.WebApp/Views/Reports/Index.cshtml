@@ -1,11 +1,11 @@
-﻿@model IEnumerable<GamersWorld.WebApp.Models.ReportModel>
-
+﻿@model GamersWorld.WebApp.Models.ReportViewModel
 @{
     ViewData["Title"] = "Requested Reports";
 }
 
-<h2>Requested Reports</h2>
+<input type="hidden" id="employeeId" value="@Model.EmployeeId" />
 
+<h2>Requested Reports</h2>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -16,8 +16,10 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var report in Model)
+        @if (Model.Reports != null)
         {
+            @foreach (var report in Model.Reports)
+            {
                 <tr>
                     <td>@report.Id</td>
                     <td>@report.Title</td>
@@ -26,6 +28,11 @@
                         <a href="@Url.Action("Download", "Reports", new { documentId = report.DocumentId })" class="btn btn-primary">Download</a>
                     </td>
                 </tr>
+            }
         }
     </tbody>
 </table>
+
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+    <partial name="_NotificationPopup" />
+</div>
