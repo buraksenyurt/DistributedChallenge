@@ -6,17 +6,6 @@
 <head>
     <title>Report Request</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
-    <style>
-        .notification-popup {
-            position: fixed;
-            top: 25px;
-            right: 25px;
-            min-width: 250px;
-            min-height: 50px;
-            z-index: 1050;
-            display: none;
-        }
-    </style>
 </head>
 
 <body>
@@ -50,17 +39,25 @@
             </div>
             <button type="submit" class="btn btn-primary">Send</button>
         </form>
-        <div class="notification-popup alert alert-success" role="alert" id="notificationPopup">
-            <span id="notifyMessage"></span><button type="button" class="close" aria-label="Close"
-                onclick="closePopup()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <br />
-            <a href="reports">Please click to show report</a>
+
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+            <div id="notificationPopup" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <span id="notifyMessageLine1"></span> is ready.
+                        <br />
+                        <span id="notifyMessageLine2"></span>
+                        <br />
+                        <a href="reports" class="btn btn-primary mt-2">Please click to show report</a>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
     <script>
         const employeeId = '@Model.Owner.EmployeeId';
 
@@ -70,7 +67,9 @@
 
         connection.on("ReadNotification", function (message) {
             console.log("On read notification");
-            document.getElementById("notifyMessage").innerText = message;
+            const notification = JSON.parse(message);
+            document.getElementById("notifyMessageLine1").innerText = notification.Title;
+            document.getElementById("notifyMessageLine2").innerText = notification.DocumentId;
             showPopup();
         });
 
@@ -81,14 +80,13 @@
         });
 
         function showPopup() {
-            const popup = document.getElementById("notificationPopup");
-            popup.style.display = "block";
-            setTimeout(closePopup, 10000);
+            const popup = new bootstrap.Toast(document.getElementById('notificationPopup'));
+            popup.show();
         }
 
         function closePopup() {
-            const popup = document.getElementById("notificationPopup");
-            popup.style.display = "none";
+            const popup = bootstrap.Toast.getInstance(document.getElementById('notificationPopup'));
+            popup.hide();
         }
 
         (function () {
