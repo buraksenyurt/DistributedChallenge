@@ -6,6 +6,7 @@ public class Document
 {
     public int Id { get; set; }
     public Guid TraceId { get; set; }
+    public string? ReportTitle { get; set; }
     public string? EmployeeId { get; set; }
     public string? DocumentId { get; set; }
     [JsonIgnore]

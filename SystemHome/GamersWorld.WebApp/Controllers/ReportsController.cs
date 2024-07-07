@@ -32,6 +32,7 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
             data.Add(new ReportModel
             {
                 Id = reportDocument.Id,
+                Title = reportDocument.ReportTitle,
                 DocumentId = reportDocument.DocumentId,
                 InsertTime = reportDocument.InsertTime,
             });

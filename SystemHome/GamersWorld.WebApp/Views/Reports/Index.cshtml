@@ -10,7 +10,8 @@
     <thead>
         <tr>
             <th>Id</th>
-            <th>Insert Time</th>
+            <th>Report Title</th>
+            <th>Arrived Time</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -19,6 +20,7 @@
         {
                 <tr>
                     <td>@report.Id</td>
+                    <td>@report.Title</td>
                     <td>@report.InsertTime</td>
                     <td>
                         <a href="@Url.Action("Download", "Reports", new { documentId = report.DocumentId })" class="btn btn-primary">Download</a>

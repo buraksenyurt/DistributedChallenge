@@ -37,7 +37,7 @@
                 <input asp-for="ReportTitle" class="form-control" required />
                 <div asp-validation-for="ReportTitle" class="text-danger"></div>
                 <div class="invalid-feedback">
-                    Raporu tanımlayan kısa bir tanımlama gerekli
+                    A brief description describing the report is required.
                 </div>
             </div>
             <div class="mb-3">
@@ -45,10 +45,10 @@
                 <input asp-for="Expression" class="form-control" required />
                 <div asp-validation-for="Expression" class="text-danger"></div>
                 <div class="invalid-feedback">
-                    İstenilen raporu yazınız
+                    Type the required query for your report.
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Gönder</button>
+            <button type="submit" class="btn btn-primary">Send</button>
         </form>
         <div class="notification-popup alert alert-success" role="alert" id="notificationPopup">
             <span id="notifyMessage"></span><button type="button" class="close" aria-label="Close"
