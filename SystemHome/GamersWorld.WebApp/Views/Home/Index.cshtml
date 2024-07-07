@@ -1,109 +1,39 @@
 ﻿@model GamersWorld.WebApp.Models.ReportRequestModel
+@{
+    ViewData["Title"] = "Report Request";
+}
 
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Report Request</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
-</head>
-
-<body>
-    <div class="container">
-        <h2>Report Request Form</h2>
-        <form asp-action="SubmitReport" method="post" class="needs-validation" novalidate>
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="mb-3">
-                <p class="form-control-plaintext">@Model.Owner.ToString()</p>
-            </div>
-
-            <input type="hidden" asp-for="Owner.FullName" />
-            <input type="hidden" asp-for="Owner.EmployeeId" />
-            <input type="hidden" asp-for="Owner.Title" />
-
-            <div class="mb-3">
-                <label asp-for="ReportTitle" class="form-label"></label>
-                <input asp-for="ReportTitle" class="form-control" required />
-                <div asp-validation-for="ReportTitle" class="text-danger"></div>
-                <div class="invalid-feedback">
-                    A brief description describing the report is required.
-                </div>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Expression" class="form-label"></label>
-                <input asp-for="Expression" class="form-control" required />
-                <div asp-validation-for="Expression" class="text-danger"></div>
-                <div class="invalid-feedback">
-                    Type the required query for your report.
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Send</button>
-        </form>
-
-        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
-            <div id="notificationPopup" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <span id="notifyMessageLine1"></span> is ready.
-                        <br />
-                        <span id="notifyMessageLine2"></span>
-                        <br />
-                        <a href="reports" class="btn btn-primary mt-2">Please click to show report</a>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
+<h2>Report Request Form</h2>
+<form asp-action="SubmitReport" method="post" class="needs-validation" novalidate>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-3">
+        <p class="form-control-plaintext">@Model.Owner.ToString()</p>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const employeeId = '@Model.Owner.EmployeeId';
+    <input type="hidden" id="employeeId" value="@Model.Owner.EmployeeId" />
+    <input type="hidden" asp-for="Owner.FullName" />
+    <input type="hidden" asp-for="Owner.EmployeeId" />
+    <input type="hidden" asp-for="Owner.Title" />
 
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/notifyHub?employeeId=" + employeeId)
-            .build();
+    <div class="mb-3">
+        <label asp-for="ReportTitle" class="form-label"></label>
+        <input asp-for="ReportTitle" class="form-control" required />
+        <div asp-validation-for="ReportTitle" class="text-danger"></div>
+        <div class="invalid-feedback">
+            A brief description describing the report is required.
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Expression" class="form-label"></label>
+        <input asp-for="Expression" class="form-control" required />
+        <div asp-validation-for="Expression" class="text-danger"></div>
+        <div class="invalid-feedback">
+            Type the required query for your report.
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Send</button>
+</form>
 
-        connection.on("ReadNotification", function (message) {
-            console.log("On read notification");
-            const notification = JSON.parse(message);
-            document.getElementById("notifyMessageLine1").innerText = notification.Title;
-            document.getElementById("notifyMessageLine2").innerText = notification.DocumentId;
-            showPopup();
-        });
-
-        connection.start().then(() => {
-            console.log("SignalR connection established.");
-        }).catch(function (err) {
-            return console.error(err.toString());
-        });
-
-        function showPopup() {
-            const popup = new bootstrap.Toast(document.getElementById('notificationPopup'));
-            popup.show();
-        }
-
-        function closePopup() {
-            const popup = bootstrap.Toast.getInstance(document.getElementById('notificationPopup'));
-            popup.hide();
-        }
-
-        (function () {
-            'use strict'
-            var forms = document.querySelectorAll('.needs-validation')
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })()
-    </script>
-</body>
-
-</html>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+    <partial name="_NotificationPopup" />
+</div>

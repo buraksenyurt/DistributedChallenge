@@ -26,10 +26,10 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
             EmployeeId = ownerEmployeeId
         };
         var reportDocuments = await _messengerServiceClient.GetReportDocumentsByEmployeeAsync(request);
-        var data = new List<ReportModel>();
+        var reports = new List<ReportModel>();
         foreach (var reportDocument in reportDocuments)
         {
-            data.Add(new ReportModel
+            reports.Add(new ReportModel
             {
                 Id = reportDocument.Id,
                 Title = reportDocument.ReportTitle,
@@ -37,7 +37,14 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
                 InsertTime = reportDocument.InsertTime,
             });
         }
-        return View(data);
+
+        var viewModel = new ReportViewModel
+        {
+            EmployeeId = ownerEmployeeId,
+            Reports = reports
+        };
+
+        return View(viewModel);
     }
 
     [HttpGet("Reports/Download")]
