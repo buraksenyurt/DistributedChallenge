@@ -52,6 +52,7 @@ app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueServ
         {
             TraceId = traceId,
             EmployeeId = request.EmployeeId,
+            Title = request.ReportTitle,
             Time = DateTime.UtcNow,
             CreatedReportId = request.DocumentId,
         };
