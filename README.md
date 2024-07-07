@@ -11,8 +11,9 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
   - [Yapılacaklar Listesi _(ToDo List)_](#yapılacaklar-listesi-todo-list)
   - [Sistemin Çalıştırılması](#sistemin-çalıştırılması)
   - [Sistem Çıktıları](#sistem-çıktıları)
-    - [İlk Temas (First Contact - 29 Mayıs 2024, 21:00 suları)](#i̇lk-temas-first-contact---29-mayıs-2024-2100-suları)
-    - [İkinci Temas (30 Mayıs 2024, 22:00 suları)](#i̇kinci-temas-30-mayıs-2024-2200-suları)
+    - [İlk Zaman Kapısı (29 Mayıs 2024, 21:00 suları)](#i̇lk-zaman-kapısı-29-mayıs-2024-2100-suları)
+    - [İkinci Zaman Kapısı (30 Mayıs 2024, 22:00 suları)](#i̇kinci-zaman-kapısı-30-mayıs-2024-2200-suları)
+    - [Üçüncü Zaman Kapısı (7 Temmuz 2024, 17:30 suları)](#üçüncü-zaman-kapısı-7-temmuz-2024-1730-suları)
   - [Zamanla Yapılan Eklemeler](#zamanla-yapılan-eklemeler)
     - [Redis Stream Entgrasyonu (9 Haziran 2024)](#redis-stream-entgrasyonu-9-haziran-2024)
     - [SonarQube Genişletmesi](#sonarqube-genişletmesi)
@@ -181,7 +182,7 @@ gnome-terminal --title="ASGARD - Heimdall Monitoring UI" -- bash -c "cd ../Syste
 
 Belli dönemlere ait çalışma zamanı sonuçları aşağıdaki yer almaktadır.
 
-### İlk Temas (First Contact - 29 Mayıs 2024, 21:00 suları)
+### İlk Zaman Kapısı (29 Mayıs 2024, 21:00 suları)
 
 **NOT : Solution içerisindeki Docs klasöründe Thunder Client aracına ait REST test çıktıları yer almaktadır. Bunları VS Code ortamınıza import ederek kullanabilirsiniz.**
 
@@ -199,7 +200,7 @@ Mesajı Publish ettikten sonra host uygulama tarafından otomatik olarak yakalan
 
 ![First Test](/images/first_test.png)
 
-### İkinci Temas (30 Mayıs 2024, 22:00 suları)
+### İkinci Zaman Kapısı (30 Mayıs 2024, 22:00 suları)
 
 SystemHome'te SystemMiddleEarth'nin bilgilendirme amaçlı olarak kullanacağı _(Rapor hazır, rapor ifadesinde hata var vb durumlar için)_ **GateWayProxy** isimli bir **Web Api** yer alıyor. Bu serviste kendisine gelen mesajlara göre ReportReadyEvent veya InvalidExpressionEvent gibi olayları üretiyor. Dolayısıyla rabbit mq kuyruğunu kullanan bir servis söz konusu. Bu servise aşağıdaki gibi örnek talepler gönderebildim.
 
@@ -230,6 +231,22 @@ Rapordaki ifadede ihlal var taklidi yapan bir mesaj.
 Örnek çalışma zamanı görüntüsü ise şöyle oluştu...
 
 ![Second Test](/images/second_test.png)
+
+### Üçüncü Zaman Kapısı (7 Temmuz 2024, 17:30 Suları)
+
+Buraya kadar çözüm üzerinde çok fazla sayıda geliştirme yapıldı. Çözümün daha gerçekçi olması için önyüz tarafında da düzenlemeler yapıldı. Örneğin bir rapor hazır olduğunda event mekanizması SignalR kullanarak login olan kullanıcı ekranına bir popup çıkarmakta. Henüz bir Identity entegrasyonu olmasa da sadece rapor talep eden kişiler için Popup çıkartılması mümkün. Bu amaçla web uygulama tarafında aşağıdaki gibi ekran değişiklikleri oldu.
+
+![SignalR Runtime 01](/images/runtime_07.png)
+
+![SignalR Runtime 02](/images/runtime_08.png)
+
+ve bir rapor hazır olduğunda sadece bu istemci uygulama ekranlarına gelen popup bildirimi.
+
+![SignalR Runtime 03](/images/runtime_09.png)
+
+System Home tarafında Postgres veritabanında tutulan raporlar tek ekrandan da görülebiliyor.
+
+![SignalR Runtime 04](/images/runtime_10.png)
 
 ## Zamanla Yapılan Eklemeler
 
