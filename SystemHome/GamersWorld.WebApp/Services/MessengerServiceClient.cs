@@ -1,22 +1,17 @@
 namespace GamersWorld.WebApp.Services;
 
-using GamersWorld.Domain.Constants;
 using GamersWorld.Domain.Data;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
-using SecretsAgent;
 
-public class MessengerServiceClient(HttpClient httpClient, ISecretStoreService secretStoreService, ILogger<MessengerServiceClient> logger)
+public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServiceClient> logger)
 {
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<MessengerServiceClient> _logger = logger;
-    private readonly ISecretStoreService _secretStoreService = secretStoreService;
 
     public async Task<IEnumerable<Document>> GetReportDocumentsByEmployeeAsync(GetReportsByEmployeeRequest request)
     {
-        var messengerApiAddress = await _secretStoreService.GetSecretAsync(SecretName.MessengerApiAddress);
-        var url = $"http://{messengerApiAddress}?EmployeeId={request.EmployeeId}";
-        var response = await _httpClient.GetFromJsonAsync<IEnumerable<Document>>(url);
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<Document>>($"?EmployeeId={request.EmployeeId}");
         if (response == null)
         {
             _logger.LogWarning("There are no reports for {EmployeeId}", request.EmployeeId);
@@ -27,9 +22,7 @@ public class MessengerServiceClient(HttpClient httpClient, ISecretStoreService s
 
     public async Task<DocumentContent?> GetReportDocumentByIdAsync(GetReportDocumentByIdRequest request)
     {
-        var messengerApiAddress = await _secretStoreService.GetSecretAsync(SecretName.MessengerApiAddress);
-        var url = $"http://{messengerApiAddress}/document?DocumentId={request.DocumentId}";
-        var response = await _httpClient.GetFromJsonAsync<DocumentContent>(url);
+        var response = await _httpClient.GetFromJsonAsync<DocumentContent>($"/document?DocumentId={request.DocumentId}");
         if (response == null || response.Base64Content == null)
         {
             _logger.LogWarning("Requested {DocumentId} is null", request.DocumentId);
@@ -44,8 +37,7 @@ public class MessengerServiceClient(HttpClient httpClient, ISecretStoreService s
 
     public async Task<BusinessResponse> SendNewReportRequestAsync(NewReportRequest request)
     {
-        var messengerApiAddress = await _secretStoreService.GetSecretAsync(SecretName.MessengerApiAddress);
-        var response = await _httpClient.PostAsJsonAsync($"http://{messengerApiAddress}/", request);
+        var response = await _httpClient.PostAsJsonAsync("/", request);
 
         if (!response.IsSuccessStatusCode)
         {

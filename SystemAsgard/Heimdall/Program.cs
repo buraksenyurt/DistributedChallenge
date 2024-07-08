@@ -54,13 +54,13 @@ builder.Services.AddHealthChecks()
                     .GetAwaiter().GetResult()}/health")),
         tags: ["SystemHOME", "REST"]
     )
-    .AddCheck(
-        name: "GamersWorld Messenger",
-        instance: new HealthChecker(
-                    new Uri($"http://{secretStoreService.GetSecretAsync("MessengerApiAddress")
-                    .GetAwaiter().GetResult()}/health")),
-        tags: ["SystemHOME", "REST", "BackendApi"]
-    )
+    //.AddCheck(
+    //    name: "GamersWorld Messenger",
+    //    instance: new HealthChecker(
+    //                new Uri($"http://{secretStoreService.GetSecretAsync("MessengerApiAddress")
+    //                .GetAwaiter().GetResult()}/health")),
+    //    tags: ["SystemHOME", "REST", "BackendApi"]
+    //)
     .AddCheck(
         name: "GamersWorld Web App",
         instance: new HealthChecker(

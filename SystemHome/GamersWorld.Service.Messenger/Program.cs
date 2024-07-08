@@ -11,6 +11,8 @@ using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Application.Contracts.MessageQueue;
 using GamersWorld.Application.MessageQueue;
 using GamersWorld.Application.Contracts.Events;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,7 @@ builder.Services.AddSingleton<ISecretStoreService, SecretStoreService>();
 builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddServiceDiscovery(o => o.UseConsul());
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 

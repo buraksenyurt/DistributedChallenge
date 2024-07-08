@@ -1,11 +1,14 @@
 using GamersWorld.WebApp;
+using GamersWorld.WebApp.Services;
 using JudgeMiddleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient();
 builder.Services.AddDependencies();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
@@ -20,6 +23,14 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+builder.Services.AddServiceDiscovery(o => o.UseConsul());
+builder.Services.AddHttpClient<MessengerServiceClient>(client =>
+{
+    client.BaseAddress = new Uri("http://web-backend-service");
+})
+.AddServiceDiscovery()
+.AddRoundRobinLoadBalancer();
 
 var app = builder.Build();
 
