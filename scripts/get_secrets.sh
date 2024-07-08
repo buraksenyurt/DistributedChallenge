@@ -23,7 +23,6 @@ environment="Development"
 
 get_secret $environment "RedisConnectionString"
 get_secret $environment "EvalServiceApiAddress"
-get_secret $environment "HomeGatewayApiAddress"
 get_secret $environment "HomeWebAppAddress"
 get_secret $environment "RabbitMQHostName"
 get_secret $environment "RabbitMQUsername"
