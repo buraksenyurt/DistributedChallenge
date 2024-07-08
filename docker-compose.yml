@@ -58,6 +58,11 @@ services:
     depends_on:
       - postgres
 
+  consul:
+    image: hashicorp/consul:latest
+    ports:
+      - '8500:8500'
+
 volumes:
   localstack_data:
   baget_data:
