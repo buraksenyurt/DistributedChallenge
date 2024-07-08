@@ -22,6 +22,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Github Actions ve Local Nuget Repo Problemi](#github-actions-ve-local-nuget-repo-problemi)
     - [Servisler için HealthCheck Uygulaması](#servisler-için-healthcheck-uygulaması)
     - [Resiliency Deneyleri](#resiliency-deneyleri)
+    - [Service Discovery ve Hashicorp Consul Entegrasonu](#service-discovery-ve-hashicorp-consul-entegrasonu)
   - [Bazı Düşünceler](#bazı-düşünceler)
   - [Tartışılabilecek Problemler](#tartışılabilecek-problemler)
   - [Youtube Anlatımları](#youtube-anlatımları)
@@ -87,6 +88,7 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 | DOCKER COMPOSE | LocalStack                       |             | Local AWS Secrets Manager                            | localhost:4566 |
 | DOCKER COMPOSE | BaGet                            |             | Local NuGet Server                                   | localhost:5000 |
 | DOCKER COMPOSE | Postgresql                       |             | Rapor veritabanı                                     | N/A            |
+| DOCKER COMPOSE | Consul                           |             | Service Discovery için                               | localhost:8500 |
 | SYSTEM ASGARD  | Heimdall                         | Self Hosted | Servis izleme uygulaması                             | localhost:5247 |
 
 **NOT: Yeni servisler ilave edildikçe burası güncellenmelidir.**
@@ -121,10 +123,10 @@ Envanterimize göre sistemin genel dayanıklılığını test edebileceğimiz ve
 - [ ] Daha önceden çekilmiş raporlar için tekrardan üretim sürecini başlatmak yerine **Redis** tabanlı bir caching sistemi kullanılabilir.
 - [ ] Tüm servisler **HTTPS** protokolünde çalışacak hale getirilebilir.
 - [ ] Uçtan uca testi otomatik olarak yapacak bir **RPA _(Robotik Process Automation)_** eklentisi konulabilir. Belki otomatik **UI** testleri için **Playwright** aracından yararlanılabilir.
-- [ ] Bazı servislerin ayakta olup olmadıklarını kontrol etmek için bu servislere **HealthCheck** fonksiyonları eklenebilir.
+- [x] Bazı servislerin ayakta olup olmadıklarını kontrol etmek için bu servislere **HealthCheck** mekanizması eklenebilir.
 - [x] URL adresleri, **RabbitMQ** ortam bilgileri **(Development, Test, Pre-Production, Production)** gibi alanlar için daha güvenli bir ortamdan **(Hashicorp Vault, AWS Secrets Manager, Azure Key Vault, Google Cloud Secret Manager, CyberArk Conjur vb)** tedarik edilecek şekilde genel bir düzenlemeye gidilebilir.
 - [ ] Log mesajları veya **Business Response** nesnelerindeki metinsel ifadeler için çoklu dil desteği _(Multilanguage Support)_ getirilebilir.
-- [ ] **SystemHome**'daki **Event Host** uygulaması bir çeşit Pipeline. **Event** yönetiminde ilgili business nesneler çağırılmadan önce ve sonrası için akan veri içeriklerini loglayacak ortak bir mekanizma yazılabilir.
+- [ ] **SystemHome**'daki **Event Host** uygulaması bir nevi Pipeline akışına da sahip. **Event** yönetiminde ilgili business nesneler çağırılmadan önce ve sonrası için akan veri içeriklerini loglayacak ortak bir mekanizma yazılabilir.
 - [ ] Birçok fonksiyonda standart girdi çıktı loglaması, **exception handling** gibi **Cross-Cutting Concern** olarak da adlandırılan işlemler söz konusu. Bu kullanımda **AOP**_(Aspect Oriented Programming)_ tabanlı bir yaklaşıma gidilebilir belki.
 - [x] Sistemdeki servisleri izlemek için Microsoft **HealthCheck** paketinden yararlanılan bir arabirim geliştirilebilir.
 - [ ] **SystemAsgard**'daki **Heimdall** uygulamasındaki monitoring bilgileri **Prometheus, Application Insights, Seq, Datadog** gibi dış araçlara gönderilebilir.
@@ -468,6 +470,27 @@ Dağıtık sistemlerini dayanıklılığını(Resiliency) artırmak için servis
 - **Data Inconsistency:** Veri tutarsızlığı durumunun oluşturulması
 
 Pek tabii bu manuel operasyonar haricinde [Shopify Toxiproxy](https://github.com/Shopify/toxiproxy) hazır paketler de kullanılabilir. Ben hafifsiklet bir çözüm ile ilerlemeyi düşünüyorum.
+
+### Service Discovery ve Hashicorp Consul Entegrasonu
+
+Sistemlerimizde birçok servis yer alıyor. Aslında bu servisler ayağa kalkarken kendilerini bir Service Discovery mekanizmasına kayıt edebilirler. Buna göre servis istemcileri sadece servis adlarından yararlanarak ilgili hizmetleri Service Discovery mekanizması üzerinden keşfedebilirler. Normalde bunun için AWS Secrets Manager deposunu kullanıyorduk. Ancak buraya sadece hasas şifre bilgileri için konuşlandırabiliriz. Bu nedenle envanterimizdeki servisleri yavaş yavaş Hashicorp'un Consul isimli örneği üzerinden yönetilecek şekilde Secrets Manager'dan çıkartacağız. Consul ürünü ile ayrıca servislerin sağlık durumlarını incelemek de mümküm.
+
+Tabii consul ürününün çok fazla meziyeti var. Ben şimdilik sadece Service Discovery noktasında ele almak istiyorum. [Daha fazla bilgi için buraya bakabilirsiniz](https://developer.hashicorp.com/consul).
+
+Ürünü deneyimlemek için her zaman olduğu gibi bir docker-compose üzerinden bir kurgu kullanıyoruz. 
+
+```yml
+  consul:
+    image: hashicorp/consul:latest
+    ports:
+      - '8500:8500'
+```
+
+İlk denemede System Home tarafından web uygulaması ile arka planda kullandığın backend servisi ele alındı. Buna göre GamersWorld.Services.Messenger ayağa kalkarken kendisini consul'a kayıt ediyor. Web App tarafı da onu çağırırken Service Discovery'de tanımlı ismi üzerinden hareket ediyor.
+
+İşte örnek bir ekran görüntüsü. Buna göre web tarafı backend servisine gitmek için **http:// web-backend-service** adresini kullanıyor. Service Discovery'de gerekli yönlendirmeyi yaparak talebi localhost' a indiriyor.
+
+![Service Discovery](./images/service_discovery_01.png)
 
 ## Bazı Düşünceler
 
