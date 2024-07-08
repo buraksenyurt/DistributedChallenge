@@ -6,6 +6,8 @@ using JudgeMiddleware;
 using GamersWorld.Application.Contracts.MessageQueue;
 using GamersWorld.Application.MessageQueue;
 using GamersWorld.Application.Contracts.Events;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,8 @@ builder.Logging.AddConsole();
 builder.Services.AddSingleton<ISecretStoreService, SecretStoreService>();
 builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
+builder.Services.AddServiceDiscovery(o => o.UseConsul());
 
 var app = builder.Build();
 

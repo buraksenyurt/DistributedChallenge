@@ -24,7 +24,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddServiceDiscovery(o => o.UseConsul());
+builder.Services.AddDiscoveryClient();
 builder.Services.AddHttpClient<MessengerServiceClient>(client =>
 {
     client.BaseAddress = new Uri("http://web-backend-service");

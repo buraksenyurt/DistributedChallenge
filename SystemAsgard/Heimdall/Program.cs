@@ -47,13 +47,13 @@ builder.Services.AddHealthChecks()
                     .GetAwaiter().GetResult()}/health")),
         tags: ["SystemHAL", "REST"]
     )
-    .AddCheck(
-        name: "GamersWorld Gateway",
-        instance: new HealthChecker(
-                    new Uri($"http://{secretStoreService.GetSecretAsync("HomeGatewayApiAddress")
-                    .GetAwaiter().GetResult()}/health")),
-        tags: ["SystemHOME", "REST"]
-    )
+    //.AddCheck(
+    //    name: "GamersWorld Gateway",
+    //    instance: new HealthChecker(
+    //                new Uri($"http://{secretStoreService.GetSecretAsync("HomeGatewayApiAddress")
+    //                .GetAwaiter().GetResult()}/health")),
+    //    tags: ["SystemHOME", "REST"]
+    //)
     //.AddCheck(
     //    name: "GamersWorld Messenger",
     //    instance: new HealthChecker(

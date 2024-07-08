@@ -10,12 +10,12 @@ namespace Kahin.EventHost;
 
 public class Worker(
     IRedisService redisService
-        , IHomeGatewayClientService httpGatewayClient
+        , HomeGatewayServiceClient httpGatewayClient
         , ILogger<Worker> logger)
         : BackgroundService
 {
     private readonly IRedisService _redisService = redisService;
-    private readonly IHomeGatewayClientService _httpGatewayClient = httpGatewayClient;
+    private readonly HomeGatewayServiceClient _httpGatewayClient = httpGatewayClient;
     private readonly ILogger<Worker> _logger = logger;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -45,7 +45,7 @@ public class Worker(
                             DocumentId = eventData.DocumentId.ToString(),
                             Detail = ""
                         };
-                        var response = await _httpGatewayClient.Post(payload);
+                        var response = await _httpGatewayClient.SendReportStatusAsync(payload);
                         _logger.LogInformation("Home Gateway API Response: {Response}", response);
                         break;
                     case EventType.Error:

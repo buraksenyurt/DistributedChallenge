@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="JudgeMiddleware" Version="1.0.9" />
+    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.7" />
     <ProjectReference Include="..\GamersWorld.Application\GamersWorld.Application.csproj" />
     <ProjectReference Include="..\GamersWorld.Domain\GamersWorld.Domain.csproj" />
   </ItemGroup>
