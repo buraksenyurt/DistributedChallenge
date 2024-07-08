@@ -93,6 +93,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{8D8E09
 		images\runtime_09.png = images\runtime_09.png
 		images\runtime_10.png = images\runtime_10.png
 		images\second_test.png = images\second_test.png
+		images\service_discovery_01.png = images\service_discovery_01.png
 		images\sonar_scanner_day_1.png = images\sonar_scanner_day_1.png
 		images\vault_01.png = images\vault_01.png
 	EndProjectSection

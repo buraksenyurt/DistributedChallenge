@@ -1,26 +1,24 @@
-using System.ComponentModel.DataAnnotations;
+using GamersWorld.Application;
+using GamersWorld.Application.Contracts.Document;
+using GamersWorld.Application.Contracts.Events;
+using GamersWorld.Application.Contracts.MessageQueue;
+using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
-using GamersWorld.Domain.Enums;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using SecretsAgent;
-using JudgeMiddleware;
 using GamersWorld.Repository;
+using JudgeMiddleware;
 using Microsoft.AspNetCore.Mvc;
-using GamersWorld.Application.Contracts.Document;
-using GamersWorld.Application.Contracts.MessageQueue;
-using GamersWorld.Application.MessageQueue;
-using GamersWorld.Application.Contracts.Events;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
+using System.ComponentModel.DataAnnotations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<IDocumentRepository, DocumentRepository>();
-builder.Services.AddSingleton<ISecretStoreService, SecretStoreService>();
-builder.Services.AddSingleton<IEventQueueService, RabbitMqService>();
+builder.Services.AddApplication();
+builder.Services.AddData();
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddServiceDiscovery(o => o.UseConsul());
