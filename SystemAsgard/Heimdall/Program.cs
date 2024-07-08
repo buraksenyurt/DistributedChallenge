@@ -31,6 +31,15 @@ builder.Services.AddHealthChecks()
         name: "Report Db",
         tags: ["Docker-Compose", "PostgreSQL", "Database"]
     )
+    .AddConsul(setup =>
+        {
+            setup.HostName = "localhost";
+            setup.Port = 8500;
+            setup.RequireHttps = false;
+        },
+        name: "Consul",
+        tags: ["Docker-Compose", "Consul", "Service-Discovery", "hashicorp"]
+        )
     .AddCheck(
         name: "Eval Audit Api",
         instance: new HealthChecker(
