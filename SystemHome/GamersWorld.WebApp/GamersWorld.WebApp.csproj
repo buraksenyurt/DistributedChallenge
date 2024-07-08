@@ -7,8 +7,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.6" />
-    <PackageReference Include="SecretsAgent" Version="1.0.1" />
     <PackageReference Include="JudgeMiddleware" Version="1.0.9" />
+    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.7" />
   </ItemGroup>
 
   <PropertyGroup>
