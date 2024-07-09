@@ -10,6 +10,8 @@ using Resistance.Inconsistency;
 using Resistance.Latency;
 using Resistance.NetworkFailure;
 using Resistance.Outage;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IExpressionValidator, ExpressionValidator>();
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
+builder.Services.AddServiceDiscovery(o => o.UseConsul());
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 

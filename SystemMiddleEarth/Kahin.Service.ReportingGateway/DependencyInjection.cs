@@ -1,8 +1,9 @@
-using Kahin.Common.Constants;
 using Kahin.Common.Validation;
 using Kahin.MQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SecretsAgent;
+using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
 
 namespace Kahin.Service.ReportingGateway;
 
@@ -14,17 +15,15 @@ public static class DependencyInjection
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
-        services.AddHttpClient(Names.EvalApi, (serviceProvider, client) =>
+        services.AddDiscoveryClient();
+        services.AddHttpClient<ValidatorClient>(client =>
         {
-            var secretsService = serviceProvider.GetRequiredService<ISecretStoreService>();
-            var evalApiServiceAddress = secretsService
-                .GetSecretAsync(SecretName.EvalServiceApiAddress)
-                .GetAwaiter()
-                .GetResult();
-            client.BaseAddress = new Uri($"http://{evalApiServiceAddress}/api");
-        });
-        services.AddTransient<ValidatorClient>();
+            client.BaseAddress = new Uri("http://hal-audit-service");
+        })
+        .AddServiceDiscovery()
+        .AddRoundRobinLoadBalancer();
         services.AddSingleton<IRedisService, RedisService>();
+
         return services;
     }
 }
