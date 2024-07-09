@@ -4,7 +4,6 @@ using JudgeMiddleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
-using Steeltoe.Discovery.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
