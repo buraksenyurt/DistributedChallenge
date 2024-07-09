@@ -31,6 +31,13 @@ builder.Services.AddHttpClient("HalAuditApi", client =>
 .AddServiceDiscovery()
 .AddRoundRobinLoadBalancer();
 
+builder.Services.AddHttpClient("MiddleEarthGatewayApi", client =>
+{
+    client.BaseAddress = new Uri("http://reporting-gateway-service");
+})
+.AddServiceDiscovery()
+.AddRoundRobinLoadBalancer();
+
 var loggerFactory = LoggerFactory.Create(logging =>
 {
     logging.AddConsole();
@@ -73,11 +80,11 @@ builder.Services.AddHealthChecks()
         instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "HalAuditApi"),
         tags: ["SystemHAL", "REST", "AuditApi"]
     )
-    //.AddCheck(
-    //    name: "Kahin Reporting Gateway",
-    //    instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "MiddleEarthGatewayApi"),
-    //    tags: ["SystemMIDDLE_EARTH", "REST"]
-    //)
+    .AddCheck(
+        name: "Kahin Reporting Gateway",
+        instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "MiddleEarthGatewayApi"),
+        tags: ["SystemMIDDLE_EARTH", "REST"]
+    )
     .AddCheck(
         name: "GamersWorld Gateway",
         instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "HomeGatewayApi"),

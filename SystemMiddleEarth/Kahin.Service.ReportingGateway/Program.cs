@@ -8,10 +8,13 @@ using Kahin.Common.Responses;
 using Kahin.Common.Validation;
 using Kahin.MQ;
 using Kahin.Service.ReportingGateway;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDependencies();
+builder.Services.AddServiceDiscovery(o => o.UseConsul());
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 

@@ -22,13 +22,10 @@ get_secret() {
 environment="Development"
 
 get_secret $environment "RedisConnectionString"
-get_secret $environment "EvalServiceApiAddress"
-get_secret $environment "HomeWebAppAddress"
 get_secret $environment "RabbitMQHostName"
 get_secret $environment "RabbitMQUsername"
 get_secret $environment "RabbitMQPassword"
 get_secret $environment "RabbitMQPort"
-get_secret $environment "KahinReportingGatewayApiAddress"
 get_secret $environment "ReportDbConnStr"
 get_secret $environment "HomeWebAppHubAddress"
 
