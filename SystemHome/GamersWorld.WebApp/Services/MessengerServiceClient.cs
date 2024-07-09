@@ -1,6 +1,7 @@
 namespace GamersWorld.WebApp.Services;
 
 using GamersWorld.Domain.Data;
+using GamersWorld.Domain.Dtos;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
 

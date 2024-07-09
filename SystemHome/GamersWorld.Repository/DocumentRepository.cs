@@ -1,16 +1,19 @@
 using Dapper;
 using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Domain.Data;
+using GamersWorld.Domain.Dtos;
 using GamersWorld.Domain.Requests;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using SecretsAgent;
 
 namespace GamersWorld.Repository;
 
-public class DocumentRepository(ISecretStoreService secretStoreService)
+public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<DocumentRepository> logger)
     : IDocumentRepository
 {
     private readonly ISecretStoreService _secretStoreService = secretStoreService;
+    private readonly ILogger<DocumentRepository> _logger = logger;
 
     private async Task<NpgsqlConnection> GetOpenConnectionAsync()
     {
@@ -49,7 +52,14 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
 
         await using var dbConnection = await GetOpenConnectionAsync();
         var reportDocument = await dbConnection.QueryFirstOrDefaultAsync<Document>(sql, new { documentReadRequest.DocumentId });
-
+        if (reportDocument == null)
+        {
+            _logger.LogInformation("There is no content for {DocumentId}", documentReadRequest.DocumentId);
+            return new Document
+            {
+                DocumentId = documentReadRequest.DocumentId
+            };
+        }
         return reportDocument;
     }
 
@@ -63,6 +73,15 @@ public class DocumentRepository(ISecretStoreService secretStoreService)
         await using var dbConnection = await GetOpenConnectionAsync();
         var content = await dbConnection.QueryFirstOrDefaultAsync<byte[]>(sql, new { documentReadRequest.DocumentId });
 
+        if (content == null)
+        {
+            _logger.LogInformation("There is no content for {DocumentId}", documentReadRequest.DocumentId);
+            return new DocumentContent
+            {
+                Base64Content = string.Empty,
+                ContentSize = 0
+            };
+        }
         return new DocumentContent
         {
             Base64Content = Convert.ToBase64String(content),

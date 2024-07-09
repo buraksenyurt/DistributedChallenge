@@ -9,7 +9,6 @@ using GamersWorld.Repository;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Common.Http.Discovery;
 
-
 // RabbitMq ayarlarını da ele alacağımız için appSettings konfigurasyonu için bir builder nesnesi örnekledik
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -38,13 +37,6 @@ services.AddHttpClient(Names.KahinGateway, client =>
 })
 .AddServiceDiscovery()
 .AddRoundRobinLoadBalancer();
-
-//services.AddHttpClient(Names.KahinGateway, (serviceProvider, client) =>
-//{
-//    var secretStoreService = serviceProvider.GetRequiredService<ISecretStoreService>();
-//    var reportingServiceHostAddress = secretStoreService.GetSecretAsync(SecretName.KahinReportingGatewayApiAddress).GetAwaiter().GetResult();
-//    client.BaseAddress = new Uri($"http://{reportingServiceHostAddress}");
-//});
 
 var serviceProvider = services.BuildServiceProvider();
 var logger = serviceProvider.GetRequiredService<ILogger<Program>>();

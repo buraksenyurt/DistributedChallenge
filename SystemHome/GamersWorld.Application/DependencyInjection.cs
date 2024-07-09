@@ -18,7 +18,6 @@ public static class DependencyInjection
         services.AddTransient<IDocumentReader, TableReader>();
         services.AddSingleton<ISecretStoreService, SecretStoreService>();
         services.AddSingleton<IEventQueueService, RabbitMqService>();
-        //services.AddTransient<IDocumentWriter, FileSaver>();
 
         return services;
     }
