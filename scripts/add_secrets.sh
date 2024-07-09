@@ -27,13 +27,10 @@ add_or_update_secret() {
 
 # Development Secrets
 add_or_update_secret "Development" "RedisConnectionString" "localhost:6379"
-add_or_update_secret "Development" "EvalServiceApiAddress" "localhost:5147"
-add_or_update_secret "Development" "HomeWebAppAddress" "localhost:5093"
 add_or_update_secret "Development" "RabbitMQHostName" "localhost"
 add_or_update_secret "Development" "RabbitMQUsername" "scothtiger"
 add_or_update_secret "Development" "RabbitMQPassword" "123456"
 add_or_update_secret "Development" "RabbitMQPort" "5672"
 add_or_update_secret "Development" "RabbitAmqpConnectionString" "amqp://scothtiger:123456@localhost:5672/"
-add_or_update_secret "Development" "KahinReportingGatewayApiAddress" "localhost:5218"
 add_or_update_secret "Development" "ReportDbConnStr" "Host=localhost;Port=5432;Username=johndoe;Password=somew0rds;Database=ReportDb"
 add_or_update_secret "Development" "HomeWebAppHubAddress" "localhost:5093/notifyHub"
