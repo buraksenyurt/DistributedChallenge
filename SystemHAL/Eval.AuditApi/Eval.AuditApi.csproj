@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
     <PackageReference Include="Resistance" Version="1.0.5" />
+    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.7" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="JudgeMiddleware" Version="1.0.9" />
   </ItemGroup>

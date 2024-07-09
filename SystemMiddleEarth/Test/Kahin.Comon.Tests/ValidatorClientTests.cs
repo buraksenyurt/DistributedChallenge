@@ -11,7 +11,6 @@ namespace Kahin.Common.Tests;
 
 public class ValidatorClientTests
 {
-    private readonly Mock<IHttpClientFactory> _mockHttpClientFactory;
     private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
     private readonly HttpClient _mockHttpClient;
     private readonly Mock<ILogger<ValidatorClient>> _mockLogger;
@@ -23,8 +22,6 @@ public class ValidatorClientTests
         {
             BaseAddress = new Uri("http://mockaddress/api")
         };
-        _mockHttpClientFactory = new Mock<IHttpClientFactory>();
-        _mockHttpClientFactory.Setup(_mock => _mock.CreateClient(It.IsAny<string>())).Returns(_mockHttpClient);
         _mockLogger = new Mock<ILogger<ValidatorClient>>();
     }
 
@@ -50,7 +47,7 @@ public class ValidatorClientTests
             )
             .ReturnsAsync(httpResponseMessage);
 
-        var validatorClient = new ValidatorClient(_mockHttpClientFactory.Object, _mockLogger.Object);
+        var validatorClient = new ValidatorClient(_mockHttpClient, _mockLogger.Object);
 
         // Act
         var result = await validatorClient.ValidateExpression(request);
@@ -81,7 +78,7 @@ public class ValidatorClientTests
             )
             .ReturnsAsync(httpResponseMessage);
 
-        var validatorClient = new ValidatorClient(_mockHttpClientFactory.Object, _mockLogger.Object);
+        var validatorClient = new ValidatorClient(_mockHttpClient, _mockLogger.Object);
 
         // Act
         var result = await validatorClient.ValidateExpression(request);
@@ -108,7 +105,7 @@ public class ValidatorClientTests
             )
             .ReturnsAsync(httpResponseMessage);
 
-        var validatorClient = new ValidatorClient(_mockHttpClientFactory.Object, _mockLogger.Object);
+        var validatorClient = new ValidatorClient(_mockHttpClient, _mockLogger.Object);
 
         // Act
         var result = await validatorClient.ValidateExpression(request);
