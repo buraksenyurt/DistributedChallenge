@@ -1,4 +1,4 @@
-﻿using GamersWorld.Domain.Data;
+﻿using GamersWorld.Domain.Dtos;
 using GamersWorld.Domain.Requests;
 
 namespace GamersWorld.Application.Contracts.Document;
