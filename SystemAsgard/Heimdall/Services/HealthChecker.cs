@@ -2,14 +2,15 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Heimdall.Services;
 
-public class HealthChecker(Uri serviceAddress) : IHealthCheck
+public class HealthChecker(IHttpClientFactory httpClientFactory, string clientName) : IHealthCheck
 {
-    private readonly Uri _serviceAddress = serviceAddress;
+    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
+    private readonly string _clientName = clientName;
 
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-        using var client = new HttpClient();
-        var response = await client.GetAsync(_serviceAddress, cancellationToken);
+        var client = _httpClientFactory.CreateClient(_clientName);
+        var response = await client.GetAsync("/health", cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {

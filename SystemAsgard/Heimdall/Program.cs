@@ -2,10 +2,27 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using Heimdall.Services;
 using SecretsAgent;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Common.Http.Discovery;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddDiscoveryClient();
+
+builder.Services.AddHttpClient("HomeMessengerApi", client =>
+{
+    client.BaseAddress = new Uri("http://web-backend-service");
+})
+.AddServiceDiscovery()
+.AddRoundRobinLoadBalancer();
+
+builder.Services.AddHttpClient("HomeGatewayApi", client =>
+{
+    client.BaseAddress = new Uri("http://home-gateway-service");
+})
+.AddServiceDiscovery()
+.AddRoundRobinLoadBalancer();
 
 var loggerFactory = LoggerFactory.Create(logging =>
 {
@@ -40,40 +57,24 @@ builder.Services.AddHealthChecks()
         name: "Consul",
         tags: ["Docker-Compose", "Consul", "Service-Discovery", "hashicorp"]
         )
-    .AddCheck(
-        name: "Eval Audit Api",
-        instance: new HealthChecker(
-                    new Uri($"http://{secretStoreService.GetSecretAsync("EvalServiceApiAddress")
-                    .GetAwaiter().GetResult()}/health")),
-        tags: ["SystemHAL", "REST"]
+    .AddCheck("GamersWorld Messenger",
+        instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "HomeMessengerApi"),
+        tags: ["SystemHOME", "REST", "BackendApi"]
     )
     //.AddCheck(
-    //    name: "GamersWorld Gateway",
-    //    instance: new HealthChecker(
-    //                new Uri($"http://{secretStoreService.GetSecretAsync("HomeGatewayApiAddress")
-    //                .GetAwaiter().GetResult()}/health")),
-    //    tags: ["SystemHOME", "REST"]
+    //    name: "Audit Api",
+    //    instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "HalAuditApi"),
+    //    tags: ["SystemHAL", "REST", "AuditApi"]
     //)
     //.AddCheck(
-    //    name: "GamersWorld Messenger",
-    //    instance: new HealthChecker(
-    //                new Uri($"http://{secretStoreService.GetSecretAsync("MessengerApiAddress")
-    //                .GetAwaiter().GetResult()}/health")),
-    //    tags: ["SystemHOME", "REST", "BackendApi"]
+    //    name: "Kahin Reporting Gateway",
+    //    instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "MiddleEarthGatewayApi"),
+    //    tags: ["SystemMIDDLE_EARTH", "REST"]
     //)
     .AddCheck(
-        name: "GamersWorld Web App",
-        instance: new HealthChecker(
-                    new Uri($"http://{secretStoreService.GetSecretAsync("HomeWebAppAddress")
-                    .GetAwaiter().GetResult()}/health")),
-        tags: ["SystemHOME", "WebApp"]
-    )
-    .AddCheck(
-        name: "Kahin Reporting Gateway",
-        instance: new HealthChecker(
-                    new Uri($"http://{secretStoreService.GetSecretAsync("KahinReportingGatewayApiAddress")
-                    .GetAwaiter().GetResult()}/health")),
-        tags: ["SystemMIDDLE_EARTH", "REST"]
+        name: "GamersWorld Gateway",
+        instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "HomeGatewayApi"),
+        tags: ["SystemHOME", "REST"]
     );
 
 builder.Services.AddHealthChecksUI(setupSettings =>
