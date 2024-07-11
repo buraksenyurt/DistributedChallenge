@@ -48,6 +48,20 @@ public class Worker(
                         var response = await _httpGatewayClient.SendReportStatusAsync(payload);
                         _logger.LogInformation("Home Gateway API Response: {Response}", response);
                         break;
+                    case EventType.AuditFail:
+                        var auditFail = new ReportStatusRequest
+                        {
+                            TraceId = eventData.TraceId,
+                            EmployeeId = eventData.EmployeeId,
+                            ReportTitle = eventData.ReportTitle,
+                            StatusCode = (int)StatusCode.InvalidExpression,
+                            StatusMessage = "Audit validation error!",
+                            DocumentId = eventData.DocumentId.ToString(),
+                            Detail = ""
+                        };
+                        var _ = await _httpGatewayClient.SendReportStatusAsync(auditFail);
+                        _logger.LogWarning("Audit validation failed for expression");
+                        break;
                     case EventType.Error:
                         _logger.LogError("Error on Redis event streaming. {EventData}", eventData);
                         break;

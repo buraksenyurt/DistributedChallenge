@@ -108,6 +108,15 @@ app.MapPost("/", async (
     {
         logger.LogError("'{Expression}' is not valid!", request.Expression);
 
+        var auditPayload = new RedisPayload
+        {
+            TraceId = request.TraceId,
+            EmployeeId = request.EmployeeId,
+            EventType = EventType.AuditFail
+        };
+
+        await redisService.AddReportPayloadAsync(Names.EventStream, auditPayload, TimeSpan.FromMinutes(TimeCop.OneMilisecond * 10));
+
         return Results.Json(new CreateReportResponse
         {
             Status = StatusCode.InvalidExpression,
