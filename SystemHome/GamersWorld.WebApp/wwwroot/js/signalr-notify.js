@@ -9,10 +9,10 @@
         .withUrl("/notifyHub?employeeId=" + employeeId)
         .build();
 
-    connection.on("ReadNotification", function (message) {
+    connection.on("ReadNotification", function (data) {
         console.log("On read notification");
-        const notification = JSON.parse(message);
-        document.getElementById("notifyMessageLine1").innerText = notification.Title;
+        const notification = JSON.parse(data);
+        document.getElementById("notifyMessageLine1").innerText = notification.Content;
         document.getElementById("notifyMessageLine2").innerText = notification.DocumentId;
         showPopup();
     });

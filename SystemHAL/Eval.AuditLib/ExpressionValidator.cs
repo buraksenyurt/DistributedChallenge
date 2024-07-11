@@ -3,7 +3,6 @@ using Eval.AuditLib.Model;
 using Microsoft.Extensions.Logging;
 
 namespace Eval.Lib;
-// .net 8 ile gelen primary constructor özelliği
 public class ExpressionValidator(ILogger<ExpressionValidator> logger) : IExpressionValidator
 {
     private readonly ILogger<ExpressionValidator> _logger = logger;
@@ -22,7 +21,6 @@ public class ExpressionValidator(ILogger<ExpressionValidator> logger) : IExpress
 
         //TODO@buraksenyurt Burada gelen ifadenin geçerli bir sorgu olup olmadığını kontrol edecek bir fonksiyonellik olmalı
 
-        // Deneysel olarak gelen ifadenin geçerli olup olmadığına karar vermek için zar atıyoruz
         Random random = new();
         var value = random.Next(1, 9);
         var isValid = value % 7 != 0;
