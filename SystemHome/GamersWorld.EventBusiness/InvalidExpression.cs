@@ -9,18 +9,18 @@ namespace GamersWorld.EventBusiness;
 public class InvalidExpression(ILogger<InvalidExpression> logger, INotificationService notificationService) : IEventDriver<InvalidExpressionEvent>
 {
     private readonly ILogger<InvalidExpression> _logger = logger;
-    private readonly INotificationService _notificationService=notificationService;
+    private readonly INotificationService _notificationService = notificationService;
 
     public async Task Execute(InvalidExpressionEvent appEvent)
     {
         var notificationData = new ReportNotification
         {
-            DocumentId = "Not Available",
+            DocumentId = "Audit Validation Error !",
             Content = appEvent.Title,
             IsSuccess = false
         };
         await _notificationService.PushToUserAsync(appEvent.EmployeeId, JsonSerializer.Serialize(notificationData));
 
-        _logger.LogWarning("{Expression}, Reason: {Reason}", appEvent.Expression, appEvent.Reason);
+        _logger.LogWarning("{ReportTitle}, Reason: {Reason}", appEvent.Title, appEvent.Reason);
     }
 }
