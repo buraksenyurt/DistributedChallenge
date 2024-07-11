@@ -74,6 +74,7 @@ app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueServ
             Expression = request.Detail,
             Reason = request.StatusMessage,
             Time = DateTime.Now,
+            EmployeeId = request.EmployeeId,
         };
         eventQueueService.PublishEvent(invalidExpressionEvent);
         logger.LogError(

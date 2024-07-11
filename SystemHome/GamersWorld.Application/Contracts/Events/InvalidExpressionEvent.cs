@@ -6,4 +6,7 @@ public class InvalidExpressionEvent : IEvent
     public string? Expression { get; set; }
     public string? Reason { get; set; }
     public DateTime Time { get; set; }
+    public string? EmployeeId { get; set; }
+    public string? Title { get; set; }
+
 }

@@ -30,11 +30,10 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReade
         {
             _logger.LogInformation("{Message}", response.Message);
 
-            //await _notificationService.PushAsync($"{appEvent.CreatedReportId} is ready!");
             var notificationData = new ReportNotification
             {
                 DocumentId = appEvent.CreatedReportId,
-                Title = appEvent.Title
+                Content = appEvent.Title
             };
 
             await _notificationService.PushToUserAsync(appEvent.EmployeeId, JsonSerializer.Serialize(notificationData));
