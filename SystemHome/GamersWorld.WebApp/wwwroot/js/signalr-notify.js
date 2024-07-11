@@ -12,8 +12,23 @@
     connection.on("ReadNotification", function (data) {
         console.log("On read notification");
         const notification = JSON.parse(data);
+        const popupElement = document.getElementById("notificationPopup");
+        const lnkReportsElement = document.getElementById("lnkReports");
+
         document.getElementById("notifyMessageLine1").innerText = notification.Content;
         document.getElementById("notifyMessageLine2").innerText = notification.DocumentId;
+
+        if (notification.IsSuccess) {
+            popupElement.classList.remove("text-bg-warning");
+            popupElement.classList.add("text-bg-success");
+            lnkReportsElement.style.display = "inline";
+
+        } else {
+            popupElement.classList.remove("text-bg-success");
+            popupElement.classList.add("text-bg-warning");
+            lnkReportsElement.style.display = "none";
+        }
+
         showPopup();
     });
 
