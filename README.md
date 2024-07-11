@@ -29,6 +29,8 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
 
 ## Geliştirme Ortamı
 
+Süreç boyunca iki farklı ortamda çalışma fırsatı buldum. İlki Moon isimli ev bilgisayarım. Ubuntu tabanlı sistemin özellikleri şöyle.
+
 | Özellik   | Açıklama                      |
 |-----------|-------------------------------|
 | OS        | Ubuntu 22.04 LTS              |
@@ -37,14 +39,31 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
 | IDE       | Visual Studio Code            |
 | Framework | .Net 8.0                      |
 
+Diğer sistem ise iş bilgisayarı ve Windows tabanlı.
+
+| Özellik   | Açıklama                      |
+|-----------|-------------------------------|
+| OS        | Windows 10 Enterprise         |
+| CPU       | Intel(R) Core(TM) i7 2.30GHz  |
+| RAM       | 32 Gb                         |
+| IDE       | Visual Studio Pro 2022        |
+| Framework | .Net 8.0                      |
+
+Ancak bunların haricinde herhangi bir lokasyondan da çalışma şansımız var. Bu noktada Github Codespaces oldukça işe yarıyor.
+
 ## Senaryo
 
 Kullanıcılarına oyun kiralayan bir internet şirketi olduğunu düşünelim. Şirketin son kullanıcılara _(End Users)_ sunduğu web ve mobile bazlı uygulamalar dışında şirket genel merkezinde kullanılan Back Office tadında farklı bir programları daha var. Bu programda yer alan ekranlardan birisi de raporlama talepleri için kullanılıyor. Şirketin sahip olduğu veri miktarı ve rapor taleplerinin belli bir onay sürecinden geçip içeriklerini farklı alanlardan toplaması nedeniyle bir raporun çekilmesi bazen birkaç dakikayı bulabiliyor. Her ne kadar şirket içerisinde bu işleri üstelenen bir raporlama ekibi bulunsa da personelin kullandığı web sayfalarında bu şekilde belirsiz süreyle beklenmeleri istenmiyor. Çözüm olarak rapor talebinin girildiği bir formun tasarlanması ve talebin raporlama ekibine ait uygulamalara ulaştırılıp hazır hale geldikten sonra personelin bilgilendirilmesi şeklinde bir yol izlenmesine karar veriliyor. Tüm bu sürecin tamamen sistem tarafından gerçekleştirilmesi ve otomatize edilmesi isteniyor. İşte Örnek Birkaç Rapor İfadesi;
 
-- Geçtiğimiz yıl kiraladığımız oyunlardan en çok pozitif yorum alan ilk 25 adedinin ülke bazlı satış rakamları.
-- Dün yapılan kiralamalardan firma ve oyun türü bazında gruplanmış kar değerleri.
-- Geçen ay en yüksek puan alan oyuncuların yaptığı toplam harcama tutarları.
-- Dövüş oyunlarından puan olarak benimkini geçen en iyi 10 oyunun kullanım istatistikleri.
+| Rapor Başlığı                           | İfade (Expression)                                                                                           |
+|-----------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| En Pozitif Yorumları Toplayanlar        | Geçtiğimiz yıl kiraladığımız oyunlardan en çok pozitif yorum alan ilk 25 adedinin ülke bazlı satış rakamları.|
+| Güncel Firma Bazlı Kiralamalar          | Dün yapılan kiralamalardan firma ve oyun türü bazında gruplanmış kar değerleri.                              |
+| En İyi Oyuncuların Harcamaları          | Geçen ay en yüksek puan alan oyuncuların yaptığı oyun için satın alma harcamalarının toplam tutarları.       |
+| Çak Norizin Bireysel Başarımları        | Dövüş oyunlarından puan olarak benimkini geçen en iyi 10 oyunun kullanım istatistikleri.                     |
+| En Sağlıklı Oyuncularımız               | Oyun oynarken platformumuz üzerinden yemek siparişi verenler arasında en sağlıklı şekilde tıkınanlar         |
+| Patlamış Mısır Sevdalıları              | Hafta sonu oyuncularından en çok patlamış mısır siparişi veren ilk 1000 kullanıcının tercih ettiği markalar  |
+| AFK Modunda Takılan Sakinler            | Oyunun başından kalkıp AFK modundan kalan kullanıcılardan son bir ayda en yüksek süre duraksayanlar          |
 
 ## Aday Çözüm
 
