@@ -11,10 +11,10 @@ public class CreateReportRequest
     public string? EmployeeId { get; set; }
 
     [Required]
-    [StringLength(30, MinimumLength = 20, ErrorMessage = "Title length must be between 20 and 30 characters.")]
+    [StringLength(50, MinimumLength = 20, ErrorMessage = "Title length must be between 20 and 50 characters.")]
     public string? Title { get; set; }
 
     [Required(ErrorMessage = "Expression must be filled.")]
-    [StringLength(100, MinimumLength = 30, ErrorMessage = "Expression length must be between 30 and 100 characters.")]
+    [StringLength(200, MinimumLength = 50, ErrorMessage = "Expression length must be between 50 and 200 characters.")]
     public string? Expression { get; set; }
 }

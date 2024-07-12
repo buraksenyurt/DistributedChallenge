@@ -35,6 +35,7 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
                 Title = reportDocument.ReportTitle,
                 DocumentId = reportDocument.DocumentId,
                 InsertTime = reportDocument.InsertTime,
+                ExpireTime = reportDocument.ExpireTime
             });
         }
 
@@ -61,5 +62,23 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
             return File(content, "application/octet-stream", $"{documentId}.txt");
         }
         return NotFound();
+    }
+
+    [HttpGet("Reports/Delete")]
+    public async Task<IActionResult> Delete(string documentId)
+    {
+        var response = await _messengerServiceClient
+            .DeleteDocumentByIdAsync(new DeleteDocumentByIdRequest
+            {
+                DocumentId = documentId
+            });
+        if (response.StatusCode == Domain.Enums.StatusCode.Success)
+        {
+            TempData["Notification"] = "Document successfully deleted!";
+            return RedirectToAction("Index");
+        }
+
+        TempData["Notification"] = "Failed to delete document!";
+        return RedirectToAction("Index");
     }
 }

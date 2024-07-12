@@ -130,4 +130,16 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
 
         return documents;
     }
+
+    public async Task<int> DeleteDocumentByIdAsync(DocumentReadRequest documentReadRequest)
+    {
+        const string sql = @"
+                DELETE
+                FROM Documents
+                WHERE DocumentId = @DocumentId";
+
+        await using var dbConnection = await GetOpenConnectionAsync();
+        var affectedRowCount = await dbConnection.ExecuteAsync(sql, new { documentReadRequest.DocumentId });
+        return affectedRowCount;
+    }
 }

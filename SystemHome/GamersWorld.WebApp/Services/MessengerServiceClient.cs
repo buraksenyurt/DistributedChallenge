@@ -73,4 +73,31 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
             return result;
         }
     }
+
+    public async Task<BusinessResponse> DeleteDocumentByIdAsync(DeleteDocumentByIdRequest request)
+    {
+        var deleteResponse = await _httpClient.DeleteAsync($"/document?documentId={request.DocumentId}");
+        if (!deleteResponse.IsSuccessStatusCode)
+        {
+            return new BusinessResponse
+            {
+                StatusCode = Domain.Enums.StatusCode.Fail,
+                Message = "Fail on document delete"
+            };
+        }
+        if (deleteResponse.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            _logger.LogInformation("{DocumentId} deleted", request.DocumentId);
+            return new BusinessResponse
+            {
+                StatusCode = Domain.Enums.StatusCode.Success,
+                Message = "Document succesfully deleted!"
+            };
+        }
+        return new BusinessResponse
+        {
+            StatusCode = Domain.Enums.StatusCode.Fail,
+            Message = "Document deletion unsuccesfull!"
+        };
+    }
 }

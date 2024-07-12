@@ -11,4 +11,5 @@ public interface IDocumentRepository
     Task<IEnumerable<Domain.Data.Document>> GetAllDocumentsAsync();
     Task<IEnumerable<Domain.Data.Document>> GetAllDocumentsByEmployeeAsync(DocumentReadRequest documentReadRequest);
     Task<DocumentContent> ReadDocumentContentByIdAsync(DocumentReadRequest documentReadRequest);
+    Task<int> DeleteDocumentByIdAsync(DocumentReadRequest documentReadRequest);
 }

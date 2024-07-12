@@ -121,4 +121,20 @@ app.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService
 .WithName("NewReportRequest")
 .WithOpenApi();
 
+app.MapDelete("/document", async ([FromQuery] string documentId, IDocumentRepository repository, ILogger<Program> logger) =>
+{
+    logger.LogInformation("Delete report request for {DocumentId}", documentId);
+    var affectedRowCount = await repository.DeleteDocumentByIdAsync(
+        new DocumentReadRequest
+        {
+            DocumentId = documentId
+        });
+    if (affectedRowCount == 0)
+        return Results.NotFound();
+
+    return Results.Ok();
+})
+.WithName("DeleteReportById")
+.WithOpenApi();
+
 app.Run();
