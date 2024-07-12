@@ -14,6 +14,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [İlk Zaman Kapısı (29 Mayıs 2024, 21:00 suları)](#i̇lk-zaman-kapısı-29-mayıs-2024-2100-suları)
     - [İkinci Zaman Kapısı (30 Mayıs 2024, 22:00 suları)](#i̇kinci-zaman-kapısı-30-mayıs-2024-2200-suları)
     - [Üçüncü Zaman Kapısı (7 Temmuz 2024, 17:30 suları)](#üçüncü-zaman-kapısı-7-temmuz-2024-1730-suları)
+    - [Dördüncü Zaman Kapısı (13 Temmuz 2024, 00:10 suları)](#dördüncü-zaman-kapısı-13-temmuz-2024-0010-suları)
   - [Zamanla Yapılan Eklemeler](#zamanla-yapılan-eklemeler)
     - [Redis Stream Entgrasyonu (9 Haziran 2024)](#redis-stream-entgrasyonu-9-haziran-2024)
     - [SonarQube Genişletmesi](#sonarqube-genişletmesi)
@@ -268,6 +269,20 @@ ve bir rapor hazır olduğunda sadece bu istemci uygulama ekranlarına gelen pop
 System Home tarafında Postgres veritabanında tutulan raporlar tek ekrandan da görülebiliyor.
 
 ![SignalR Runtime 04](/images/runtime_10.png)
+
+### Dördüncü Zaman Kapısı (13 Temmuz 2024, 00:10 Suları)
+
+Kullanıcı arayüz tarafının biraz daha işe yarar hale gelmesi için çalışmalar yapıldı. Örneğinde Audit servisinde rastgele zar atarak döndüğümüz içerik ihlalleri için yine SignalR üzerinden push notification ile istemcinin bilgilendirilmesi sağlandı.
+
+![Runtime 11](/images/runtime_11.png)
+
+Diğer yandan rapor görüntüleme ekranına silme fonksiyonelliği de kazandırıldı.
+
+![Runtime 12](/images/runtime_12.png)
+
+![Runtime 13](/images/runtime_13.png)
+
+Dikkat edileceği üzere artık System Home tarafına inen rapor dokümanları için zaman aşımı entegrasyonuna başlandı. Yaşan süresi _(Expire Time)_ dolan rapor dokümanlarını kalıcı ortamlarından silecek takvimlendirilmiş _(Scheduled)_ bir mekanizma üzerinde geliştirme yapılacak. Background Worker türünden bir host uygulamanın iş göreceğini düşünüyorum. 
 
 ## Zamanla Yapılan Eklemeler
 
