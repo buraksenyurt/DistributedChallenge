@@ -52,6 +52,8 @@ public class ReportDocumentAvailable(
                 EmployeeId = appEvent.EmployeeId,
                 DocumentId = getReportResponse.DocumentId,
                 Content = content,
+                InsertTime = DateTime.Now,
+                ExpireTime = DateTime.Now.AddMinutes(10),
             };
             var saveResponse = await _documentSaver.SaveAsync(docContent);
             _logger.LogInformation("Save response is {StatusCode} and message is {Message}"
