@@ -26,8 +26,8 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
     public async Task<int> InsertDocumentAsync(DocumentSaveRequest documentSaveRequest)
     {
         const string sql = @"
-                INSERT INTO Documents (TraceId, ReportTitle, EmployeeId, DocumentId, Content)
-                VALUES (@TraceId, @ReportTitle, @EmployeeId, @DocumentId, @Content)
+                INSERT INTO Documents (TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime, ExpireTime)
+                VALUES (@TraceId, @ReportTitle, @EmployeeId, @DocumentId, @Content, @InsertTime, @ExpireTime)
                 RETURNING Id";
 
         await using var dbConnection = await GetOpenConnectionAsync();
@@ -37,7 +37,9 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
             documentSaveRequest.ReportTitle,
             documentSaveRequest.EmployeeId,
             documentSaveRequest.DocumentId,
-            documentSaveRequest.Content
+            documentSaveRequest.Content,
+            documentSaveRequest.InsertTime,
+            documentSaveRequest.ExpireTime
         });
 
         return insertedId;
@@ -46,7 +48,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
     public async Task<Document> ReadDocumentAsync(DocumentReadRequest documentReadRequest)
     {
         const string sql = @"
-                SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime
+                SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime, ExpireTime
                 FROM Documents
                 WHERE DocumentId = @DocumentId";
 
@@ -105,7 +107,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
     public async Task<IEnumerable<Document>> GetAllDocumentsAsync()
     {
         const string sql = @"
-                SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime
+                SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime, ExpireTime
                 FROM Documents
                 ORDER BY InsertTime";
 
@@ -118,7 +120,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
     public async Task<IEnumerable<Document>> GetAllDocumentsByEmployeeAsync(DocumentReadRequest documentReadRequest)
     {
         const string sql = @"
-                SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime
+                SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime, ExpireTime
                 FROM Documents
                 WHERE EmployeeId = @EmployeeId
                 ORDER BY InsertTime";

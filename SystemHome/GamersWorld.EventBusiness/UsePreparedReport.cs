@@ -26,7 +26,7 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReade
             DocumentId = appEvent.CreatedReportId,
             TraceId = appEvent.TraceId
         });
-        if (response != null && response.StatusCode == StatusCode.DocumentReadable)
+        if (response is { StatusCode: StatusCode.DocumentReadable })
         {
             _logger.LogInformation("{Message}", response.Message);
 
