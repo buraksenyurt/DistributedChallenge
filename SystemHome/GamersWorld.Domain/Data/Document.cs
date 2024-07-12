@@ -12,4 +12,5 @@ public class Document
     [JsonIgnore]
     public byte[] Content { get; set; }
     public DateTime InsertTime { get; set; }
+    public DateTime ExpireTime { get; set; }
 }
