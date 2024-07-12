@@ -33,7 +33,7 @@ public class PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFac
         {
             var createReportResponse = await response.Content.ReadFromJsonAsync<CreateReportResponse>();
 
-            if (createReportResponse != null && createReportResponse.Status == StatusCode.Success)
+            if (createReportResponse is { Status: StatusCode.Success })
             {
                 _logger.LogInformation("Report request sent({Status}). {DocumentId}"
                     , createReportResponse.Status, createReportResponse.DocumentId);
