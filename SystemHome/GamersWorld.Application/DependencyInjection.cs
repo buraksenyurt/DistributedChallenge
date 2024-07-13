@@ -4,6 +4,7 @@ using GamersWorld.Application.Contracts.Notification;
 using GamersWorld.Application.Document;
 using GamersWorld.Application.MessageQueue;
 using GamersWorld.Application.Notification;
+using GamersWorld.Domain.Constants;
 using Microsoft.Extensions.DependencyInjection;
 using SecretsAgent;
 
@@ -14,8 +15,8 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddTransient<INotificationService, SignalrNotificationService>();
-        services.AddTransient<IDocumentWriter, TableSaver>();
-        //services.AddTransient<IDocumentWriter, FtpWriter>();
+        services.AddKeyedTransient<IDocumentWriter, TableSaver>(Names.DbWriteService);
+        services.AddKeyedTransient<IDocumentWriter, FtpWriter>(Names.FtpWriteService);
         services.AddTransient<IDocumentReader, TableReader>();
         services.AddSingleton<ISecretStoreService, SecretStoreService>();
         services.AddSingleton<IEventQueueService, RabbitMqService>();

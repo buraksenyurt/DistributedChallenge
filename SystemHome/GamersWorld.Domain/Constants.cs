@@ -21,4 +21,6 @@ public static class Names
     public const string EventQueue = "report_events_queue";
     public const string KahinGateway = "KahinGateway";
     public const string WebSignalR = "WebSignalRAddress";
+    public const string DbWriteService = "DbWriteService";
+    public const string FtpWriteService = "FtpWriteService";
 }

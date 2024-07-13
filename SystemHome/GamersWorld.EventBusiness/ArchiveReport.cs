@@ -1,14 +1,18 @@
 ﻿using Microsoft.Extensions.Logging;
 using GamersWorld.Application.Contracts.Events;
 using GamersWorld.Application.Contracts.Document;
+using Microsoft.Extensions.DependencyInjection;
+using GamersWorld.Domain.Constants;
+using System;
 
 namespace GamersWorld.EventBusiness;
 
-public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository documentRepository, IDocumentWriter documentWriter) : IEventDriver<ArchiveReportEvent>
+public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository documentRepository, IServiceProvider serviceProvider) 
+    : IEventDriver<ArchiveReportEvent>
 {
     private readonly ILogger<ArchiveReport> _logger = logger;
     private readonly IDocumentRepository _documentRepository = documentRepository;
-    private readonly IDocumentWriter _documentWriter = documentWriter;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public async Task Execute(ArchiveReportEvent appEvent)
     {
@@ -22,8 +26,9 @@ public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository do
             _logger.LogWarning("{DocumentId} content not found", appEvent.DocumentId);
             return;
         }
+        var writeOperator = _serviceProvider.GetRequiredKeyedService<IDocumentWriter>(Names.FtpWriteService);
 
-        var writeResponse = await _documentWriter.SaveAsync(new Domain.Requests.DocumentSaveRequest
+        var writeResponse = await writeOperator.SaveAsync(new Domain.Requests.DocumentSaveRequest
         {
             DocumentId = appEvent.DocumentId,
             Content = doc.Content,

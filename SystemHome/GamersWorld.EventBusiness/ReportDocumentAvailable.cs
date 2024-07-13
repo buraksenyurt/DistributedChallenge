@@ -6,18 +6,19 @@ using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Constants;
 using GamersWorld.Application.Contracts.Events;
 using GamersWorld.Application.Contracts.Document;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GamersWorld.EventBusiness;
 
 public class ReportDocumentAvailable(
     ILogger<ReportDocumentAvailable> logger
     , IHttpClientFactory httpClientFactory
-    , IDocumentWriter documentSaver)
+    , IServiceProvider serviceProvider)
     : IEventDriver<ReportReadyEvent>
 {
     private readonly ILogger<ReportDocumentAvailable> _logger = logger;
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
-    private readonly IDocumentWriter _documentSaver = documentSaver;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public async Task Execute(ReportReadyEvent appEvent)
     {
@@ -55,7 +56,10 @@ public class ReportDocumentAvailable(
                 InsertTime = DateTime.Now,
                 ExpireTime = DateTime.Now.AddMinutes(10),
             };
-            var saveResponse = await _documentSaver.SaveAsync(docContent);
+
+            var writeOperator = _serviceProvider.GetRequiredKeyedService<IDocumentWriter>(Names.DbWriteService);
+
+            var saveResponse = await writeOperator.SaveAsync(docContent);
             _logger.LogInformation("Save response is {StatusCode} and message is {Message}"
             , saveResponse.StatusCode, saveResponse.Message);
         }
