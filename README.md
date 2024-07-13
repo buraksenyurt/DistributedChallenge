@@ -24,6 +24,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Servisler için HealthCheck Uygulaması](#servisler-için-healthcheck-uygulaması)
     - [Resiliency Deneyleri](#resiliency-deneyleri)
     - [Service Discovery ve Hashicorp Consul Entegrasonu](#service-discovery-ve-hashicorp-consul-entegrasonu)
+    - [Ftp Entegrasyonu ile Arşivleme Stratejisi](#ftp-entegrasyonu-ile-arşivleme-stratejisi)
   - [Bazı Düşünceler](#bazı-düşünceler)
   - [Tartışılabilecek Problemler](#tartışılabilecek-problemler)
   - [Youtube Anlatımları](#youtube-anlatımları)
@@ -525,6 +526,32 @@ Tabii consul ürününün çok fazla meziyeti var. Ben şimdilik sadece Service 
 İşte örnek bir ekran görüntüsü. Buna göre web tarafı backend servisine gitmek için **http:// web-backend-service** adresini kullanıyor. Service Discovery'de gerekli yönlendirmeyi yaparak talebi localhost' a indiriyor.
 
 ![Service Discovery](./images/service_discovery_01.png)
+
+### Ftp Entegrasyonu ile Arşivleme Stratejisi
+
+Birden fazla sistemin bir arada olduğu senaryolarda ftp bazlı süreçler de olabiliyor. Bunu deneyimlemek için yine docker-compose üzerinden kullanabileceğimiz bir ftp imajına başvurduk. [Alpine tabanlı bu basit ftp imajı](https://hub.docker.com/r/delfer/alpine-ftp-server) ile sistemde sanki bir ftp sunucusu ile işlem yapıyormuşuz stratejisini hayata geçirebildik. Senaryomuza göre önyüzde hali hazırda duran bazı raporlar için doğrudan silme ve arşive gönderme seçeneklerimiz var. Arşive gönderme aslında raporun veritabanından silinmesi ama belli bir süre zarfında ftp sunucusunda yaşatılması anlamına gelmekte. Elbette bu bizim uydurduğumuz bir senaryo. Ftp-server imajı ile çalışırken bazı problemler de yaşadım. Bunlardan birisi docker-compose dosyasında belirtilen kullanıcının bir türlü oluşturulmamasıydı. Bu nedenle docker container'a bir terminal açıp ilgili kullanıcıyı manuel olarak ekledim. 
+
+Diğer bir sorunda FTP upload işlemleri için kullandığım FluentFTP paketinin dosya yazma işini bir türlü gerçekleştiremeyişiydi. Bunun sebebi ise ftpuser klasöründe documents'ı oluşturmaması ve buraya ftp kullanıcısı için yazma hakkı vermememizdi. Bu nedenle aşağıdaki komutları not olarak eklemek istedim.
+
+```bash
+# Docker container'a terminal açılır
+docker exec -it distributedchallenge_ftp-server_1 sh
+
+# Ftp kullanıcısı eklenir ve şifresi belirlenir
+adduser -D -h /home/ftpuser userone
+echo "userone:123" | chpasswd
+
+# Senaryoda geçerli olan documents klasörü oluşturulur
+mkdir -p /home/ftpuser/documents
+
+# Ftp kullanıcısı için yetkiler verilir
+chmod -R 755 /home/ftpuser/documents
+chown -R user: /home/ftpuser/documents
+```
+
+Sonuç olarak önyüzden arşivleme işlemi başlatıldığında bir başka event-business işletilir ve her şey yolunda giderse söz konusu rapor ftp sunucusuna yüklenirken veritabanından da silinir.
+
+![Runtime 14](/images/runtime_14.png)
 
 ## Bazı Düşünceler
 
