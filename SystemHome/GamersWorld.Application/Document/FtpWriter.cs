@@ -34,7 +34,7 @@ public class FtpWriter(ILogger<FileSaver> logger, ISecretStoreService secretStor
             {
                 return new BusinessResponse
                 {
-                    StatusCode = StatusCode.DocumentSaved,
+                    StatusCode = StatusCode.DocumentUploaded,
                     Message = $"{payload.Content.Length} bytes saved."
                 };
             }
@@ -66,8 +66,17 @@ public class FtpWriter(ILogger<FileSaver> logger, ISecretStoreService secretStor
         using var client = new AsyncFtpClient(ftpServer, ftpUsername, ftpPassword);
         await client.Connect(token);
 
-        var ftpStatus = await client.UploadBytes(content, $"/documents/{fileName}", token: token);
-        _logger.LogInformation("Upload File Complete, status {StatusDescription}", ftpStatus.ToString());
+        var rootFolder = "/home/ftpuser/documents";
+
+        _logger.LogInformation("Checking the directory exists.");
+        if (!await client.DirectoryExists(rootFolder, token))
+        {
+            _logger.LogInformation("Directory does not exist. Creating it.");
+            await client.CreateDirectory(rootFolder, token);
+        }
+
+        var ftpStatus = await client.UploadBytes(content, $"{rootFolder}/{fileName}", token: token);
+        _logger.LogInformation("Upload File to {TargetFolder} Complete. Status : {StatusDescription}", rootFolder, ftpStatus.ToString());
 
         return ftpStatus;
     }

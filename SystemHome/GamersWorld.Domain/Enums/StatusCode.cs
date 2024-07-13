@@ -5,6 +5,7 @@ public enum StatusCode
     ReportReady = 200,
     DocumentSaved = 205,
     DocumentReadable = 206,
+    DocumentUploaded = 207,
     InvalidExpression = 400,
     ValidationErrors = 401,
     Fail = 500
