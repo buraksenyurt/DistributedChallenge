@@ -62,8 +62,23 @@ services:
     image: hashicorp/consul:latest
     ports:
       - '8500:8500'
+  
+  ftp-server:
+    image: delfer/alpine-ftp-server
+    ports:
+      - "21:21"
+      - "21000-21010:21000-21010"
+    environment:
+      FTP_USER: "system_user"
+      FTP_PASS: "P@sswr0d"
+      PASV_MIN_PORT: 21000
+      PASV_MAX_PORT: 21010
+    volumes:
+      - ftp_data:/home/ftpuser/ftp_data
 
 volumes:
   localstack_data:
   baget_data:
   postgres_data:
+  ftp_data:
+    
