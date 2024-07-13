@@ -99,7 +99,7 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 |----------------|----------------------------------|-------------|------------------------------------------------------|----------------|
 | HAL            | Eval.AuditApi                    | REST        | Rapor talebindeki ifadeyi denetlemek                 | localhost:5147 |
 | HOME           | GamersWorld.Service.Gateway      | REST        | Middle Earth için rapor statü güncelleme hizmeti     | localhost:5102 |
-| HOME           | GamersWorld.Service.Messenger    |  REST        | Web önyüz için backend servisi                       | localhost:5234 |
+| HOME           | GamersWorld.Service.Messenger    | REST        | Web önyüz için backend servisi                       | localhost:5234 |
 | HOME           | GamersWorld.WebApp               | Self Hosted | Web uygulaması                                       | localhost:5093 |
 | HOME           | GamersWorld.EventHost            | Self Hosted | Home sistemindeki event yönetim hizmeti              | N/A            |
 | MIDDLE EARTH   | Kahin.Service.ReportingGateway   | REST        | Rapor hazırlama, yollama ve durum güncellemesi       | localhost:5218 |
@@ -110,6 +110,7 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 | DOCKER COMPOSE | BaGet                            |             | Local NuGet Server                                   | localhost:5000 |
 | DOCKER COMPOSE | Postgresql                       |             | Rapor veritabanı                                     | N/A            |
 | DOCKER COMPOSE | Consul                           |             | Service Discovery için                               | localhost:8500 |
+| DOCKER COMPOSE | Ftp Server                       |             | Ftp senaryolarını işletmek için                      | localhost      |
 | SYSTEM ASGARD  | Heimdall                         | Self Hosted | Servis izleme uygulaması                             | localhost:5247 |
 
 **NOT: Yeni servisler ilave edildikçe burası güncellenmelidir.**
