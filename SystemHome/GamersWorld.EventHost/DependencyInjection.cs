@@ -10,8 +10,6 @@ namespace GamersWorld.EventHost;
 
 public static class DependencyInjection
 {
-    // Event ve Business nesne bağımlılıklarının DI servislerine yükleyen metot
-
     public static IServiceCollection AddEventDrivers(this IServiceCollection services)
     {
         services.AddTransient<IEventDriver<ReportRequestedEvent>, PostReportRequest>();
@@ -19,12 +17,12 @@ public static class DependencyInjection
         services.AddTransient<IEventDriver<ReportIsHereEvent>, UsePreparedReport>();
         services.AddTransient<IEventDriver<ReportProcessCompletedEvent>, DeleteReport>();
         services.AddTransient<IEventDriver<InvalidExpressionEvent>, InvalidExpression>();
+        services.AddTransient<IEventDriver<ArchiveReportEvent>, ArchiveReport>();
         services.AddSingleton<EventHandlerFactory>();
 
         return services;
     }
 
-    // RabbitMq hizmetini DI servisine yükleyen fonksiyon
     public static IServiceCollection AddRabbitMq(this IServiceCollection services)
     {
         var secretStoreService = services.BuildServiceProvider().GetRequiredService<ISecretStoreService>();

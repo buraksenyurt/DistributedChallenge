@@ -15,6 +15,7 @@ public static class DependencyInjection
     {
         services.AddTransient<INotificationService, SignalrNotificationService>();
         services.AddTransient<IDocumentWriter, TableSaver>();
+        //services.AddTransient<IDocumentWriter, FtpWriter>();
         services.AddTransient<IDocumentReader, TableReader>();
         services.AddSingleton<ISecretStoreService, SecretStoreService>();
         services.AddSingleton<IEventQueueService, RabbitMqService>();

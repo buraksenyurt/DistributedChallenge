@@ -2,9 +2,9 @@
 
 namespace GamersWorld.Domain.Requests
 {
-    public class GetReportDocumentByIdRequest
+    public class DocumentIdRequest
     {
         [Required]
-        public string? DocumentId { get; set; }
+        public string? DocumentId { get; set; } 
     }
 }
