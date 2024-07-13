@@ -28,6 +28,7 @@ get_secret $environment "RabbitMQPassword"
 get_secret $environment "RabbitMQPort"
 get_secret $environment "ReportDbConnStr"
 get_secret $environment "HomeWebAppHubAddress"
+get_secret $environment "FtpServerAddress"
 get_secret $environment "FtpUsername"
 get_secret $environment "FtpPassword"
 
