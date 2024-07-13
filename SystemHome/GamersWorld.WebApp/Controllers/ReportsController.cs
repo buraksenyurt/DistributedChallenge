@@ -94,11 +94,11 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
             });
         if (response.StatusCode == Domain.Enums.StatusCode.Success)
         {
-            TempData["Notification"] = "Document successfully Archived!";
+            TempData["Notification"] = "A document archiving request has been sent.";
             return RedirectToAction("Index");
         }
 
-        TempData["Notification"] = "Failed document to archive!";
+        TempData["Notification"] = "Failed the document archiving!";
         return RedirectToAction("Index");
     }
 }

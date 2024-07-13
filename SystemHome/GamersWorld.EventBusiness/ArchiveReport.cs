@@ -7,7 +7,7 @@ using System;
 
 namespace GamersWorld.EventBusiness;
 
-public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository documentRepository, IServiceProvider serviceProvider) 
+public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository documentRepository, IServiceProvider serviceProvider)
     : IEventDriver<ArchiveReportEvent>
 {
     private readonly ILogger<ArchiveReport> _logger = logger;
@@ -33,7 +33,7 @@ public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository do
             DocumentId = appEvent.DocumentId,
             Content = doc.Content,
         });
-        if (writeResponse.StatusCode != Domain.Enums.StatusCode.Success)
+        if (writeResponse.StatusCode != Domain.Enums.StatusCode.DocumentUploaded)
         {
             _logger.LogWarning("{DocumentId} save operation failed", doc.DocumentId);
             return;
