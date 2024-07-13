@@ -69,8 +69,8 @@ services:
       - "21:21"
       - "21000-21010:21000-21010"
     environment:
-      FTP_USER: "system_user"
-      FTP_PASS: "P@sswr0d"
+      FTP_USER: "userone"
+      FTP_PASS: "123"
       PASV_MIN_PORT: 21000
       PASV_MAX_PORT: 21010
     volumes:
@@ -81,4 +81,3 @@ volumes:
   baget_data:
   postgres_data:
   ftp_data:
-    

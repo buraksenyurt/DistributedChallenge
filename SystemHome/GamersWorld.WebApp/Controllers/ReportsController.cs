@@ -2,6 +2,7 @@
 using GamersWorld.WebApp.Models;
 using GamersWorld.WebApp.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace GamersWorld.WebApp.Controllers;
 
@@ -52,7 +53,7 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
     public async Task<IActionResult> Download(string documentId)
     {
         var document = await _messengerServiceClient
-            .GetReportDocumentByIdAsync(new GetReportDocumentByIdRequest
+            .GetReportDocumentByIdAsync(new DocumentIdRequest
             {
                 DocumentId = documentId
             });
@@ -68,7 +69,7 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
     public async Task<IActionResult> Delete(string documentId)
     {
         var response = await _messengerServiceClient
-            .DeleteDocumentByIdAsync(new DeleteDocumentByIdRequest
+            .DeleteDocumentByIdAsync(new DocumentIdRequest
             {
                 DocumentId = documentId
             });
@@ -79,6 +80,25 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
         }
 
         TempData["Notification"] = "Failed to delete document!";
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet("Reports/Archive")]
+    public async Task<IActionResult> Archive(string documentId, string title)
+    {
+        var response = await _messengerServiceClient
+            .ArchiveDocumentByIdAsync(new ArchiveReportRequest
+            {
+                Title = title,
+                DocumentId = documentId
+            });
+        if (response.StatusCode == Domain.Enums.StatusCode.Success)
+        {
+            TempData["Notification"] = "Document successfully Archived!";
+            return RedirectToAction("Index");
+        }
+
+        TempData["Notification"] = "Failed document to archive!";
         return RedirectToAction("Index");
     }
 }

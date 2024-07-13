@@ -137,4 +137,52 @@ app.MapDelete("/document", async ([FromQuery] string documentId, IDocumentReposi
 .WithName("DeleteReportById")
 .WithOpenApi();
 
+app.MapPost("/archive", (ArchiveReportRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
+{
+    var validationResults = new List<ValidationResult>();
+    var validationContext = new ValidationContext(request);
+
+    if (!Validator.TryValidateObject(request, validationContext, validationResults, true))
+    {
+        logger.LogError("Validation errors occurred!");
+        var errors = validationResults
+            .GroupBy(e => e.MemberNames.FirstOrDefault() ?? string.Empty)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Select(e => e.ErrorMessage ?? string.Empty).ToArray()
+            );
+
+        var errorResponse = new BusinessResponse
+        {
+            StatusCode = StatusCode.ValidationErrors,
+            Message = "Validation errors occurred.",
+            ValidationErrors = errors
+        };
+
+        return Results.Json(errorResponse, statusCode: 400);
+    }
+
+    var archiveReportEvent = new ArchiveReportEvent
+    {
+        TraceId = Guid.NewGuid(),
+        DocumentId = request.DocumentId,
+        Title = request.Title,
+        Time = DateTime.Now,
+    };
+
+    eventQueueService.PublishEvent(archiveReportEvent);
+    logger.LogInformation(
+        "ArchiveReportEvent sent. DocumentId: {DocumentId}, Title: {Title}"
+        , archiveReportEvent.DocumentId, archiveReportEvent.Title);
+
+    var response = new BusinessResponse
+    {
+        StatusCode = StatusCode.Success,
+        Message = "Successfully sent"
+    };
+    return Results.Json(response);
+})
+.WithName("ArchiveReportRequest")
+.WithOpenApi();
+
 app.Run();

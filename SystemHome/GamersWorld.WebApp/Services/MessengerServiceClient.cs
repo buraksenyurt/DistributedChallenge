@@ -21,7 +21,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
         return response;
     }
 
-    public async Task<DocumentContent?> GetReportDocumentByIdAsync(GetReportDocumentByIdRequest request)
+    public async Task<DocumentContent?> GetReportDocumentByIdAsync(DocumentIdRequest request)
     {
         var response = await _httpClient.GetFromJsonAsync<DocumentContent>($"/document?DocumentId={request.DocumentId}");
         if (response == null || response.Base64Content == null)
@@ -74,7 +74,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
         }
     }
 
-    public async Task<BusinessResponse> DeleteDocumentByIdAsync(DeleteDocumentByIdRequest request)
+    public async Task<BusinessResponse> DeleteDocumentByIdAsync(DocumentIdRequest request)
     {
         var deleteResponse = await _httpClient.DeleteAsync($"/document?documentId={request.DocumentId}");
         if (!deleteResponse.IsSuccessStatusCode)
@@ -98,6 +98,33 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
         {
             StatusCode = Domain.Enums.StatusCode.Fail,
             Message = "Document deletion unsuccesfull!"
+        };
+    }
+
+    public async Task<BusinessResponse> ArchiveDocumentByIdAsync(ArchiveReportRequest request)
+    {
+        var archiveResponse = await _httpClient.PostAsJsonAsync($"/archive", request);
+        if (!archiveResponse.IsSuccessStatusCode)
+        {
+            return new BusinessResponse
+            {
+                StatusCode = Domain.Enums.StatusCode.Fail,
+                Message = "Fail on document archive"
+            };
+        }
+        if (archiveResponse.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            _logger.LogInformation("{DocumentId} archived", request.DocumentId);
+            return new BusinessResponse
+            {
+                StatusCode = Domain.Enums.StatusCode.Success,
+                Message = "Document succesfully archived!"
+            };
+        }
+        return new BusinessResponse
+        {
+            StatusCode = Domain.Enums.StatusCode.Fail,
+            Message = "Document archive process unsuccesfull!"
         };
     }
 }

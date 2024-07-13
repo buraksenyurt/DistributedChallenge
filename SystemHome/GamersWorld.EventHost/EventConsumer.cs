@@ -9,8 +9,7 @@ using GamersWorld.Application.Contracts.Events;
 
 namespace GamersWorld.EventHost;
 
-public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvider serviceProvider,
-        ILogger<EventConsumer> logger)
+public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvider serviceProvider, ILogger<EventConsumer> logger)
 {
     private readonly IConnectionFactory _connectionFactory = connectionFactory;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
@@ -18,23 +17,21 @@ public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvide
 
     public void Run()
     {
-        // RabitMq bağlantısı tesis edilir ve bir kanal oluşturulur
         using var connection = _connectionFactory.CreateConnection();
         using var channel = connection.CreateModel();
-        // reports_event_queue isimli bir kuyruk tanımlanır
-        channel.QueueDeclare(queue: Names.EventQueue, durable: false, exclusive: false, autoDelete: false,
+        channel.QueueDeclare(
+            queue: Names.EventQueue,
+            durable: false,
+            exclusive: false,
+            autoDelete: false,
             arguments: null);
 
         var consumer = new EventingBasicConsumer(channel);
-        // Gelen mesajların yakalandığı olay metodu
-        // Lambda operatörü üzerinden anonymous function olarak event handler temsilcisini bağlanır
+
         consumer.Received += async (model, args) =>
         {
             var message = args.Body.ToArray();
-            var eventType =
-                args.BasicProperties.Type; // Publish edilecek mesajı type property değerinden yakalayabiliriz
-
-            // Kuyruktan yakalanan mesaj değerlendirilmek üzere Handle operasyonuna gönderilir
+            var eventType = args.BasicProperties.Type;
             await Handle(eventType, message);
         };
 
@@ -50,10 +47,6 @@ public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvide
 
         using var scope = _serviceProvider.CreateScope();
         var factory = scope.ServiceProvider.GetRequiredService<EventHandlerFactory>();
-
-        // Kuyruktan yakalanan Event ve mesaj içeriği burada değerlendirilir
-        // eventType türüne göre JSON formatından döndürülen mesaj içeriği
-        // factory nesnesi üzerinden uygun business nesnesinin execute fonksiyonuna kadar gönderilir
 
         switch (eventType)
         {
@@ -90,6 +83,13 @@ public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvide
                 if (invalidExpressionEvent != null)
                 {
                     await factory.ExecuteEvent(invalidExpressionEvent);
+                }
+                break;
+            case nameof(ArchiveReportEvent):
+                var archiveReportEvent = JsonSerializer.Deserialize<ArchiveReportEvent>(eventMessage);
+                if (archiveReportEvent != null)
+                {
+                    await factory.ExecuteEvent(archiveReportEvent);
                 }
                 break;
             default:
