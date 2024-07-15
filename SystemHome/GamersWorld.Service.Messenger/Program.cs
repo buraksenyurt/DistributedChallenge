@@ -7,7 +7,6 @@ using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
 using GamersWorld.Repository;
 using JudgeMiddleware;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
@@ -45,7 +44,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapHealthChecks("/health");
 
-app.MapGet("/", async ([FromQuery] string employeeId, IDocumentRepository repository, ILogger<Program> logger) =>
+var documentsGroup = app.MapGroup("/api/documents");
+
+documentsGroup.MapGet("/employee/{employeeId}", async (string employeeId, IDocumentRepository repository, ILogger<Program> logger) =>
 {
     logger.LogInformation("Request reports data for {EmployeeId}", employeeId);
     var documents = await repository.GetAllDocumentsByEmployeeAsync(new DocumentReadRequest
@@ -58,7 +59,7 @@ app.MapGet("/", async ([FromQuery] string employeeId, IDocumentRepository reposi
 .WithName("GetReportsByEmployee")
 .WithOpenApi();
 
-app.MapGet("/document", async ([FromQuery] string documentId, IDocumentRepository repository, ILogger<Program> logger) =>
+documentsGroup.MapGet("/{documentId}", async (string documentId, IDocumentRepository repository, ILogger<Program> logger) =>
 {
     logger.LogInformation("Request report content for {DocumentId}", documentId);
     var document = await repository.ReadDocumentContentByIdAsync(
@@ -72,7 +73,7 @@ app.MapGet("/document", async ([FromQuery] string documentId, IDocumentRepositor
 .WithOpenApi();
 
 
-app.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
+documentsGroup.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
 {
     var validationResults = new List<ValidationResult>();
     var validationContext = new ValidationContext(request);
@@ -122,7 +123,7 @@ app.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService
 .WithName("NewReportRequest")
 .WithOpenApi();
 
-app.MapDelete("/document", async ([FromQuery] string documentId, IDocumentRepository repository, ILogger<Program> logger) =>
+documentsGroup.MapDelete("/{documentId}", async (string documentId, IDocumentRepository repository, ILogger<Program> logger) =>
 {
     logger.LogInformation("Delete report request for {DocumentId}", documentId);
     var affectedRowCount = await repository.DeleteDocumentByIdAsync(
@@ -138,7 +139,7 @@ app.MapDelete("/document", async ([FromQuery] string documentId, IDocumentReposi
 .WithName("DeleteReportById")
 .WithOpenApi();
 
-app.MapPost("/archive", (ArchiveReportRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
+documentsGroup.MapPost("/archive", (ArchiveReportRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
 {
     var validationResults = new List<ValidationResult>();
     var validationContext = new ValidationContext(request);
@@ -167,7 +168,7 @@ app.MapPost("/archive", (ArchiveReportRequest request, IEventQueueService eventQ
     {
         TraceId = Guid.NewGuid(),
         DocumentId = request.DocumentId,
-        ClientId = request.EmployeeId, 
+        ClientId = request.EmployeeId,
         Title = request.Title,
         Time = DateTime.Now,
     };
