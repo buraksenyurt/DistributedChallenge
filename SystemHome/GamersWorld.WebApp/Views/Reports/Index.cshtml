@@ -45,7 +45,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="@Url.Action("Archive", "Reports", new { documentId = report.DocumentId, title=report.Title })" class="btn btn-secondary">
+                        <a href="@Url.Action("Archive", "Reports", new { documentId = report.DocumentId, title=report.Title, employeeId=Model.EmployeeId })" class="btn btn-secondary">
                             <i class="bi bi-archive"></i>
                         </a>
                     </td>

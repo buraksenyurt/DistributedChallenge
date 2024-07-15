@@ -33,7 +33,9 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReade
             var notificationData = new ReportNotification
             {
                 DocumentId = appEvent.CreatedReportId,
-                Content = appEvent.Title
+                Content = appEvent.Title,
+                Topic = NotificationTopic.Report.ToString(),
+                IsSuccess = true,
             };
 
             await _notificationService.PushToUserAsync(appEvent.EmployeeId, JsonSerializer.Serialize(notificationData));

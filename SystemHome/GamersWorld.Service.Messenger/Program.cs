@@ -166,6 +166,7 @@ app.MapPost("/archive", (ArchiveReportRequest request, IEventQueueService eventQ
     {
         TraceId = Guid.NewGuid(),
         DocumentId = request.DocumentId,
+        ClientId = request.EmployeeId, 
         Title = request.Title,
         Time = DateTime.Now,
     };

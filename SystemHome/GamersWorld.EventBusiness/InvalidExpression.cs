@@ -17,7 +17,8 @@ public class InvalidExpression(ILogger<InvalidExpression> logger, INotificationS
         {
             DocumentId = "Audit Validation Error !",
             Content = appEvent.Title,
-            IsSuccess = false
+            IsSuccess = false,
+            Topic = Domain.Enums.NotificationTopic.Report.ToString(),
         };
         await _notificationService.PushToUserAsync(appEvent.EmployeeId, JsonSerializer.Serialize(notificationData));
 

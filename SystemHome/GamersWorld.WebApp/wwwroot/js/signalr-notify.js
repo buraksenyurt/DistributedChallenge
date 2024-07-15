@@ -10,22 +10,22 @@
         .build();
 
     connection.on("ReadNotification", function (data) {
-        console.log("On read notification");
         const notification = JSON.parse(data);
+        console.log(notification);
         const popupElement = document.getElementById("notificationPopup");
         const lnkReportsElement = document.getElementById("lnkReports");
 
+        document.getElementById("notifyMessageTopic").innerText = notification.Topic;
         document.getElementById("notifyMessageLine1").innerText = notification.Content;
         document.getElementById("notifyMessageLine2").innerText = notification.DocumentId;
 
-        if (notification.IsSuccess) {
-            popupElement.classList.remove("text-bg-warning");
-            popupElement.classList.add("text-bg-success");
+        if (notification.IsSuccess && notification.Topic === 'Report') {
+            popupElement.classList.remove("bg-warning", "text-dark");
+            popupElement.classList.add("bg-success", "text-white");
             lnkReportsElement.style.display = "inline";
-
         } else {
-            popupElement.classList.remove("text-bg-success");
-            popupElement.classList.add("text-bg-warning");
+            popupElement.classList.remove("bg-success", "text-white");
+            popupElement.classList.add("bg-warning", "text-dark");
             lnkReportsElement.style.display = "none";
         }
 
