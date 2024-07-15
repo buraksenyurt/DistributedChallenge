@@ -1,15 +1,15 @@
 ﻿@* Views/Shared/_NotificationPopup.cshtml *@
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
-    <div id="notificationPopup" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="notificationPopup" class="toast align-items-center bg-info border-0" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body">
-                <span id="notifyMessageLine1">   </span>
-                <br />
-                <span id="notifyMessageLine2"></span>
-                <br />
-                <a id="lnkReports" href="reports" class="btn btn-primary mt-2">Please click to show report</a>
+                <h5 class="toast-title text-dark">Notification</h5>
+                <p id="notifyMessageTopic" class="mb-1 fw-bold"></p>
+                <p id="notifyMessageLine1" class="mb-1"></p>
+                <p id="notifyMessageLine2" class="mb-1"></p>
+                <a id="lnkReports" href="reports" class="btn btn-outline-dark mt-2">Goto Reports</a>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
 </div>

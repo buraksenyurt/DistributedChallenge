@@ -84,13 +84,14 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
     }
 
     [HttpGet("Reports/Archive")]
-    public async Task<IActionResult> Archive(string documentId, string title)
+    public async Task<IActionResult> Archive(string documentId, string title, string employeeId)
     {
         var response = await _messengerServiceClient
             .ArchiveDocumentByIdAsync(new ArchiveReportRequest
             {
                 Title = title,
-                DocumentId = documentId
+                DocumentId = documentId,
+                EmployeeId = employeeId
             });
         if (response.StatusCode == Domain.Enums.StatusCode.Success)
         {

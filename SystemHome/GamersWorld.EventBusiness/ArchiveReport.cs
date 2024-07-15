@@ -1,18 +1,21 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Application.Contracts.Events;
-using GamersWorld.Application.Contracts.Document;
-using Microsoft.Extensions.DependencyInjection;
+using GamersWorld.Application.Contracts.Notification;
 using GamersWorld.Domain.Constants;
-using System;
+using GamersWorld.Domain.Dtos;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace GamersWorld.EventBusiness;
 
-public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository documentRepository, IServiceProvider serviceProvider)
+public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository documentRepository, IServiceProvider serviceProvider, INotificationService notificationService)
     : IEventDriver<ArchiveReportEvent>
 {
     private readonly ILogger<ArchiveReport> _logger = logger;
     private readonly IDocumentRepository _documentRepository = documentRepository;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly INotificationService _notificationService = notificationService;
 
     public async Task Execute(ArchiveReportEvent appEvent)
     {
@@ -42,6 +45,15 @@ public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository do
         var deleteResult = await _documentRepository.DeleteDocumentByIdAsync(request);
         if (deleteResult == 1)
         {
+            var notificationData = new ReportNotification
+            {
+                DocumentId = appEvent.DocumentId,
+                Content = appEvent.Title,
+                IsSuccess = true,
+                Topic = Domain.Enums.NotificationTopic.Archive.ToString()
+            };
+
+            await _notificationService.PushToUserAsync(appEvent.ClientId, JsonSerializer.Serialize(notificationData));
             _logger.LogWarning("{Document} is archiving to target", appEvent.DocumentId);
         }
         else

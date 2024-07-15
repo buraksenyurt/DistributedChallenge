@@ -6,4 +6,5 @@ public class ArchiveReportEvent : IEvent
     public string? DocumentId { get; set; }
     public string? Title { get; set; }
     public DateTime Time { get; set; }
+    public string? ClientId { get; set; }
 }
