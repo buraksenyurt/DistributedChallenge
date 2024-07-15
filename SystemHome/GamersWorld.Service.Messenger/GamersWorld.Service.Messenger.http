@@ -1,4 +1,4 @@
-@GamersWorld.Messenger_HostAddress = http://localhost:5234
+@GamersWorld.Messenger_HostAddress = http://localhost:5234/api/documents
 
 GET {{GamersWorld.Messenger_HostAddress}}/health
 
@@ -34,6 +34,6 @@ Accept: application/json
 
 ###
 
-GET {{GamersWorld.Messenger_HostAddress}}/
+GET {{GamersWorld.Messenger_HostAddress}}/employee/PRG-1903
 
 ###

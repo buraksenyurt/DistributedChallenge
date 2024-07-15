@@ -12,7 +12,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
 
     public async Task<IEnumerable<Document>> GetReportDocumentsByEmployeeAsync(GetReportsByEmployeeRequest request)
     {
-        var response = await _httpClient.GetFromJsonAsync<IEnumerable<Document>>($"?EmployeeId={request.EmployeeId}");
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<Document>>($"/api/documents/employee/{request.EmployeeId}");
         if (response == null)
         {
             _logger.LogWarning("There are no reports for {EmployeeId}", request.EmployeeId);
@@ -23,7 +23,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
 
     public async Task<DocumentContent?> GetReportDocumentByIdAsync(DocumentIdRequest request)
     {
-        var response = await _httpClient.GetFromJsonAsync<DocumentContent>($"/document?DocumentId={request.DocumentId}");
+        var response = await _httpClient.GetFromJsonAsync<DocumentContent>($"/api/documents/{request.DocumentId}");
         if (response == null || response.Base64Content == null)
         {
             _logger.LogWarning("Requested {DocumentId} is null", request.DocumentId);
@@ -38,7 +38,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
 
     public async Task<BusinessResponse> SendNewReportRequestAsync(NewReportRequest request)
     {
-        var response = await _httpClient.PostAsJsonAsync("/", request);
+        var response = await _httpClient.PostAsJsonAsync("/api/documents/", request);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -76,7 +76,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
 
     public async Task<BusinessResponse> DeleteDocumentByIdAsync(DocumentIdRequest request)
     {
-        var deleteResponse = await _httpClient.DeleteAsync($"/document?documentId={request.DocumentId}");
+        var deleteResponse = await _httpClient.DeleteAsync($"api/documents/{request.DocumentId}");
         if (!deleteResponse.IsSuccessStatusCode)
         {
             return new BusinessResponse
@@ -103,7 +103,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
 
     public async Task<BusinessResponse> ArchiveDocumentByIdAsync(ArchiveReportRequest request)
     {
-        var archiveResponse = await _httpClient.PostAsJsonAsync($"/archive", request);
+        var archiveResponse = await _httpClient.PostAsJsonAsync($"/api/documents/archive", request);
         if (!archiveResponse.IsSuccessStatusCode)
         {
             return new BusinessResponse
