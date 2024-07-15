@@ -149,7 +149,8 @@ app.MapPost("/", async (
         DocumentId = refDocId,
         EmployeeId = request.EmployeeId,
         Expression = request.Expression,
-        EventType = EventType.ReportRequested
+        EventType = EventType.ReportRequested,
+        ReportExpireTime = request.ExpireTime
     };
 
     await redisService.AddReportPayloadAsync(Names.EventStream, payload, TimeSpan.FromMinutes(TimeCop.SixtyMinutes));

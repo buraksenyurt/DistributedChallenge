@@ -11,6 +11,7 @@ public class RedisPayload
     public ReferenceDocumentId DocumentId { get; set; }
     public string? Expression { get; set; }
     public EventType EventType { get; set; }
+    public TimeSpan ReportExpireTime { get; set; }
 
     override public string ToString()
     {

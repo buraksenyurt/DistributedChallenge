@@ -1,5 +1,6 @@
 namespace GamersWorld.Domain.Requests;
 
+using GamersWorld.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 public class NewReportRequest
@@ -14,4 +15,5 @@ public class NewReportRequest
     [Required(ErrorMessage = "Expression must be filled.")]
     [StringLength(200, MinimumLength = 50, ErrorMessage = "Expression length must be between 50 and 200 characters.")]
     public string? Expression { get; set; }
+    public Lifetime Lifetime { get; set; }
 }

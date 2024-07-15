@@ -23,7 +23,8 @@ public class PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFac
             appEvent.TraceId,
             appEvent.Title,
             appEvent.Expression,
-            appEvent.EmployeeId
+            appEvent.EmployeeId,
+            ExpireTime = TimeSpan.FromMinutes((int)appEvent.Lifetime)
         };
 
         _logger.LogInformation("Service Uri : {ServiceUri}", client.BaseAddress);

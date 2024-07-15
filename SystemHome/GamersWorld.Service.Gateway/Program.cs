@@ -59,6 +59,7 @@ app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueServ
             Title = request.ReportTitle,
             Time = DateTime.UtcNow,
             CreatedReportId = request.DocumentId,
+            ExpireTime = request.ExpireTime
         };
 
         eventQueueService.PublishEvent(reportReadyEvent);

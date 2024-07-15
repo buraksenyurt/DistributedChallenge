@@ -48,6 +48,7 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
                 Title = report.ReportTitle ?? "None",
                 Expression = report.Expression ?? "None",
                 EmployeeId = report.Owner.EmployeeId,
+                Lifetime = report.Lifetime
             };
 
             var response = await _messengerServiceClient.SendNewReportRequestAsync(payload);
