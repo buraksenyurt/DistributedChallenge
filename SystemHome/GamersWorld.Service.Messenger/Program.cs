@@ -104,6 +104,7 @@ app.MapPost("/", (NewReportRequest request, IEventQueueService eventQueueService
         Title = request.Title ?? "Last Sales Report",
         Expression = request.Expression ?? "Güncel ülke bazlı satış raporlarının özet dökümü.",
         Time = DateTime.Now,
+        Lifetime = request.Lifetime,
     };
 
     eventQueueService.PublishEvent(reportRequestedEvent);

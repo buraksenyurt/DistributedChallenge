@@ -31,6 +31,19 @@
             Type the required query for your report.
         </div>
     </div>
+    <div class="mb-3">
+        <label asp-for="Lifetime" class="form-label"></label>
+        <select asp-for="Lifetime" class="form-control" required>
+            @foreach (var lifetime in Enum.GetValues(typeof(GamersWorld.Domain.Enums.Lifetime)))
+            {
+                <option value="@lifetime">@lifetime</option>
+            }
+        </select>
+        <div asp-validation-for="Lifetime" class="text-danger"></div>
+        <div class="invalid-feedback">
+            Please choose a lifetime.
+        </div>
+    </div>
     <button type="submit" class="btn btn-primary">Send</button>
 </form>
 

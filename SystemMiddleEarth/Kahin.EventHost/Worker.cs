@@ -41,7 +41,8 @@ public class Worker(
                             EmployeeId = eventData.EmployeeId,
                             ReportTitle = eventData.ReportTitle,
                             StatusCode = (int)StatusCode.ReportReady,
-                            StatusMessage = "Report is ready and live for 60 minutes",
+                            ExpireTime = eventData.ReportExpireTime,
+                            StatusMessage = $"Report is ready and live for {eventData.ReportExpireTime.TotalMinutes} minutes",
                             DocumentId = eventData.DocumentId.ToString(),
                             Detail = ""
                         };

@@ -5,5 +5,6 @@ public class ReportReadyEvent : IEvent
     public string? EmployeeId { get; set; }
     public string? Title { get; set; }
     public DateTime Time { get; set; }
+    public TimeSpan ExpireTime { get; set; }
     public string? CreatedReportId { get; set; }
 }

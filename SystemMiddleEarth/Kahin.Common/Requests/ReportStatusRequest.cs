@@ -1,3 +1,4 @@
+
 namespace Kahin.Common.Requests;
 
 public class ReportStatusRequest
@@ -9,4 +10,5 @@ public class ReportStatusRequest
     public int StatusCode { get; set; }
     public string? StatusMessage { get; set; }
     public string? Detail { get; set; }
+    public TimeSpan ExpireTime { get; set; }
 }

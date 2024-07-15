@@ -54,7 +54,7 @@ public class ReportDocumentAvailable(
                 DocumentId = getReportResponse.DocumentId,
                 Content = content,
                 InsertTime = DateTime.Now,
-                ExpireTime = DateTime.Now.AddMinutes(10),
+                ExpireTime = DateTime.Now.AddMinutes(appEvent.ExpireTime.TotalMinutes),
             };
 
             var writeOperator = _serviceProvider.GetRequiredKeyedService<IDocumentWriter>(Names.DbWriteService);
