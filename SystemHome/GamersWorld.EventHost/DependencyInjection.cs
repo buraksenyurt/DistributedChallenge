@@ -12,12 +12,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddEventDrivers(this IServiceCollection services)
     {
-        services.AddTransient<IEventDriver<ReportRequestedEvent>, PostReportRequest>();
+        services.AddTransient<IEventDriver<ReportRequestedEvent>, NewReportRequest>();
         services.AddTransient<IEventDriver<ReportReadyEvent>, ReportDocumentAvailable>();
         services.AddTransient<IEventDriver<ReportIsHereEvent>, UsePreparedReport>();
-        services.AddTransient<IEventDriver<ReportProcessCompletedEvent>, DeleteReport>();
+        services.AddTransient<IEventDriver<DeleteReportRequestEvent>, DeleteReport>();
         services.AddTransient<IEventDriver<InvalidExpressionEvent>, InvalidExpression>();
-        services.AddTransient<IEventDriver<ArchiveReportEvent>, ArchiveReport>();
+        services.AddTransient<IEventDriver<ArchiveReportRequestEvent>, ArchiveReport>();
         services.AddSingleton<EventHandlerFactory>();
 
         return services;

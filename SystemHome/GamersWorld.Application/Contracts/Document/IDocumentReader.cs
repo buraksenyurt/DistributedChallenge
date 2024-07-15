@@ -6,5 +6,5 @@ namespace GamersWorld.Application.Contracts.Document;
 public interface IDocumentReader
 {
     // Task<byte[]> ReadAsync(DocumentReadRequest payload);
-    Task<BusinessResponse> GetLength(DocumentReadRequest payload);
+    Task<BusinessResponse> GetLength(GenericDocumentRequest payload);
 }

@@ -10,16 +10,16 @@ using System.Text.Json;
 namespace GamersWorld.EventBusiness;
 
 public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository documentRepository, IServiceProvider serviceProvider, INotificationService notificationService)
-    : IEventDriver<ArchiveReportEvent>
+    : IEventDriver<ArchiveReportRequestEvent>
 {
     private readonly ILogger<ArchiveReport> _logger = logger;
     private readonly IDocumentRepository _documentRepository = documentRepository;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly INotificationService _notificationService = notificationService;
 
-    public async Task Execute(ArchiveReportEvent appEvent)
+    public async Task Execute(ArchiveReportRequestEvent appEvent)
     {
-        var request = new Domain.Requests.DocumentReadRequest
+        var request = new Domain.Requests.GenericDocumentRequest
         {
             DocumentId = appEvent.DocumentId,
         };
@@ -50,7 +50,7 @@ public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository do
                 DocumentId = appEvent.DocumentId,
                 Content = appEvent.Title,
                 IsSuccess = true,
-                Topic = Domain.Enums.NotificationTopic.Archive.ToString()
+                Topic = Domain.Enums.NotificationTopic.Archived.ToString()
             };
 
             await _notificationService.PushToUserAsync(appEvent.ClientId, JsonSerializer.Serialize(notificationData));

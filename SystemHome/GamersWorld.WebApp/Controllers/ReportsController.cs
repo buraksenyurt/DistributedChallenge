@@ -2,7 +2,6 @@
 using GamersWorld.WebApp.Models;
 using GamersWorld.WebApp.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace GamersWorld.WebApp.Controllers;
 
@@ -66,20 +65,23 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
     }
 
     [HttpGet("Reports/Delete")]
-    public async Task<IActionResult> Delete(string documentId)
+    public async Task<IActionResult> Delete(string documentId, string title, string employeeId)
     {
         var response = await _messengerServiceClient
-            .DeleteDocumentByIdAsync(new DocumentIdRequest
+            .DeleteDocumentByIdAsync(
+            new DeleteReportRequest
             {
-                DocumentId = documentId
+                DocumentId = documentId,
+                EmployeeId = employeeId,
+                Title = title
             });
-        if (response.StatusCode == Domain.Enums.StatusCode.Success)
+        if (response.StatusCode == Domain.Enums.StatusCode.DeleteRequestAccepted)
         {
-            TempData["Notification"] = "Document successfully deleted!";
+            TempData["Notification"] = "Document deleting request has been sent.";
             return RedirectToAction("Index");
         }
 
-        TempData["Notification"] = "Failed to delete document!";
+        TempData["Notification"] = "Failed to delete request!";
         return RedirectToAction("Index");
     }
 
@@ -95,11 +97,11 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
             });
         if (response.StatusCode == Domain.Enums.StatusCode.Success)
         {
-            TempData["Notification"] = "A document archiving request has been sent.";
+            TempData["Notification"] = "Document archiving request has been sent.";
             return RedirectToAction("Index");
         }
 
-        TempData["Notification"] = "Failed the document archiving!";
+        TempData["Notification"] = "Failed the archive request!";
         return RedirectToAction("Index");
     }
 }

@@ -21,7 +21,7 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReade
         _logger.LogInformation("Document Accepted, Trace Id : {TraceId}, Document Id : {CreatedReportId}"
             , appEvent.TraceId, appEvent.CreatedReportId);
 
-        var response = await _documentReader.GetLength(new DocumentReadRequest
+        var response = await _documentReader.GetLength(new GenericDocumentRequest
         {
             DocumentId = appEvent.CreatedReportId,
             TraceId = appEvent.TraceId
@@ -34,7 +34,7 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReade
             {
                 DocumentId = appEvent.CreatedReportId,
                 Content = appEvent.Title,
-                Topic = NotificationTopic.Report.ToString(),
+                Topic = NotificationTopic.Ready.ToString(),
                 IsSuccess = true,
             };
 

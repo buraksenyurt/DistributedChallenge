@@ -3,6 +3,7 @@ public enum StatusCode
 {
     Success = 1,
     ReportReady = 200,
+    DeleteRequestAccepted = 202,
     DocumentSaved = 205,
     DocumentReadable = 206,
     DocumentUploaded = 207,

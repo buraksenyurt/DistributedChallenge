@@ -7,10 +7,10 @@ using GamersWorld.Application.Contracts.Events;
 
 namespace GamersWorld.EventBusiness;
 
-public class PostReportRequest(ILogger<PostReportRequest> logger, IHttpClientFactory httpClientFactory)
+public class NewReportRequest(ILogger<NewReportRequest> logger, IHttpClientFactory httpClientFactory)
     : IEventDriver<ReportRequestedEvent>
 {
-    private readonly ILogger<PostReportRequest> _logger = logger;
+    private readonly ILogger<NewReportRequest> _logger = logger;
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
 
     public async Task Execute(ReportRequestedEvent appEvent)

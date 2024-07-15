@@ -4,6 +4,8 @@ using GamersWorld.Domain.Data;
 using GamersWorld.Domain.Dtos;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
+using System.Text;
+using System.Text.Json;
 
 public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServiceClient> logger)
 {
@@ -74,9 +76,15 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
         }
     }
 
-    public async Task<BusinessResponse> DeleteDocumentByIdAsync(DocumentIdRequest request)
+    public async Task<BusinessResponse> DeleteDocumentByIdAsync(DeleteReportRequest request)
     {
-        var deleteResponse = await _httpClient.DeleteAsync($"api/documents/{request.DocumentId}");
+        var requestUri = $"api/documents/{request.DocumentId}";
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, requestUri)
+        {
+            Content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json")
+        };
+
+        var deleteResponse = await _httpClient.SendAsync(httpRequestMessage);
         if (!deleteResponse.IsSuccessStatusCode)
         {
             return new BusinessResponse
@@ -85,13 +93,13 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
                 Message = "Fail on document delete"
             };
         }
-        if (deleteResponse.StatusCode == System.Net.HttpStatusCode.OK)
+        if (deleteResponse.StatusCode == System.Net.HttpStatusCode.Accepted)
         {
-            _logger.LogInformation("{DocumentId} deleted", request.DocumentId);
+            _logger.LogInformation("{DocumentId} delete request has been sent.", request.DocumentId);
             return new BusinessResponse
             {
-                StatusCode = Domain.Enums.StatusCode.Success,
-                Message = "Document succesfully deleted!"
+                StatusCode = Domain.Enums.StatusCode.DeleteRequestAccepted,
+                Message = "Document delete request has been sent."
             };
         }
         return new BusinessResponse

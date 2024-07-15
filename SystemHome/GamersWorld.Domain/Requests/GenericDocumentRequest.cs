@@ -1,6 +1,6 @@
 namespace GamersWorld.Domain.Requests;
 
-public class DocumentReadRequest
+public class GenericDocumentRequest
 {
     public Guid TraceId { get; set; }
     public string? DocumentId { get; set; }

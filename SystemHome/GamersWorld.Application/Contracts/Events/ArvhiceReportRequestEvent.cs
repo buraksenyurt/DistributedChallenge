@@ -1,6 +1,6 @@
 ﻿namespace GamersWorld.Application.Contracts.Events;
 
-public class ArchiveReportEvent : IEvent
+public class ArchiveReportRequestEvent : IEvent
 {
     public Guid TraceId { get; set; }
     public string? DocumentId { get; set; }

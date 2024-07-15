@@ -10,17 +10,17 @@ using Moq.Protected;
 
 namespace GamersWorld.EventBusiness.Tests;
 
-public class PostReportRequestTests
+public class NewReportRequestTests
 {
-    private readonly Mock<ILogger<PostReportRequest>> _loggerMock;
+    private readonly Mock<ILogger<NewReportRequest>> _loggerMock;
     private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
     private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
     private readonly HttpClient _httpClient;
-    private readonly PostReportRequest _postReportRequest;
+    private readonly NewReportRequest _newReportRequest;
 
-    public PostReportRequestTests()
+    public NewReportRequestTests()
     {
-        _loggerMock = new Mock<ILogger<PostReportRequest>>();
+        _loggerMock = new Mock<ILogger<NewReportRequest>>();
         _httpClientFactoryMock = new Mock<IHttpClientFactory>();
         _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
 
@@ -33,7 +33,7 @@ public class PostReportRequestTests
             .Setup(factory => factory.CreateClient(It.IsAny<string>()))
             .Returns(_httpClient);
 
-        _postReportRequest = new PostReportRequest(_loggerMock.Object, _httpClientFactoryMock.Object);
+        _newReportRequest = new NewReportRequest(_loggerMock.Object, _httpClientFactoryMock.Object);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class PostReportRequestTests
             });
 
         // Act
-        await _postReportRequest.Execute(eventPayload);
+        await _newReportRequest.Execute(eventPayload);
 
         // Assert
         _loggerMock.Verify(
@@ -106,7 +106,7 @@ public class PostReportRequestTests
             });
 
         // Act
-        await _postReportRequest.Execute(eventPayload);
+        await _newReportRequest.Execute(eventPayload);
 
         // Assert
         _loggerMock.Verify(
@@ -153,7 +153,7 @@ public class PostReportRequestTests
             });
 
         // Act
-        await _postReportRequest.Execute(eventPayload);
+        await _newReportRequest.Execute(eventPayload);
 
         // Assert
         _loggerMock.Verify(

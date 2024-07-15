@@ -85,7 +85,7 @@ app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueServ
 
     return Results.Ok();
 })
-.WithName("PostReportRequestStatus")
+.WithName("NewReportRequestStatus")
 .WithOpenApi();
 
 app.Run();
