@@ -12,7 +12,7 @@ public class TableReader(ILogger<FileSaver> logger, IDocumentRepository document
     private readonly ILogger<FileSaver> _logger = logger;
     private readonly IDocumentRepository _documentRepository = documentRepository;
 
-    public async Task<BusinessResponse> GetLength(DocumentReadRequest payload)
+    public async Task<BusinessResponse> GetLength(GenericDocumentRequest payload)
     {
         try
         {

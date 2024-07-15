@@ -15,10 +15,10 @@ public class InvalidExpression(ILogger<InvalidExpression> logger, INotificationS
     {
         var notificationData = new ReportNotification
         {
-            DocumentId = "Audit Validation Error !",
+            DocumentId = "Audit validation error occured!",
             Content = appEvent.Title,
             IsSuccess = false,
-            Topic = Domain.Enums.NotificationTopic.Report.ToString(),
+            Topic = Domain.Enums.NotificationTopic.Invalid.ToString(),
         };
         await _notificationService.PushToUserAsync(appEvent.EmployeeId, JsonSerializer.Serialize(notificationData));
 

@@ -2,8 +2,10 @@
 {
     public enum NotificationTopic
     {
-        Archive,
-        Report,
-        None
+        Archived,
+        Deleted,
+        Invalid,
+        None,
+        Ready,
     }
 }

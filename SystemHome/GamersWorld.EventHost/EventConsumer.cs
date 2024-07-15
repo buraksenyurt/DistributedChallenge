@@ -85,11 +85,18 @@ public class EventConsumer(IConnectionFactory connectionFactory, IServiceProvide
                     await factory.ExecuteEvent(invalidExpressionEvent);
                 }
                 break;
-            case nameof(ArchiveReportEvent):
-                var archiveReportEvent = JsonSerializer.Deserialize<ArchiveReportEvent>(eventMessage);
+            case nameof(ArchiveReportRequestEvent):
+                var archiveReportEvent = JsonSerializer.Deserialize<ArchiveReportRequestEvent>(eventMessage);
                 if (archiveReportEvent != null)
                 {
                     await factory.ExecuteEvent(archiveReportEvent);
+                }
+                break;
+            case nameof(DeleteReportRequestEvent):
+                var deleteReportEvent = JsonSerializer.Deserialize<DeleteReportRequestEvent>(eventMessage);
+                if (deleteReportEvent != null)
+                {
+                    await factory.ExecuteEvent(deleteReportEvent);
                 }
                 break;
             default:

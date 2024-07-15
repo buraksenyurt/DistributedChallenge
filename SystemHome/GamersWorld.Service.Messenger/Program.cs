@@ -1,3 +1,4 @@
+using Amazon.Runtime.Internal;
 using GamersWorld.Application;
 using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Application.Contracts.Events;
@@ -7,6 +8,7 @@ using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
 using GamersWorld.Repository;
 using JudgeMiddleware;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
@@ -49,7 +51,7 @@ var documentsGroup = app.MapGroup("/api/documents");
 documentsGroup.MapGet("/employee/{employeeId}", async (string employeeId, IDocumentRepository repository, ILogger<Program> logger) =>
 {
     logger.LogInformation("Request reports data for {EmployeeId}", employeeId);
-    var documents = await repository.GetAllDocumentsByEmployeeAsync(new DocumentReadRequest
+    var documents = await repository.GetAllDocumentsByEmployeeAsync(new GenericDocumentRequest
     {
         EmployeeId = employeeId,
     });
@@ -63,7 +65,7 @@ documentsGroup.MapGet("/{documentId}", async (string documentId, IDocumentReposi
 {
     logger.LogInformation("Request report content for {DocumentId}", documentId);
     var document = await repository.ReadDocumentContentByIdAsync(
-        new DocumentReadRequest
+        new GenericDocumentRequest
         {
             DocumentId = documentId
         });
@@ -123,18 +125,20 @@ documentsGroup.MapPost("/", (NewReportRequest request, IEventQueueService eventQ
 .WithName("NewReportRequest")
 .WithOpenApi();
 
-documentsGroup.MapDelete("/{documentId}", async (string documentId, IDocumentRepository repository, ILogger<Program> logger) =>
+documentsGroup.MapDelete("/{documentId}", (string documentId, [FromBody] DeleteReportRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
 {
-    logger.LogInformation("Delete report request for {DocumentId}", documentId);
-    var affectedRowCount = await repository.DeleteDocumentByIdAsync(
-        new DocumentReadRequest
-        {
-            DocumentId = documentId
-        });
-    if (affectedRowCount == 0)
-        return Results.NotFound();
+    logger.LogInformation("Delete report request for {DocumentId}", request.DocumentId);
+    var deleteReportEvent = new DeleteReportRequestEvent
+    {
+        TraceId = Guid.NewGuid(),
+        DocumentId = request.DocumentId,
+        ClientId = request.EmployeeId,
+        Title = request.Title,
+        Time = DateTime.Now,
+    };
+    eventQueueService.PublishEvent(deleteReportEvent);
 
-    return Results.Ok();
+    return Results.Accepted();
 })
 .WithName("DeleteReportById")
 .WithOpenApi();
@@ -164,7 +168,7 @@ documentsGroup.MapPost("/archive", (ArchiveReportRequest request, IEventQueueSer
         return Results.Json(errorResponse, statusCode: 400);
     }
 
-    var archiveReportEvent = new ArchiveReportEvent
+    var archiveReportEvent = new ArchiveReportRequestEvent
     {
         TraceId = Guid.NewGuid(),
         DocumentId = request.DocumentId,

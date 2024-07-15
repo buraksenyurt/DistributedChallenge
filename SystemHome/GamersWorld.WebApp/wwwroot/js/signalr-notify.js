@@ -19,13 +19,17 @@
         document.getElementById("notifyMessageLine1").innerText = notification.Content;
         document.getElementById("notifyMessageLine2").innerText = notification.DocumentId;
 
-        if (notification.IsSuccess && notification.Topic === 'Report') {
+        if (notification.IsSuccess) {
             popupElement.classList.remove("bg-warning", "text-dark");
             popupElement.classList.add("bg-success", "text-white");
-            lnkReportsElement.style.display = "inline";
         } else {
             popupElement.classList.remove("bg-success", "text-white");
             popupElement.classList.add("bg-warning", "text-dark");
+        }
+
+        if (notification.Topic == 'Ready') {
+            lnkReportsElement.style.display = "inline";
+        } else {
             lnkReportsElement.style.display = "none";
         }
 
@@ -41,6 +45,22 @@
     function showPopup() {
         const popup = new bootstrap.Toast(document.getElementById('notificationPopup'));
         popup.show();
+        $('#notificationPopup').on('hidden.bs.toast', function () {
+            refreshReports();
+        });
+    }
+
+    function refreshReports() {
+        $.ajax({
+            url: '/Reports/Index',
+            type: 'GET',
+            success: function (data) {
+                $('#divReports').html($(data).find('#divReports').html());
+            },
+            error: function (error) {
+                console.error('Failed to refresh reports:', error);
+            }
+        });
     }
 
     (function () {

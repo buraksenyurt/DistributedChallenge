@@ -45,7 +45,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
         return insertedId;
     }
 
-    public async Task<Document> ReadDocumentAsync(DocumentReadRequest documentReadRequest)
+    public async Task<Document> ReadDocumentAsync(GenericDocumentRequest documentReadRequest)
     {
         const string sql = @"
                 SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime, ExpireTime
@@ -65,7 +65,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
         return reportDocument;
     }
 
-    public async Task<DocumentContent> ReadDocumentContentByIdAsync(DocumentReadRequest documentReadRequest)
+    public async Task<DocumentContent> ReadDocumentContentByIdAsync(GenericDocumentRequest documentReadRequest)
     {
         const string sql = @"
                 SELECT Content
@@ -91,7 +91,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
         };
     }
 
-    public async Task<int> GetDocumentLength(DocumentReadRequest documentReadRequest)
+    public async Task<int> GetDocumentLength(GenericDocumentRequest documentReadRequest)
     {
         const string sql = @"
                 SELECT LENGTH(Content) AS ContentLength
@@ -117,7 +117,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
         return documents;
     }
 
-    public async Task<IEnumerable<Document>> GetAllDocumentsByEmployeeAsync(DocumentReadRequest documentReadRequest)
+    public async Task<IEnumerable<Document>> GetAllDocumentsByEmployeeAsync(GenericDocumentRequest documentReadRequest)
     {
         const string sql = @"
                 SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime, ExpireTime
@@ -131,7 +131,7 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
         return documents;
     }
 
-    public async Task<int> DeleteDocumentByIdAsync(DocumentReadRequest documentReadRequest)
+    public async Task<int> DeleteDocumentByIdAsync(GenericDocumentRequest documentReadRequest)
     {
         const string sql = @"
                 DELETE

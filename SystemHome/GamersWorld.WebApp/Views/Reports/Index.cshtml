@@ -14,46 +14,48 @@
 <input type="hidden" id="employeeId" value="@Model.EmployeeId" />
 
 <h2>Requested Reports</h2>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Report Title</th>
-            <th>Arrived Time</th>
-            <th>Expire Time</th>
-            <th colspan="3">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Reports != null)
-        {
-            @foreach (var report in Model.Reports)
+<div id="divReports">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Report Title</th>
+                <th>Arrived Time</th>
+                <th>Expire Time</th>
+                <th colspan="3">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Reports != null)
             {
-                <tr>
-                    <td>@report.Id</td>
-                    <td>@report.Title</td>
-                    <td>@report.InsertTime</td>
-                    <td>@report.ExpireTime</td>
-                    <td>
-                        <a href="@Url.Action("Download", "Reports", new { documentId = report.DocumentId })" class="btn btn-primary">
-                            <i class="bi bi-download"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="@Url.Action("Delete", "Reports", new { documentId = report.DocumentId })" class="btn btn-danger">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="@Url.Action("Archive", "Reports", new { documentId = report.DocumentId, title=report.Title, employeeId=Model.EmployeeId })" class="btn btn-secondary">
-                            <i class="bi bi-archive"></i>
-                        </a>
-                    </td>
-                </tr>
+                @foreach (var report in Model.Reports)
+                {
+                    <tr>
+                        <td>@report.Id</td>
+                        <td>@report.Title</td>
+                        <td>@report.InsertTime</td>
+                        <td>@report.ExpireTime</td>
+                        <td>
+                            <a href="@Url.Action("Download", "Reports", new { documentId = report.DocumentId })" class="btn btn-primary">
+                                <i class="bi bi-download"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Delete", "Reports",new { documentId = report.DocumentId, title=report.Title, employeeId=Model.EmployeeId })" class="btn btn-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Archive", "Reports", new { documentId = report.DocumentId, title=report.Title, employeeId=Model.EmployeeId })" class="btn btn-secondary">
+                                <i class="bi bi-archive"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
     <partial name="_NotificationPopup" />

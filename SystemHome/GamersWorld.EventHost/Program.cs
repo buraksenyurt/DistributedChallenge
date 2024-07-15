@@ -38,6 +38,9 @@ services.AddHttpClient(Names.KahinGateway, client =>
 .AddServiceDiscovery()
 .AddRoundRobinLoadBalancer();
 
+Console.WriteLine("Press any key to start");
+Console.ReadLine();
+
 var serviceProvider = services.BuildServiceProvider();
 var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
