@@ -8,8 +8,9 @@ using GamersWorld.Application;
 using GamersWorld.Repository;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Common.Http.Discovery;
+using Microsoft.Extensions.Http.Resilience;
+using Polly;
 
-// RabbitMq ayarlarını da ele alacağımız için appSettings konfigurasyonu için bir builder nesnesi örnekledik
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", reloadOnChange: true, optional: false)
@@ -36,29 +37,28 @@ services.AddHttpClient(Names.KahinGateway, client =>
     client.BaseAddress = new Uri("http://reporting-gateway-service");
 })
 .AddServiceDiscovery()
-.AddRoundRobinLoadBalancer();
-
-Console.WriteLine("Press any key to start");
-Console.ReadLine();
+.AddRoundRobinLoadBalancer()
+.AddResilienceHandler("Resilience Pipeline",
+    static builder =>
+    {
+        builder.AddRetry(new HttpRetryStrategyOptions
+        {
+            BackoffType = DelayBackoffType.Exponential,
+            MaxRetryAttempts = 5,
+            Delay = TimeSpan.FromSeconds(3),
+            UseJitter = true
+        });
+    });
 
 var serviceProvider = services.BuildServiceProvider();
 var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
 var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
 var httpClient = httpClientFactory.CreateClient(Names.KahinGateway);
-if (await ServiceController.IsReportingServiceAlive(httpClient, logger))
-{
-    logger.LogInformation("Reporting service is up and online.");
-}
-else
-{
-    logger.LogError("Reporting service isn't working!");
-}
+await ServiceController.IsReportingServiceAlive(httpClient, logger);
 
-// Mesaj kuyruğunu dinleyecek nesne örneklenir
 var eventConsumer = serviceProvider.GetService<EventConsumer>();
 
-// Dinleme fonksiyonu başlatılır
 if (eventConsumer != null)
 {
     logger.LogInformation("Event listener is online");

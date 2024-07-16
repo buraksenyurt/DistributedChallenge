@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace GamersWorld.EventHost;
+namespace Kahin.EventHost;
 
 public static class ServiceController
 {
