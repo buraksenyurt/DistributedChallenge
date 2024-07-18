@@ -1,8 +1,7 @@
-﻿using Eval.AuditLib.Contracts;
-using Eval.AuditLib.Model;
-using Microsoft.Extensions.Logging;
+﻿using Eval.AuditApi.Contracts;
+using Eval.AuditApi.Model;
 
-namespace Eval.Lib;
+namespace Eval.AuditApi;
 public class ExpressionValidator(ILogger<ExpressionValidator> logger) : IExpressionValidator
 {
     private readonly ILogger<ExpressionValidator> _logger = logger;

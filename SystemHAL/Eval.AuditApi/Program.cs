@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using Eval.AuditLib.Contracts;
-using Eval.AuditLib.Model;
-using Eval.Lib;
+using Eval.AuditApi.Contracts;
+using Eval.AuditApi.Model;
+using Eval.AuditApi;
 using JudgeMiddleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Resistance;
