@@ -14,8 +14,4 @@
     <PackageReference Include="JudgeMiddleware" Version="1.0.9" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Eval.AuditLib\Eval.AuditLib.csproj" />
-  </ItemGroup>
-
 </Project>
