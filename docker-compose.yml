@@ -76,6 +76,11 @@ services:
     volumes:
       - ftp_data:/home/ftpuser/ftp_data
 
+  audit-web-api:
+    image: systemhome/evalapi
+    ports:
+      - "5147:8080"
+
 volumes:
   localstack_data:
   baget_data:

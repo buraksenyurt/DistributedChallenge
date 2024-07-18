@@ -1,6 +1,6 @@
-using Eval.AuditLib.Model;
+using Eval.AuditApi.Model;
 
-namespace Eval.AuditLib.Contracts;
+namespace Eval.AuditApi.Contracts;
 
 public interface IExpressionValidator
 {
