@@ -1,8 +1,15 @@
-# Feature/POC Çalýþmalarý
+# Feature(POC) Çalýþmalarý
 
 Köklü deðiþikliðe sebep olabilecek özellikler veaya araþtýrmalar ile ilgili açýlan alt branch'lere ait detaylý bilgiler.
 
+- [Feature(POC) Çalýþmalarý](#feature-poc-çalýþmalarý)
+	- [System HAL Servisinin Ayrýþtýrýlmasý](#system-hal-servisinin-ayrýþtýrýlmasý)
+		- [Plan](#plan)
+		- [Ýþlemler](#iþlemler)
+
 ## System HAL Servisinin Ayrýþtýrýlmasý
+
+**Branch -> pocDockerizeAuditApi**
 
 System HAL içerisinde yer alan Audit servisinin DistributedChallenges solution'ý dýþýna çýkartýlmasý ve Dockerize edilerek iþletilmesi için baþlatýlan çalýþmadýr. 
 
@@ -16,9 +23,16 @@ Audit servis temsilen arayüzden gelen bir rapor talebindeki ifadeyi denetlemek i
 
 Ýlk olarak SystemHAL içerisindeki Eval.AuditLib içeriði Eval.AuditApi içerisine alýnýp projenin lightweight bir versiyonu hazýrlanýr. Sonrasýnda proje DistributedChallenge çözümünden ayrýþtýrýlýr. Yeni çözümdeki proje dockerize edilir. Burada karþýlaþýlabilecek ve çözülmesi gereken bazý problemler söz konusudur.
 
-- **Local Nuget Repo Sorunu:** Dockerize edilen projeye ait container oluþturulurken container dýþýndaki ama ana makinedeki BaGet server'ýna eriþip local nuget baðýmlýlýklarýný çözümleyebilmelidir.
-- **Consul Problemi:** Genel çözümde Service Discovery için kullanýlan Consul, ayrý bir docker-compose içeriði ile ayaðla kaldýrýlan farklý bir container olarak çalýþmaktadýr. Dockerize edilen Eval.AuditApi servisi ayaða kalkarken kendisini Consul hizmetine bildirmektedir. Dockerize edilen servisin diðer docker container'ýndaki Consul hizmetine baðýmsýz olarak eriþebiliyor olmasý gerekmektedir.
+- **PRB01 - Local Nuget Repo Sorunu:** Dockerize edilen projeye ait container oluþturulurken container dýþýndaki ama ana makinedeki BaGet server'ýna eriþip local nuget baðýmlýlýklarýný çözümleyebilmelidir.
+- **PRB02 - Consul Problemi:** Genel çözümde Service Discovery için kullanýlan Consul, ayrý bir docker-compose içeriði ile ayaðla kaldýrýlan farklý bir container olarak çalýþmaktadýr. Dockerize edilen Eval.AuditApi servisi ayaða kalkarken kendisini Consul hizmetine bildirmektedir. Dockerize edilen servisin diðer docker container'ýndaki Consul hizmetine baðýmsýz olarak eriþebiliyor olmasý gerekmektedir.
 
 Yukarýda bahsedilen maddeler plan dahilinde çözümlenmesi gereken meselelerdir.
 
 ## Ýþlemler
+
+PRB01 kodlu sorun için root klasörde nuget.config oluþturuldu ve BaGet adresi için **host.docker.internal:5000/v3/index.json** kullanýldý. Ancak bu docker imajý build edilirken iþe yarýyor. Projeyi bu nuget.config dosyasý ile build ettiðimizde bukez localhost:5000 adresli nuget adresine bakmadýðý için Restore iþlemlerinden hata alýnýyor.
+
+```bash
+# Docker imajýný oluþturmak için root klasördeyken
+docker build -t systemhome/evalapi -f Eval.AuditApi/Dockerfile .
+```
