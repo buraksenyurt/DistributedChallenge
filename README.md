@@ -13,8 +13,8 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
   - [Sistem Çıktıları](#sistem-çıktıları)
     - [İlk Zaman Kapısı (29 Mayıs 2024, 21:00 suları)](#i̇lk-zaman-kapısı-29-mayıs-2024-2100-suları)
     - [İkinci Zaman Kapısı (30 Mayıs 2024, 22:00 suları)](#i̇kinci-zaman-kapısı-30-mayıs-2024-2200-suları)
-    - [Üçüncü Zaman Kapısı (7 Temmuz 2024, 17:30 suları)](#üçüncü-zaman-kapısı-7-temmuz-2024-1730-suları)
-    - [Dördüncü Zaman Kapısı (13 Temmuz 2024, 00:10 suları)](#dördüncü-zaman-kapısı-13-temmuz-2024-0010-suları)
+    - [Üçüncü Zaman Kapısı (7 Temmuz 2024, 17:30 Suları)](#üçüncü-zaman-kapısı-7-temmuz-2024-1730-suları)
+    - [Dördüncü Zaman Kapısı (13 Temmuz 2024, 00:10 Suları)](#dördüncü-zaman-kapısı-13-temmuz-2024-0010-suları)
   - [Zamanla Yapılan Eklemeler](#zamanla-yapılan-eklemeler)
     - [Redis Stream Entgrasyonu (9 Haziran 2024)](#redis-stream-entgrasyonu-9-haziran-2024)
     - [SonarQube Genişletmesi](#sonarqube-genişletmesi)
@@ -25,6 +25,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Resiliency Deneyleri](#resiliency-deneyleri)
     - [Service Discovery ve Hashicorp Consul Entegrasonu](#service-discovery-ve-hashicorp-consul-entegrasonu)
     - [Ftp Entegrasyonu ile Arşivleme Stratejisi](#ftp-entegrasyonu-ile-arşivleme-stratejisi)
+    - [Planlı İşler](#planlı-i̇şler)
   - [Bazı Düşünceler](#bazı-düşünceler)
   - [Tartışılabilecek Problemler](#tartışılabilecek-problemler)
   - [Youtube Anlatımları](#youtube-anlatımları)
@@ -553,6 +554,10 @@ chown -R user: /home/ftpuser/documents
 Sonuç olarak önyüzden arşivleme işlemi başlatıldığında bir başka event-business işletilir ve her şey yolunda giderse söz konusu rapor ftp sunucusuna yüklenirken veritabanından da silinir.
 
 ![Runtime 14](/images/runtime_14.png)
+
+### Planlı İşler
+
+Pek çok büyük sistemde belli periyotlarda tekrarlanan işler söz konusudur. Örneğin bizim uygulamamızda tüm raporların için kullanıclar tarafından belirlenen yaşam süreleri var. 10 dakika, Yarım saat, 1 Saat, 1 gün gibi. Bu süreler dolduğunda ilgili kaynaklardaki _(veri tabanı, ftp sunucusu vb)_ içeriklerin temizlenmesi planlı işlerden birisi olabilir. Bu tip bir iş örneğin 10 dakikada bir çalışacak şekilde planlanabilir. .Net tarafında basit bir timer mekanizması ile ilerlenebileceği gibi [Quartz](https://www.nuget.org/packages/Quartz)   veya **Hangfire** gibi paketlerden de yararlanılabilir. Örneğimizde **GamersWorld.JobHost** isimli terminal uygulamasını [Hangfire](https://www.nuget.org/packages/Hangfire/) ile çalışacak şekilde genişlettik. Planlı işler bazı durumlarda sistemde beklenmedik sorunlara da neden olabiliyor. Özellikle dağıtık sistemlerde entegre oldukları noktalar açısından düşünülünce bu önemli bir detay olabiliyor. Kurumsal ölçekteki sistemlerde n sayıda planlanmış ve oldukça karmaşık süreçler koşturan planlı işler *(Scheduled Jobs)* sistemleri inanılaz derecede yorabiliyorlar. Bizim örneğimizde şimdilik tek bir iş var. Süresi dolan rapoları veri tabanı ve ftp'den silmek. Peki işlemler sırasında veritabanı bağlantısı yoksa ya da ftp'ye ulaşılamıyorsa sistemin genelinin vereceği tepki ne olmalı? Bu vakayı da dayanıklılık senaryolarımıza dahil edebiliriz.
 
 ## Bazı Düşünceler
 
