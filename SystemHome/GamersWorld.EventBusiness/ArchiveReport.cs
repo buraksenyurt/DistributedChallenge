@@ -42,8 +42,8 @@ public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentDataRepositor
             return;
         }
 
-        var deleteResult = await _documentRepository.DeleteDocumentByIdAsync(request);
-        if (deleteResult == 1)
+        var updateResult = await _documentRepository.MarkDocumentToArchiveAsync(request);
+        if (updateResult == 1)
         {
             var notificationData = new ReportNotification
             {
@@ -58,7 +58,7 @@ public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentDataRepositor
         }
         else
         {
-            _logger.LogWarning("{DocumentId} delete from db operation failed", doc.DocumentId);
+            _logger.LogWarning("{DocumentId} marked as archive from db operation failed", doc.DocumentId);
         }
     }
 }
