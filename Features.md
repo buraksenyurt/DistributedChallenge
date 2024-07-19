@@ -1,38 +1,142 @@
-# Feature(POC) Çalışmaları
+# Feature(POC) Ã‡alÄ±ÅŸmalarÄ±
 
-Köklü değişikliğe sebep olabilecek özellikler veaya araştırmalar ile ilgili açılan alt branch'lere ait detaylı bilgiler.
+KÃ¶klÃ¼ deÄŸiÅŸikliÄŸe sebep olabilecek Ã¶zellikler veaya araÅŸtÄ±rmalar ile ilgili aÃ§Ä±lan alt branch'lere ait detaylÄ± bilgiler.
 
-- [Feature(POC) Çalışmaları](#feature-poc-çalışmaları)
-	- [System HAL Servisinin Ayrıştırılması](#system-hal-servisinin-ayrıştırılması)
+- [Feature(POC) Ã‡alÄ±ÅŸmalarÄ±](#feature-poc-Ã§alÄ±ÅŸmalarÄ±)
+	- [System HAL Servisinin AyrÄ±ÅŸtÄ±rÄ±lmasÄ±](#system-hal-servisinin-ayrÄ±ÅŸtÄ±rÄ±lmasÄ±)
 		- [Plan](#plan)
-		- [İşlemler](#işlemler)
+		- [Ä°ÅŸlemler](#iÅŸlemler)
 
-## System HAL Servisinin Ayrıştırılması
+## System HAL Servisinin AyrÄ±ÅŸtÄ±rÄ±lmasÄ±
 
 **Branch -> pocDockerizeAuditApi**
 
-System HAL içerisinde yer alan Audit servisinin DistributedChallenges solution'ı dışına çıkartılması ve Dockerize edilerek işletilmesi için başlatılan çalışmadır. 
+System HAL iÃ§erisinde yer alan Audit servisinin DistributedChallenges solution'Ä± dÄ±ÅŸÄ±na Ã§Ä±kartÄ±lmasÄ± ve Dockerize edilerek iÅŸletilmesi iÃ§in baÅŸlatÄ±lan Ã§alÄ±ÅŸmadÄ±r. Audit servis temsilen arayÃ¼zden gelen bir rapor talebindeki ifadeyi denetlemek iÃ§in kullanÄ±lan REST tabanlÄ± bir .Net servisidir. Bu servisin bazÄ± paket baÄŸÄ±mlÄ±lÄ±klarÄ± bulunuyor.
 
-Audit servis temsilen arayüzden gelen bir rapor talebindeki ifadeyi denetlemek için kullanılan REST tabanlı bir .Net servisidir. Bu servis içerisinde kullanılan bazı paket bağımlılıkları bulunmaktadır.
-
-- Resistance; Resilience deneyleri için kullanılan ve local ortamda depolanan nuget paketidir.
-- JudgeMiddleware; Bazı performans ve girdi çıktı loglamaları için kullanılan ve local ortamda depolanan nuget paketidir.
-- Consul; Servisin Consul üzerinden keşfedilebilmesi için kullanılan nuget paketidir.
+- **Resistance**; Resilience deneyleri iÃ§in kullanÄ±lan ve local ortamda depolanan nuget paketidir.
+- **JudgeMiddleware**; BazÄ± performans ve girdi Ã§Ä±ktÄ± loglamalarÄ± iÃ§in kullanÄ±lan ve local ortamda depolanan nuget paketidir.
+- **Consul**; Servisin Consul Ã¼zerinden keÅŸfedilebilmesi iÃ§in kullanÄ±lan nuget paketidir.
 
 ### Plan
 
-İlk olarak SystemHAL içerisindeki Eval.AuditLib içeriği Eval.AuditApi içerisine alınıp projenin lightweight bir versiyonu hazırlanır. Sonrasında proje DistributedChallenge çözümünden ayrıştırılır. Yeni çözümdeki proje dockerize edilir. Burada karşılaşılabilecek ve çözülmesi gereken bazı problemler söz konusudur.
+Ä°lk olarak **SystemHAL** iÃ§erisindeki **Eval.AuditLib** iÃ§eriÄŸi **Eval.AuditApi** iÃ§erisine alÄ±nÄ±p projenin biraz daha hafifletilmesi sÃ¶z konusu. SonrasÄ±nda proje **DistributedChallenge** Ã§Ã¶zÃ¼mÃ¼nden ayrÄ±ÅŸtÄ±rÄ±labilir. Yeni Ã§Ã¶zÃ¼mdeki proje dockerize edilir. Burada karÅŸÄ±laÅŸÄ±labilecek ve Ã§Ã¶zÃ¼lmesi gereken bazÄ± problemler vardÄ±r.
 
-- **PRB01 - Local Nuget Repo Sorunu:** Dockerize edilen projeye ait container oluşturulurken container dışındaki ama ana makinedeki BaGet server'ına erişip local nuget bağımlılıklarını çözümleyebilmelidir.
-- **PRB02 - Consul Problemi:** Genel çözümde Service Discovery için kullanılan Consul, ayrı bir docker-compose içeriği ile ayağla kaldırılan farklı bir container olarak çalışmaktadır. Dockerize edilen Eval.AuditApi servisi ayağa kalkarken kendisini Consul hizmetine bildirmektedir. Dockerize edilen servisin diğer docker container'ındaki Consul hizmetine bağımsız olarak erişebiliyor olması gerekmektedir.
+- **PRB01 - Local Nuget Repo Sorunu:** Proje local nuget baÄŸÄ±mlÄ±lÄ±klarÄ±na sahip olduÄŸundan bunlarÄ± **Baget** sunucusunun **localhost:5000** adresi Ã¼stÃ¼nden aramakta. Docker build iÅŸlemi sÄ±rasÄ±nda Ã§alÄ±ÅŸtÄ±rÄ±lan restore operasyonu container dÄ±ÅŸÄ±ndaki bu adrese eriÅŸemeyecek. Bunun yerine Baget sunucusunun docker-compose ile ayaÄŸa kaldÄ±rdÄ±ÄŸÄ± konuma eriÅŸebiliyor olmasÄ± gerekir.
+- **PRB02 - Consul Problemi:** Genel Ã§Ã¶zÃ¼mde **Service Discovery** iÃ§in kullanÄ±lan **Consul**, ayrÄ± bir docker-compose iÃ§eriÄŸi ile ayaÄŸla kaldÄ±rÄ±lan farklÄ± bir container olarak Ã§alÄ±ÅŸmaktadÄ±r. **Dockerize** edilen **Eval.AuditApi** servisi ayaÄŸa kalkarken kendisini Consul hizmetine bildirmeye Ã§alÄ±ÅŸacaktÄ±r. Dockerize edilen servisin diÄŸer docker container'Ä±ndaki Consul hizmetine baÄŸÄ±msÄ±z olarak eriÅŸebiliyor olmasÄ± gerekmektedir.
 
-Yukarıda bahsedilen maddeler plan dahilinde çözümlenmesi gereken meselelerdir.
+YukarÄ±da bahsedilen maddeler plan dahilinde Ã§Ã¶zÃ¼mlenmesi gereken meselelerdir.
 
-## İşlemler
+### Ä°ÅŸlemler
 
-PRB01 kodlu sorun için root klasörde nuget.config oluşturuldu ve BaGet adresi için **host.docker.internal:5000/v3/index.json** kullanıldı. Ancak bu docker imajı build edilirken işe yarıyor. Projeyi bu nuget.config dosyası ile build ettiğimizde bukez localhost:5000 adresli nuget adresine bakmadığı için Restore işlemlerinden hata alınıyor.
+**PRB01** kodlu sorun iÃ§in root klasÃ¶rde **nuget.config** dosyasÄ± oluÅŸturuldu ve BaGet adresi olarak **host.docker.internal:5000/v3/index.json** kullanÄ±ldÄ±. Ancak bu Ã§Ã¶zÃ¼m, docker imajÄ± iÃ§in build alÄ±nÄ±rken iÅŸe yarÄ±yor. Projeyi bu **nuget.config** dosyasÄ± ile build ettiÄŸimizde bu sefer de **localhost:5000** adresli nuget adresine bakmadÄ±ÄŸÄ± iÃ§in **Restore** iÅŸlemleri sÄ±rasÄ±nda hata alÄ±nÄ±yor.
 
 ```bash
-# Docker imajını oluşturmak için root klasördeyken
+# Docker imajÄ±nÄ± oluÅŸturmak iÃ§in root klasÃ¶rdeyken aÅŸaÄŸÄ±daki komutu Ã§alÄ±ÅŸtÄ±rmak yeterli
 docker build -t systemhome/evalapi -f Eval.AuditApi/Dockerfile .
+```
+
+**PRB02** kodlu problemin Ã§Ã¶zÃ¼mÃ¼ iÃ§in programÄ±n Consule hizmetine ait konfigurasyon ayarlarÄ± aÅŸaÄŸÄ±daki gibi deÄŸiÅŸtirildi.
+
+```json
+"Consul": {
+  "Host": "host.docker.internal",
+  "Discovery": {
+    "ServiceName": "hal-audit-service",
+    "Hostname": "localhost",
+    "Port": 5147
+  }
+}
+```
+
+Normal sÃ¼rÃ¼mde **Consule:Host** iÃ§in **localhost** kullanmak yeterli. Ancak servis uygulamasÄ±nda **docker container** iÃ§erisine aldÄ±ÄŸÄ±mÄ±zda localhost eriÅŸebileceÄŸi bir adres olmaktan Ã§Ä±kÄ±yor. Bunun yerine **local nuget** paketinde yaptÄ±ÄŸÄ±mÄ±z gibi **host.docker.internal** Ã¼zerinden eriÅŸim arÄ±yoruz. DiÄŸer yandan **Discovery** sekmesindeki bilgiler, **AuditApi** servisine dÄ±ÅŸarÄ±dan gelen **Distributed Challenges** Ã§Ã¶zÃ¼mÃ¼ndeki eriÅŸimler iÃ§in. Burada **localhost** kullanmak gerekiyor nitekim **Consul**, **hal-audit-service** olarak gelen talepleri docker-compose ile container'Ä± iÃ§eri alÄ±nan **localhost:5147**'ye yÃ¶nlendiriyor olacak. Bu gereksinimler docker-compose dosyasÄ±nda da 5147:8080 yÃ¶nlendirmesinin yapÄ±lmasÄ±nÄ± gerekirmekte. docker-compose dosyasÄ±nÄ±n bu Ã§Ã¶zÃ¼m iÃ§in uygulanmÄ±ÅŸ hali aÅŸaÄŸÄ±daki gibidir.
+
+```yml
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    environment:
+      RABBITMQ_DEFAULT_USER: scothtiger
+      RABBITMQ_DEFAULT_PASS: 123456
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - SERVICES=secretsmanager
+      - DEBUG=1
+      - DATA_DIR=/var/lib/localstack/data
+    volumes:
+      - localstack_data:/var/lib/localstack
+
+  baget:
+    image: loicsharma/baget:latest
+    ports:
+      - "5000:80"
+    environment:
+      - Baget__Database__Type=Sqlite
+      - Baget__Database__ConnectionString=Data Source=/var/baget/baget.db
+      - Baget__Storage__Type=FileSystem
+      - Baget__Storage__Path=/var/baget/packages
+    volumes:
+      - baget_data:/var/baget
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: johndoe
+      POSTGRES_PASSWORD: somew0rds
+      POSTGRES_DB: ReportDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: scoth@tiger.com
+      PGADMIN_DEFAULT_PASSWORD: 123456
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+  consul:
+    image: hashicorp/consul:latest
+    ports:
+      - '8500:8500'
+  
+  ftp-server:
+    image: delfer/alpine-ftp-server
+    ports:
+      - "21:21"
+      - "21000-21010:21000-21010"
+    environment:
+      FTP_USER: "userone"
+      FTP_PASS: "123"
+      PASV_MIN_PORT: 21000
+      PASV_MAX_PORT: 21010
+    volumes:
+      - ftp_data:/home/ftpuser/ftp_data
+
+  audit-web-api:
+    image: systemhome/evalapi
+    ports:
+      - "5147:8080"
+
+volumes:
+  localstack_data:
+  baget_data:
+  postgres_data:
+  ftp_data:
 ```
