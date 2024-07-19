@@ -13,4 +13,5 @@ public interface IDocumentDataRepository
     Task<DocumentContent> ReadDocumentContentByIdAsync(GenericDocumentRequest documentReadRequest);
     Task<int> DeleteDocumentByIdAsync(GenericDocumentRequest documentReadRequest);
     Task<IEnumerable<string>> GetExpiredDocumentsAsync();
+    Task<int> MarkDocumentToArchiveAsync(GenericDocumentRequest documentReadRequest);
 }

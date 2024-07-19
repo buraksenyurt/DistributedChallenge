@@ -6,5 +6,6 @@ CREATE TABLE Documents (
     DocumentId VARCHAR(255) NOT NULL,
     InsertTime TIMESTAMP,
     ExpireTime TIMESTAMP,
+    IsArchived BOOLEAN DEFAULT False,
     Content BYTEA NOT NULL
 );

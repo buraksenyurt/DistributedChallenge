@@ -50,7 +50,7 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
         const string sql = @"
                 SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime, ExpireTime
                 FROM Documents
-                WHERE DocumentId = @DocumentId";
+                WHERE DocumentId = @DocumentId AND Archived = False";
 
         await using var dbConnection = await GetOpenConnectionAsync();
         var reportDocument = await dbConnection.QueryFirstOrDefaultAsync<Document>(sql, new { documentReadRequest.DocumentId });
@@ -70,7 +70,7 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
         const string sql = @"
                 SELECT Content
                 FROM Documents
-                WHERE DocumentId = @DocumentId";
+                WHERE DocumentId = @DocumentId AND Archived = False";
 
         await using var dbConnection = await GetOpenConnectionAsync();
         var content = await dbConnection.QueryFirstOrDefaultAsync<byte[]>(sql, new { documentReadRequest.DocumentId });
@@ -96,7 +96,7 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
         const string sql = @"
                 SELECT LENGTH(Content) AS ContentLength
                 FROM Documents
-                WHERE DocumentId = @DocumentId";
+                WHERE DocumentId = @DocumentId AND Archived = False";
 
         await using var dbConnection = await GetOpenConnectionAsync();
         var length = await dbConnection.QueryFirstOrDefaultAsync<int>(sql, new { documentReadRequest.DocumentId });
@@ -109,7 +109,7 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
         const string sql = @"
                 SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime, ExpireTime
                 FROM Documents
-                ORDER BY InsertTime";
+                ORDER BY InsertTime AND Archived = False";
 
         await using var dbConnection = await GetOpenConnectionAsync();
         var documents = await dbConnection.QueryAsync<Document>(sql);
@@ -122,7 +122,7 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
         const string sql = @"
                 SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime, ExpireTime
                 FROM Documents
-                WHERE EmployeeId = @EmployeeId
+                WHERE EmployeeId = @EmployeeId AND Archived = False
                 ORDER BY InsertTime";
 
         await using var dbConnection = await GetOpenConnectionAsync();
@@ -143,12 +143,25 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
         return affectedRowCount;
     }
 
+    public async Task<int> MarkDocumentToArchiveAsync(GenericDocumentRequest documentReadRequest)
+    {
+        const string sql = @"
+                UPDATE
+                Documents
+                SET Archived = true
+                WHERE DocumentId = @DocumentId";
+
+        await using var dbConnection = await GetOpenConnectionAsync();
+        var affectedRowCount = await dbConnection.ExecuteAsync(sql, new { documentReadRequest.DocumentId });
+        return affectedRowCount;
+    }
+
     public async Task<IEnumerable<string>> GetExpiredDocumentsAsync()
     {
         const string sql = @"
                 SELECT DocumentId
                 FROM Documents
-                WHERE ExpireTime <= NOW();";
+                WHERE ExpireTime >= NOW() AND Archived = True";
         await using var dbConnection = await GetOpenConnectionAsync();
         var documentIdList = await dbConnection.QueryAsync<string>(sql);
         return documentIdList;

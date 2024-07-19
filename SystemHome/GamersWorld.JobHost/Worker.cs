@@ -47,13 +47,14 @@ internal class Worker(
             _logger.LogInformation("{DocumentId} is deleting", documentId);
             var affected = await _documentRepository.DeleteDocumentByIdAsync(new GenericDocumentRequest { DocumentId = documentId });
             //TODO@burak Need to refactor. When db operations success but delete ftp file don't, what do we do?
-            if (affected == 1)
+            if (affected != 1)
             {
-                var delResponse = await _documentDestroyer.DeleteAsync(new GenericDocumentRequest { DocumentId = documentId });
-                if (delResponse.StatusCode != Domain.Enums.StatusCode.Success)
-                {
-                    _logger.LogError("Error on ftp delete operation.{StatusCode}", delResponse.StatusCode);
-                }
+                _logger.LogWarning("Error on delete for {DocumentId}", documentId);
+            }
+            var delResponse = await _documentDestroyer.DeleteAsync(new GenericDocumentRequest { DocumentId = documentId });
+            if (delResponse.StatusCode != Domain.Enums.StatusCode.Success)
+            {
+                _logger.LogError("Error on ftp delete operation.{StatusCode}", delResponse.StatusCode);
             }
         }
     }
