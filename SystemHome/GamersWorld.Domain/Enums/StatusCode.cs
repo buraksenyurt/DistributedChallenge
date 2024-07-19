@@ -8,6 +8,7 @@ public enum StatusCode
     DocumentReadable = 206,
     DocumentUploaded = 207,
     InvalidExpression = 400,
-    ValidationErrors = 401,
+    ValidationErrors = 400,
+    DocumentNotFound = 404,
     Fail = 500
 }

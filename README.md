@@ -546,9 +546,10 @@ echo "userone:123" | chpasswd
 # Senaryoda geçerli olan documents klasörü oluşturulur
 mkdir -p /home/ftpuser/documents
 
-# Ftp kullanıcısı için yetkiler verilir
+# Ftp kullanıcısı için yetkiler verilir (yazma,okuma,silme)
 chmod -R 755 /home/ftpuser/documents
-chown -R user: /home/ftpuser/documents
+chown -R userone:userone /home/ftpuser/documents
+chmod -R 775 /home/ftpuser/documents
 ```
 
 Sonuç olarak önyüzden arşivleme işlemi başlatıldığında bir başka event-business işletilir ve her şey yolunda giderse söz konusu rapor ftp sunucusuna yüklenirken veritabanından da silinir.

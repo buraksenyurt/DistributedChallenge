@@ -6,11 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace GamersWorld.Application.Document;
 
-public class TableReader(ILogger<FileSaver> logger, IDocumentRepository documentRepository)
+public class TableReader(ILogger<FileSaver> logger, IDocumentDataRepository documentRepository)
     : IDocumentReader
 {
     private readonly ILogger<FileSaver> _logger = logger;
-    private readonly IDocumentRepository _documentRepository = documentRepository;
+    private readonly IDocumentDataRepository _documentRepository = documentRepository;
 
     public async Task<BusinessResponse> GetLength(GenericDocumentRequest payload)
     {

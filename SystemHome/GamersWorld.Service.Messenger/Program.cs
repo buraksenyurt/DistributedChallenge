@@ -48,7 +48,7 @@ app.MapHealthChecks("/health");
 
 var documentsGroup = app.MapGroup("/api/documents");
 
-documentsGroup.MapGet("/employee/{employeeId}", async (string employeeId, IDocumentRepository repository, ILogger<Program> logger) =>
+documentsGroup.MapGet("/employee/{employeeId}", async (string employeeId, IDocumentDataRepository repository, ILogger<Program> logger) =>
 {
     logger.LogInformation("Request reports data for {EmployeeId}", employeeId);
     var documents = await repository.GetAllDocumentsByEmployeeAsync(new GenericDocumentRequest
@@ -61,7 +61,7 @@ documentsGroup.MapGet("/employee/{employeeId}", async (string employeeId, IDocum
 .WithName("GetReportsByEmployee")
 .WithOpenApi();
 
-documentsGroup.MapGet("/{documentId}", async (string documentId, IDocumentRepository repository, ILogger<Program> logger) =>
+documentsGroup.MapGet("/{documentId}", async (string documentId, IDocumentDataRepository repository, ILogger<Program> logger) =>
 {
     logger.LogInformation("Request report content for {DocumentId}", documentId);
     var document = await repository.ReadDocumentContentByIdAsync(

@@ -3,7 +3,7 @@ using GamersWorld.Domain.Requests;
 
 namespace GamersWorld.Application.Contracts.Document;
 
-public interface IDocumentRepository
+public interface IDocumentDataRepository
 {
     Task<int> InsertDocumentAsync(DocumentSaveRequest documentSaveRequest);
     Task<Domain.Data.Document> ReadDocumentAsync(GenericDocumentRequest documentReadRequest);
@@ -12,4 +12,5 @@ public interface IDocumentRepository
     Task<IEnumerable<Domain.Data.Document>> GetAllDocumentsByEmployeeAsync(GenericDocumentRequest documentReadRequest);
     Task<DocumentContent> ReadDocumentContentByIdAsync(GenericDocumentRequest documentReadRequest);
     Task<int> DeleteDocumentByIdAsync(GenericDocumentRequest documentReadRequest);
+    Task<IEnumerable<string>> GetExpiredDocumentsAsync();
 }

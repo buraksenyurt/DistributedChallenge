@@ -8,10 +8,10 @@ using System.Text.Json;
 
 namespace GamersWorld.EventBusiness;
 
-public class DeleteReport(ILogger<DeleteReport> logger, IDocumentRepository documentRepository, INotificationService notificationService) : IEventDriver<DeleteReportRequestEvent>
+public class DeleteReport(ILogger<DeleteReport> logger, IDocumentDataRepository documentRepository, INotificationService notificationService) : IEventDriver<DeleteReportRequestEvent>
 {
     private readonly ILogger<DeleteReport> _logger = logger;
-    private readonly IDocumentRepository _documentRepository = documentRepository;
+    private readonly IDocumentDataRepository _documentRepository = documentRepository;
     private readonly INotificationService _notificationService = notificationService;
 
     public async Task Execute(DeleteReportRequestEvent appEvent)

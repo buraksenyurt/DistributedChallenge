@@ -9,11 +9,11 @@ using System.Text.Json;
 
 namespace GamersWorld.EventBusiness;
 
-public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentRepository documentRepository, IServiceProvider serviceProvider, INotificationService notificationService)
+public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentDataRepository documentRepository, IServiceProvider serviceProvider, INotificationService notificationService)
     : IEventDriver<ArchiveReportRequestEvent>
 {
     private readonly ILogger<ArchiveReport> _logger = logger;
-    private readonly IDocumentRepository _documentRepository = documentRepository;
+    private readonly IDocumentDataRepository _documentRepository = documentRepository;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly INotificationService _notificationService = notificationService;
 

@@ -7,7 +7,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddData(this IServiceCollection services)
     {
-        services.AddTransient<IDocumentRepository, DocumentRepository>();
+        services.AddTransient<IDocumentDataRepository, DocumentDataRepository>();
         return services;
     }
 }

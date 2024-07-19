@@ -9,11 +9,11 @@ using SecretsAgent;
 
 namespace GamersWorld.Repository;
 
-public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<DocumentRepository> logger)
-    : IDocumentRepository
+public class DocumentDataRepository(ISecretStoreService secretStoreService, ILogger<DocumentDataRepository> logger)
+    : IDocumentDataRepository
 {
     private readonly ISecretStoreService _secretStoreService = secretStoreService;
-    private readonly ILogger<DocumentRepository> _logger = logger;
+    private readonly ILogger<DocumentDataRepository> _logger = logger;
 
     private async Task<NpgsqlConnection> GetOpenConnectionAsync()
     {
@@ -141,5 +141,16 @@ public class DocumentRepository(ISecretStoreService secretStoreService, ILogger<
         await using var dbConnection = await GetOpenConnectionAsync();
         var affectedRowCount = await dbConnection.ExecuteAsync(sql, new { documentReadRequest.DocumentId });
         return affectedRowCount;
+    }
+
+    public async Task<IEnumerable<string>> GetExpiredDocumentsAsync()
+    {
+        const string sql = @"
+                SELECT DocumentId
+                FROM Documents
+                WHERE ExpireTime <= NOW();";
+        await using var dbConnection = await GetOpenConnectionAsync();
+        var documentIdList = await dbConnection.QueryAsync<string>(sql);
+        return documentIdList;
     }
 }
