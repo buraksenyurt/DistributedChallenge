@@ -560,6 +560,16 @@ Sonuç olarak önyüzden arşivleme işlemi başlatıldığında bir başka even
 
 Pek çok büyük sistemde belli periyotlarda tekrarlanan işler söz konusudur. Örneğin bizim uygulamamızda tüm raporların için kullanıclar tarafından belirlenen yaşam süreleri var. 10 dakika, Yarım saat, 1 Saat, 1 gün gibi. Bu süreler dolduğunda ilgili kaynaklardaki _(veri tabanı, ftp sunucusu vb)_ içeriklerin temizlenmesi planlı işlerden birisi olabilir. Bu tip bir iş örneğin 10 dakikada bir çalışacak şekilde planlanabilir. .Net tarafında basit bir timer mekanizması ile ilerlenebileceği gibi [Quartz](https://www.nuget.org/packages/Quartz)   veya **Hangfire** gibi paketlerden de yararlanılabilir. Örneğimizde **GamersWorld.JobHost** isimli terminal uygulamasını [Hangfire](https://www.nuget.org/packages/Hangfire/) ile çalışacak şekilde genişlettik. Planlı işler bazı durumlarda sistemde beklenmedik sorunlara da neden olabiliyor. Özellikle dağıtık sistemlerde entegre oldukları noktalar açısından düşünülünce bu önemli bir detay olabiliyor. Kurumsal ölçekteki sistemlerde n sayıda planlanmış ve oldukça karmaşık süreçler koşturan planlı işler *(Scheduled Jobs)* sistemleri inanılaz derecede yorabiliyorlar. Bizim örneğimizde şimdilik tek bir iş var. Süresi dolan rapoları veri tabanı ve ftp'den silmek. Peki işlemler sırasında veritabanı bağlantısı yoksa ya da ftp'ye ulaşılamıyorsa sistemin genelinin vereceği tepki ne olmalı? Bu vakayı da dayanıklılık senaryolarımıza dahil edebiliriz.
 
+Aşağıdaki ekran görüntülerinde arşivlenen ve süresi dolan raporların hem veri tabanından hem de ftp sunucusundan silinmesi ile ilgili çalışma zamanı görüntüleri yer alıyor.
+
+![Before Archive Runtime](/images/runtime_15.png)
+
+İlk görüntüde dikkat edileceği üzere arşive atılmış ve örnek bir kayıt var. Bu kayıt planlı iş ele alana kadar veri tabanında archived değeri true olarak duracak. Bu nedenle ftp sunucusunda bir süre daha yaşamakta. Planlı iş devreye girdikten sonra ise söz konusu kayıt veri tabanından ve ftp'den kalıcı olarak siliniyor. Aşağıdaki ekran görüntüsü de bunun kanıtı.
+
+![After Archive Runtime](/images/runtime_16.png)
+
+Tabii burada açıkta kalan bir nokta daha var. Arşivlenmediği halde süresi dolan raporlar için de bir planlı iş eklemek gerekebilir. Bu tip raporlar ftp'de olmayan ama süresi dolduğu halde db'de kalmaya devam eden türden raporlardır.
+
 ## Bazı Düşünceler
 
 - Senaryoda farklı sistemler olduğunu düşünmeliyiz. **SystemMiddleEarth** raporlama tarafını üstleniyor. Gelen rapor ifadesini anlamlı bir betiğe dönüştürmek, işletmek, pdf gibi çıktısını hazırlamak ve hazır olduğuna dair **SystemHome**' ü bilgilendirmek görevleri arasında. Kendi içerisindeki süreçlerin yönetiminde de **Event** bazlı bir yaklaşıma gidebilir. Söz gelimi ifadenin bir **Gen AI** ile anlamlı hale dönüştürülmesi birkaç saniye sürebilecek bir iş olabilir. Dönüştürme işi başarısız ise bununla ilgili olarak da **SystemHome**'ü bilgilendirmesi gerekebilir. Dolayısıyla bu da yeni bir olayın üretilmesi, **SystemHome**'e aktarılması ve **SystemHome** tarafında bu hatanın ele alınmasını gerektirecektir _(Çizelgede e1 ile ifade edilen kısım)_ Tüm çözümü zorlaştırmamak adına belki bu kısım şimdilik atlanabilir.
