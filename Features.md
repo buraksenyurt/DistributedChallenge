@@ -5,7 +5,7 @@ Köklü değişikliğe sebep olabilecek özellikler veaya araştırmalar ile ilg
 - [Feature(POC) Çalışmaları](#feature-poc-çalışmaları)
 	- [System HAL Servisinin Ayrıştırılması](#system-hal-servisinin-ayrıştırılması)
 		- [Plan](#plan)
-		- [İşlemler](#işlemler)
+		- [Uygulama](#uygulama)
 
 ## System HAL Servisinin Ayrıştırılması
 
@@ -26,7 +26,7 @@ System HAL içerisinde yer alan Audit servisinin DistributedChallenges solution'
 
 Yukarıda bahsedilen maddeler plan dahilinde çözümlenmesi gereken meselelerdir.
 
-### İşlemler
+### Uygulama
 
 **PRB01** kodlu sorun için root klasörde **nuget.config** dosyası oluşturuldu ve BaGet adresi olarak **host.docker.internal:5000/v3/index.json** kullanıldı. Ancak bu çözüm, docker imajı için build alınırken işe yarıyor. Projeyi bu **nuget.config** dosyası ile build ettiğimizde bu sefer de **localhost:5000** adresli nuget adresine bakmadığı için **Restore** işlemleri sırasında hata alınıyor.
 
