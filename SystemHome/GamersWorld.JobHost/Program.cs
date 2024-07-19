@@ -1,5 +1,7 @@
-﻿using GamersWorld.JobHost;
+﻿using GamersWorld.Application;
+using GamersWorld.JobHost;
 using GamersWorld.JobHost.Model;
+using GamersWorld.Repository;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +27,9 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddTransient<Worker>();
         services.AddSingleton<IRecurringJobManager, RecurringJobManager>();
         services.AddSingleton<IBackgroundJobClient, BackgroundJobClient>();
+
+        services.AddApplication();
+        services.AddData();
     })
     .ConfigureLogging(logging =>
     {

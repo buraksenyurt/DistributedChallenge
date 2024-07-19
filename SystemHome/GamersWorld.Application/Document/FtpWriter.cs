@@ -1,6 +1,5 @@
 using FluentFTP;
 using GamersWorld.Application.Contracts.Document;
-using GamersWorld.Application.Contracts.MessageQueue;
 using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
