@@ -88,7 +88,7 @@ internal class Worker(
                             Content = Convert.FromBase64String(doc.Base64Content)
                         });
 
-                    if (uploadResponse.StatusCode != Domain.Enums.StatusCode.Success)
+                    if (uploadResponse.StatusCode != Domain.Enums.StatusCode.DocumentUploaded)
                     {
                         _logger.LogError("Error on ftp upload operation.{StatusCode}", uploadResponse.StatusCode);
                     }
