@@ -8,16 +8,16 @@ using System.Text.Json;
 
 namespace GamersWorld.EventBusiness;
 
-public class DeleteReport(ILogger<DeleteReport> logger, IDocumentDataRepository documentRepository, INotificationService notificationService) : IEventDriver<DeleteReportRequestEvent>
+public class DeleteReport(ILogger<DeleteReport> logger, IDocumentDataRepository documentDataRepository, INotificationService notificationService) : IEventDriver<DeleteReportRequestEvent>
 {
     private readonly ILogger<DeleteReport> _logger = logger;
-    private readonly IDocumentDataRepository _documentRepository = documentRepository;
+    private readonly IDocumentDataRepository _documentDataRepository = documentDataRepository;
     private readonly INotificationService _notificationService = notificationService;
 
     public async Task Execute(DeleteReportRequestEvent appEvent)
     {
         _logger.LogInformation("{DocumentId} is deleting from system", appEvent.DocumentId);
-        var deleteResult = await _documentRepository.DeleteDocumentByIdAsync(new Domain.Requests.GenericDocumentRequest
+        var deleteResult = await _documentDataRepository.DeleteDocumentByIdAsync(new Domain.Requests.GenericDocumentRequest
         {
             DocumentId = appEvent.DocumentId,
         });

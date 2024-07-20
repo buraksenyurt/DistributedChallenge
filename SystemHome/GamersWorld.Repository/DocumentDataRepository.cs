@@ -50,7 +50,7 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
         const string sql = @"
                 SELECT Id, TraceId, ReportTitle, EmployeeId, DocumentId, Content, InsertTime, ExpireTime
                 FROM Documents
-                WHERE DocumentId = @DocumentId AND Archived = False";
+                WHERE DocumentId = @DocumentId";
 
         await using var dbConnection = await GetOpenConnectionAsync();
         var reportDocument = await dbConnection.QueryFirstOrDefaultAsync<Document>(sql, new { documentReadRequest.DocumentId });
@@ -70,7 +70,7 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
         const string sql = @"
                 SELECT Content
                 FROM Documents
-                WHERE DocumentId = @DocumentId AND Archived = False";
+                WHERE DocumentId = @DocumentId";
 
         await using var dbConnection = await GetOpenConnectionAsync();
         var content = await dbConnection.QueryFirstOrDefaultAsync<byte[]>(sql, new { documentReadRequest.DocumentId });
@@ -96,7 +96,7 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
         const string sql = @"
                 SELECT LENGTH(Content) AS ContentLength
                 FROM Documents
-                WHERE DocumentId = @DocumentId AND Archived = False";
+                WHERE DocumentId = @DocumentId";
 
         await using var dbConnection = await GetOpenConnectionAsync();
         var length = await dbConnection.QueryFirstOrDefaultAsync<int>(sql, new { documentReadRequest.DocumentId });
@@ -161,9 +161,23 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
         const string sql = @"
                 SELECT DocumentId
                 FROM Documents
-                WHERE ExpireTime >= NOW() AND Archived = True";
+                WHERE ExpireTime <=  @AdjustedTime AND Archived = False"; // Expired but not marked as archived
         await using var dbConnection = await GetOpenConnectionAsync();
-        var documentIdList = await dbConnection.QueryAsync<string>(sql);
+        var documentIdList = await dbConnection.QueryAsync<string>(sql, new { AdjustedTime = DateTime.Now });
+        return documentIdList;
+    }
+
+    public async Task<IEnumerable<string>> GetDocumentsOnRemoveAsync(TimeSpan interval)
+    {
+        const string sql = @"
+            SELECT DocumentId
+            FROM Documents
+            WHERE ExpireTime <= @AdjustedTime AND Archived = True"; // Marked as archived and the expiretime ended with a delayed interval
+
+        var adjustedTime = DateTime.Now + interval;
+
+        await using var dbConnection = await GetOpenConnectionAsync();
+        var documentIdList = await dbConnection.QueryAsync<string>(sql, new { AdjustedTime = adjustedTime });
         return documentIdList;
     }
 }

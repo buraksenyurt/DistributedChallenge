@@ -6,4 +6,5 @@ internal class JobInformation
     public string Description { get; set; }
     public string CronExpression { get; set; }
     public string ActionName { get; set; }
+    public bool Active { get; set; }
 }
