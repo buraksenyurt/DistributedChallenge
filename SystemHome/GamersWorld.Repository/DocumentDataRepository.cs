@@ -174,7 +174,7 @@ public class DocumentDataRepository(ISecretStoreService secretStoreService, ILog
             FROM Documents
             WHERE ExpireTime <= @AdjustedTime AND Archived = True"; // Marked as archived and the expiretime ended with a delayed interval
 
-        var adjustedTime = DateTime.Now + interval;
+        var adjustedTime = DateTime.Now - interval;
 
         await using var dbConnection = await GetOpenConnectionAsync();
         var documentIdList = await dbConnection.QueryAsync<string>(sql, new { AdjustedTime = adjustedTime });
