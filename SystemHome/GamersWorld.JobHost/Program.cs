@@ -17,6 +17,9 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((context, services) =>
     {
+        services.AddApplication();
+        services.AddData();
+
         services.Configure<JobHeader>(context.Configuration.GetSection("JobHeader"));
         services.AddHangfire(config =>
         {
@@ -27,9 +30,6 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddTransient<Worker>();
         services.AddSingleton<IRecurringJobManager, RecurringJobManager>();
         services.AddSingleton<IBackgroundJobClient, BackgroundJobClient>();
-
-        services.AddApplication();
-        services.AddData();
     })
     .ConfigureLogging(logging =>
     {

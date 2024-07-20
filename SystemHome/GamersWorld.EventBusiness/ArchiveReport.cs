@@ -9,11 +9,11 @@ using System.Text.Json;
 
 namespace GamersWorld.EventBusiness;
 
-public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentDataRepository documentRepository, IServiceProvider serviceProvider, INotificationService notificationService)
+public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentDataRepository documentDataRepository, IServiceProvider serviceProvider, INotificationService notificationService)
     : IEventDriver<ArchiveReportRequestEvent>
 {
     private readonly ILogger<ArchiveReport> _logger = logger;
-    private readonly IDocumentDataRepository _documentRepository = documentRepository;
+    private readonly IDocumentDataRepository _documentDataRepository = documentDataRepository;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly INotificationService _notificationService = notificationService;
 
@@ -23,7 +23,7 @@ public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentDataRepositor
         {
             DocumentId = appEvent.DocumentId,
         };
-        var doc = await _documentRepository.ReadDocumentAsync(request);
+        var doc = await _documentDataRepository.ReadDocumentAsync(request);
         if (doc == null || doc.Content == null)
         {
             _logger.LogWarning("{DocumentId} content not found", appEvent.DocumentId);
@@ -42,7 +42,7 @@ public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentDataRepositor
             return;
         }
 
-        var updateResult = await _documentRepository.MarkDocumentToArchiveAsync(request);
+        var updateResult = await _documentDataRepository.MarkDocumentToArchiveAsync(request);
         if (updateResult == 1)
         {
             var notificationData = new ReportNotification

@@ -8,12 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace GamersWorld.Application.Document;
 
-public class TableSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueService, IDocumentDataRepository documentRepository)
+public class TableSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueService, IDocumentDataRepository documentDataRepository)
     : IDocumentWriter
 {
     private readonly ILogger<FileSaver> _logger = logger;
     private readonly IEventQueueService _eventQueueService = eventQueueService;
-    private readonly IDocumentDataRepository _documentRepository = documentRepository;
+    private readonly IDocumentDataRepository _documentDataRepository = documentDataRepository;
 
     public async Task<BusinessResponse> SaveAsync(DocumentSaveRequest payload)
     {
@@ -29,7 +29,7 @@ public class TableSaver(ILogger<FileSaver> logger, IEventQueueService eventQueue
 
         try
         {
-            var insertedId = await _documentRepository.InsertDocumentAsync(payload);
+            var insertedId = await _documentDataRepository.InsertDocumentAsync(payload);
 
             var reportIsHereEvent = new ReportIsHereEvent
             {
