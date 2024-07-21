@@ -12,9 +12,9 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<MessengerServiceClient> _logger = logger;
 
-    public async Task<IEnumerable<Document>> GetReportDocumentsByEmployeeAsync(GetReportsByEmployeeRequest request)
+    public async Task<IEnumerable<Report>> GetReportDocumentsByEmployeeAsync(GetReportsByEmployeeRequest request)
     {
-        var response = await _httpClient.GetFromJsonAsync<IEnumerable<Document>>($"/api/documents/employee/{request.EmployeeId}");
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<Report>>($"/api/documents/employee/{request.EmployeeId}");
         if (response == null)
         {
             _logger.LogWarning("There are no reports for {EmployeeId}", request.EmployeeId);

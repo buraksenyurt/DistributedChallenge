@@ -1,3 +1,4 @@
+using GamersWorld.Application.Contracts.Data;
 using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Requests;
@@ -6,17 +7,17 @@ using Microsoft.Extensions.Logging;
 
 namespace GamersWorld.Application.Document;
 
-public class TableReader(ILogger<FileSaver> logger, IDocumentDataRepository documentDataRepository)
+public class TableReader(ILogger<FileSaver> logger, IReportDocumentDataRepository reportDocumentDataRepository)
     : IDocumentReader
 {
     private readonly ILogger<FileSaver> _logger = logger;
-    private readonly IDocumentDataRepository _documentDataRepository = documentDataRepository;
+    private readonly IReportDocumentDataRepository _reportDocumentDataRepository = reportDocumentDataRepository;
 
     public async Task<BusinessResponse> GetLength(GenericDocumentRequest payload)
     {
         try
         {
-            var contentLength = await _documentDataRepository.GetDocumentLength(payload);
+            var contentLength = await _reportDocumentDataRepository.GetDocumentLength(payload);
             return new BusinessResponse
             {
                 StatusCode = StatusCode.DocumentReadable,

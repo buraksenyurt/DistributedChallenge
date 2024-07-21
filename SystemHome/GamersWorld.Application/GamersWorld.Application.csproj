@@ -22,4 +22,8 @@
     <ProjectReference Include="..\GamersWorld.Domain\GamersWorld.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extension\" />
+  </ItemGroup>
+
 </Project>

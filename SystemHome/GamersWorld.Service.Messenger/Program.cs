@@ -1,8 +1,9 @@
 using Amazon.Runtime.Internal;
 using GamersWorld.Application;
-using GamersWorld.Application.Contracts.Document;
+using GamersWorld.Application.Contracts.Data;
 using GamersWorld.Application.Contracts.Events;
 using GamersWorld.Application.Contracts.MessageQueue;
+using GamersWorld.Domain.Dtos;
 using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
 using System.ComponentModel.DataAnnotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,10 +50,10 @@ app.MapHealthChecks("/health");
 
 var documentsGroup = app.MapGroup("/api/documents");
 
-documentsGroup.MapGet("/employee/{employeeId}", async (string employeeId, IDocumentDataRepository repository, ILogger<Program> logger) =>
+documentsGroup.MapGet("/employee/{employeeId}", async (string employeeId, IReportDataRepository repository, ILogger<Program> logger) =>
 {
     logger.LogInformation("Request reports data for {EmployeeId}", employeeId);
-    var documents = await repository.GetAllDocumentsByEmployeeAsync(new GenericDocumentRequest
+    var documents = await repository.GetAllReportsByEmployeeAsync(new GenericDocumentRequest
     {
         EmployeeId = employeeId,
     });
@@ -61,15 +63,32 @@ documentsGroup.MapGet("/employee/{employeeId}", async (string employeeId, IDocum
 .WithName("GetReportsByEmployee")
 .WithOpenApi();
 
-documentsGroup.MapGet("/{documentId}", async (string documentId, IDocumentDataRepository repository, ILogger<Program> logger) =>
+documentsGroup.MapGet("/{documentId}", async (string documentId, IReportDocumentDataRepository repository, ILogger<Program> logger) =>
 {
     logger.LogInformation("Request report content for {DocumentId}", documentId);
-    var document = await repository.ReadDocumentContentByIdAsync(
+    var document = await repository.ReadDocumentByIdAsync(
         new GenericDocumentRequest
         {
             DocumentId = documentId
         });
-    return Results.Json(document);
+
+    if (document == null)
+    {
+        var errorResponse = new BusinessResponse
+        {
+            StatusCode = StatusCode.DocumentNotFound,
+            Message = "Document not found",
+            ValidationErrors = null
+        };
+
+        return Results.Json(errorResponse, statusCode: 404);
+    }
+
+    return Results.Json(new DocumentContent
+    {
+        Base64Content = Convert.ToBase64String(document.Content ?? []),
+        ContentSize = document.Content.Length
+    });
 })
 .WithName("GetReportContentById")
 .WithOpenApi();

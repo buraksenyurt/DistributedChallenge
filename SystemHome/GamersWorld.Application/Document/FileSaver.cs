@@ -14,7 +14,7 @@ public class FileSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueS
     private readonly ILogger<FileSaver> _logger = logger;
     private readonly IEventQueueService _eventQueueService = eventQueueService;
 
-    public async Task<BusinessResponse> SaveAsync(DocumentSaveRequest payload)
+    public async Task<BusinessResponse> SaveAsync(ReportSaveRequest payload)
     {
         if (payload == null || payload.Content == null)
         {
@@ -37,7 +37,7 @@ public class FileSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueS
             var reportIsHereEvent = new ReportIsHereEvent
             {
                 Time = DateTime.Now,
-                Title = payload.ReportTitle,
+                Title = payload.Title,
                 TraceId = payload.TraceId,
                 CreatedReportId = payload.DocumentId,
             };
