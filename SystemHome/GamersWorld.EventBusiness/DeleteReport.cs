@@ -30,10 +30,11 @@ public class DeleteReport(
         var deleteResult = await _reportDocumentDataRepository.DeleteDocumentByIdAsync(requestData);
         if (deleteResult == 1)
         {
-            var archived = await _reportDataRepository.MarkReportToArchiveAsync(requestData);
-            if (archived == 1)
+            var archiveMark = await _reportDataRepository.MarkReportToArchiveAsync(requestData);
+            var deleteMark = await _reportDataRepository.MarkReportAsDeletedAsync(requestData);
+            if (archiveMark == 1 && deleteMark == 1)
             {
-                _logger.LogInformation("{DocumentId} content has been deleted and main report archived.", appEvent.DocumentId);
+                _logger.LogInformation("{DocumentId} content has been deleted and main report marked as archived.", appEvent.DocumentId);
                 var notificationData = new ReportNotification
                 {
                     DocumentId = appEvent.DocumentId,
@@ -46,6 +47,7 @@ public class DeleteReport(
 
                 await _notificationService.PushToUserAsync(appEvent.ClientId, JsonSerializer.Serialize(notificationData));
             }
+            //TODO@buraksenyurt After fail we need publish a new event
         }
     }
 }

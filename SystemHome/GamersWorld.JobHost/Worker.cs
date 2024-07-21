@@ -16,7 +16,7 @@ internal class Worker(
     IOptions<JobHeader> jobHeader
     , ILogger<Worker> logger
     , IRecurringJobManager recurringJobManager
-    , IReportDataRepository documentDataRepository
+    , IReportDataRepository reportDataRepository
     , IReportDocumentDataRepository reportDocumentDataRepository
     , IDocumentDestroyer documentDestroyer
     , IServiceProvider serviceProvider)
@@ -24,7 +24,7 @@ internal class Worker(
     private readonly JobHeader _jobHeader = jobHeader.Value;
     private readonly ILogger<Worker> _logger = logger;
     private readonly IRecurringJobManager _recurringJobManager = recurringJobManager;
-    private readonly IReportDataRepository _documentDataRepository = documentDataRepository;
+    private readonly IReportDataRepository _reportDataRepository = reportDataRepository;
     private readonly IReportDocumentDataRepository _reportDocumentDataRepository = reportDocumentDataRepository;
     private readonly IDocumentDestroyer _documentDestroyer = documentDestroyer;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
@@ -48,16 +48,23 @@ internal class Worker(
     public async Task TruncateDeadReports()
     {
         _logger.LogInformation("Truncate Dead Reports started at: {ExecuteTime}", DateTime.Now);
-        var documentIdList = await _documentDataRepository.GetReportsOnRemoveAsync(interval: TimeSpan.FromHours(1));
+        var documentIdList = await _reportDataRepository.GetReportsOnRemoveAsync(interval: TimeSpan.FromHours(1));
         foreach (var documentId in documentIdList)
         {
+            var request = new GenericDocumentRequest { DocumentId = documentId };
             _logger.LogInformation("{DocumentId} is deleting", documentId);
-            var affected = await _reportDocumentDataRepository.DeleteDocumentByIdAsync(new GenericDocumentRequest { DocumentId = documentId });
+            var affected = await _reportDocumentDataRepository.DeleteDocumentByIdAsync(request);
             if (affected != 1)
             {
-                _logger.LogWarning("Error on delete for {DocumentId}", documentId);
+                _logger.LogWarning("Error on 'delete document row' for {DocumentId}", documentId);
             }
-            var delResponse = await _documentDestroyer.DeleteAsync(new GenericDocumentRequest { DocumentId = documentId });
+            var markResponse = await _reportDataRepository.MarkReportAsDeletedAsync(request);
+            if (markResponse != 1)
+            {
+                _logger.LogWarning("Error on 'marked as deleted' for {DocumentId}", documentId);
+            }
+
+            var delResponse = await _documentDestroyer.DeleteAsync(request);
             if (delResponse.StatusCode != Domain.Enums.StatusCode.Success)
             {
                 _logger.LogError("Error on ftp delete operation.{StatusCode}", delResponse.StatusCode);
@@ -69,11 +76,11 @@ internal class Worker(
     {
         var documentWriter = _serviceProvider.GetRequiredKeyedService<IDocumentWriter>(Names.FtpWriteService);
         _logger.LogInformation("Archive the expired reports to ftp process started at: {ExecuteTime}", DateTime.Now);
-        var documentIdList = await _documentDataRepository.GetExpiredReportsAsync();
+        var documentIdList = await _reportDataRepository.GetExpiredReportsAsync();
         foreach (var documentId in documentIdList)
         {
             var genericRequest = new GenericDocumentRequest { DocumentId = documentId };
-            var updatedCount = await _documentDataRepository.MarkReportToArchiveAsync(genericRequest);
+            var updatedCount = await _reportDataRepository.MarkReportToArchiveAsync(genericRequest);
             if (updatedCount == 1)
             {
                 var doc = await _reportDocumentDataRepository.ReadDocumentByIdAsync(genericRequest);

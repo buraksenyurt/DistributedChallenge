@@ -6,7 +6,8 @@ CREATE TABLE report (
     document_id VARCHAR(255) NOT NULL,
     insert_time TIMESTAMP,
     expire_time TIMESTAMP,
-    archived BOOLEAN DEFAULT False
+    archived BOOLEAN DEFAULT False,
+    deleted BOOLEAN DEFAULT False,
 );
 
 CREATE TABLE report_document (

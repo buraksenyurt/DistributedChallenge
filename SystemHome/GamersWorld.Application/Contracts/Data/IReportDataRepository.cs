@@ -9,6 +9,7 @@ public interface IReportDataRepository
     Task<IEnumerable<Domain.Data.Report>> GetAllReportsAsync();
     Task<IEnumerable<Domain.Data.Report>> GetAllReportsByEmployeeAsync(GenericDocumentRequest requestData);
     Task<int> MarkReportToArchiveAsync(GenericDocumentRequest requestData);
+    Task<int> MarkReportAsDeletedAsync(GenericDocumentRequest requestData);
     Task<IEnumerable<string>> GetReportsOnRemoveAsync(TimeSpan interval);
     Task<IEnumerable<string>> GetExpiredReportsAsync();
 }

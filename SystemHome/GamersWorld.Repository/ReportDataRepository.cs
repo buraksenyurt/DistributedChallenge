@@ -131,6 +131,19 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
         return affectedRowCount;
     }
 
+    public async Task<int> MarkReportAsDeletedAsync(GenericDocumentRequest requestData)
+    {
+        const string sql = @"
+                UPDATE
+                report
+                SET deleted = true
+                WHERE document_id = @DocumentId";
+
+        await using var dbConnection = await GetOpenConnectionAsync();
+        var affectedRowCount = await dbConnection.ExecuteAsync(sql, new { requestData.DocumentId });
+        return affectedRowCount;
+    }
+
     public async Task<IEnumerable<string>> GetExpiredReportsAsync()
     {
         const string sql = @"
@@ -147,7 +160,7 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
         const string sql = @"
             SELECT document_id
             FROM report
-            WHERE expire_time <= @AdjustedTime AND archived = True"; // Marked as archived and the expiretime ended with a delayed interval
+            WHERE expire_time <= @AdjustedTime AND archived = True AND deleted = False"; // Marked as archived and the expiretime ended with a delayed interval
 
         var adjustedTime = DateTime.Now - interval;
 
