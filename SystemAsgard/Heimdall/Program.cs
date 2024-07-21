@@ -57,7 +57,7 @@ builder.Services.AddHealthChecks()
                     .GetAwaiter().GetResult(),
         name: "RabbitMQ",
         tags: ["Docker-Compose", "RabbitMQ"])
-    .AddNpgSql(connectionString: secretStoreService.GetSecretAsync("ReportDbConnStr")
+    .AddNpgSql(connectionString: secretStoreService.GetSecretAsync("GamersWorldDbConnStr")
                     .GetAwaiter().GetResult(),
         name: "Report Db",
         tags: ["Docker-Compose", "PostgreSQL", "Database"]

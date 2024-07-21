@@ -14,7 +14,7 @@ public class FtpWriter(ILogger<FileSaver> logger, ISecretStoreService secretStor
     private readonly ILogger<FileSaver> _logger = logger;
     private readonly ISecretStoreService _secretStoreService = secretStoreService;
 
-    public async Task<BusinessResponse> SaveAsync(DocumentSaveRequest payload)
+    public async Task<BusinessResponse> SaveAsync(ReportSaveRequest payload)
     {
         if (payload == null || payload.Content == null)
         {

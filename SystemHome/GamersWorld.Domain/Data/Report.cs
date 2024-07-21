@@ -1,16 +1,18 @@
-using System.Text.Json.Serialization;
-
 namespace GamersWorld.Domain.Data;
 
-public class Document
+public class Report
 {
-    public int Id { get; set; }
+    public int ReportId { get; set; }
+
     public Guid TraceId { get; set; }
-    public string? ReportTitle { get; set; }
+
+    public string? Title { get; set; }
+
     public string? EmployeeId { get; set; }
+
     public string? DocumentId { get; set; }
-    [JsonIgnore]
-    public byte[] Content { get; set; }
+
     public DateTime InsertTime { get; set; }
+
     public DateTime ExpireTime { get; set; }
 }

@@ -5,5 +5,5 @@ namespace GamersWorld.Application.Contracts.Document;
 
 public interface IDocumentWriter
 {
-    Task<BusinessResponse> SaveAsync(DocumentSaveRequest payload);
+    Task<BusinessResponse> SaveAsync(ReportSaveRequest payload);
 }

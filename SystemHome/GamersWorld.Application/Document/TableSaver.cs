@@ -1,3 +1,4 @@
+using GamersWorld.Application.Contracts.Data;
 using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Application.Contracts.Events;
 using GamersWorld.Application.Contracts.MessageQueue;
@@ -8,14 +9,19 @@ using Microsoft.Extensions.Logging;
 
 namespace GamersWorld.Application.Document;
 
-public class TableSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueService, IDocumentDataRepository documentDataRepository)
+public class TableSaver(
+    ILogger<FileSaver> logger
+    , IEventQueueService eventQueueService
+    , IReportDataRepository reportDataRepository
+    , IReportDocumentDataRepository reportDocumentDataRepository)
     : IDocumentWriter
 {
     private readonly ILogger<FileSaver> _logger = logger;
     private readonly IEventQueueService _eventQueueService = eventQueueService;
-    private readonly IDocumentDataRepository _documentDataRepository = documentDataRepository;
+    private readonly IReportDataRepository _reportDataRepository = reportDataRepository;
+    private readonly IReportDocumentDataRepository _reportDocumentDataRepository = reportDocumentDataRepository;
 
-    public async Task<BusinessResponse> SaveAsync(DocumentSaveRequest payload)
+    public async Task<BusinessResponse> SaveAsync(ReportSaveRequest payload)
     {
         if (payload == null || payload.Content == null)
         {
@@ -29,12 +35,18 @@ public class TableSaver(ILogger<FileSaver> logger, IEventQueueService eventQueue
 
         try
         {
-            var insertedId = await _documentDataRepository.InsertDocumentAsync(payload);
+            var insertedId = await _reportDataRepository.InsertReportAsync(payload);
+
+            await _reportDocumentDataRepository.InsertReportDocumentAsync(new ReportDocumentSaveRequest
+            {
+                ReportId = insertedId,
+                Content = payload.Content
+            });
 
             var reportIsHereEvent = new ReportIsHereEvent
             {
                 Time = DateTime.Now,
-                Title = payload.ReportTitle,
+                Title = payload.Title,
                 TraceId = payload.TraceId,
                 CreatedReportId = payload.DocumentId,
                 EmployeeId = payload.EmployeeId,

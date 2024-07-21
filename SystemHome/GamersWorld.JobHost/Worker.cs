@@ -1,4 +1,5 @@
-﻿using GamersWorld.Application.Contracts.Document;
+﻿using GamersWorld.Application.Contracts.Data;
+using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Domain.Constants;
 using GamersWorld.Domain.Requests;
 using GamersWorld.JobHost.Model;
@@ -15,14 +16,16 @@ internal class Worker(
     IOptions<JobHeader> jobHeader
     , ILogger<Worker> logger
     , IRecurringJobManager recurringJobManager
-    , IDocumentDataRepository documentDataRepository
+    , IReportDataRepository documentDataRepository
+    , IReportDocumentDataRepository reportDocumentDataRepository
     , IDocumentDestroyer documentDestroyer
     , IServiceProvider serviceProvider)
 {
     private readonly JobHeader _jobHeader = jobHeader.Value;
     private readonly ILogger<Worker> _logger = logger;
     private readonly IRecurringJobManager _recurringJobManager = recurringJobManager;
-    private readonly IDocumentDataRepository _documentDataRepository = documentDataRepository;
+    private readonly IReportDataRepository _documentDataRepository = documentDataRepository;
+    private readonly IReportDocumentDataRepository _reportDocumentDataRepository = reportDocumentDataRepository;
     private readonly IDocumentDestroyer _documentDestroyer = documentDestroyer;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
@@ -45,11 +48,11 @@ internal class Worker(
     public async Task TruncateDeadReports()
     {
         _logger.LogInformation("Truncate Dead Reports started at: {ExecuteTime}", DateTime.Now);
-        var documentIdList = await _documentDataRepository.GetDocumentsOnRemoveAsync(interval: TimeSpan.FromHours(1));
+        var documentIdList = await _documentDataRepository.GetReportsOnRemoveAsync(interval: TimeSpan.FromHours(1));
         foreach (var documentId in documentIdList)
         {
             _logger.LogInformation("{DocumentId} is deleting", documentId);
-            var affected = await _documentDataRepository.DeleteDocumentByIdAsync(new GenericDocumentRequest { DocumentId = documentId });
+            var affected = await _reportDocumentDataRepository.DeleteDocumentByIdAsync(new GenericDocumentRequest { DocumentId = documentId });
             if (affected != 1)
             {
                 _logger.LogWarning("Error on delete for {DocumentId}", documentId);
@@ -66,14 +69,14 @@ internal class Worker(
     {
         var documentWriter = _serviceProvider.GetRequiredKeyedService<IDocumentWriter>(Names.FtpWriteService);
         _logger.LogInformation("Archive the expired reports to ftp process started at: {ExecuteTime}", DateTime.Now);
-        var documentIdList = await _documentDataRepository.GetExpiredDocumentsAsync();
+        var documentIdList = await _documentDataRepository.GetExpiredReportsAsync();
         foreach (var documentId in documentIdList)
         {
             var genericRequest = new GenericDocumentRequest { DocumentId = documentId };
-            var updatedCount = await _documentDataRepository.MarkDocumentToArchiveAsync(genericRequest);
+            var updatedCount = await _documentDataRepository.MarkReportToArchiveAsync(genericRequest);
             if (updatedCount == 1)
             {
-                var doc = await _documentDataRepository.ReadDocumentContentByIdAsync(genericRequest);
+                var doc = await _reportDocumentDataRepository.ReadDocumentByIdAsync(genericRequest);
                 if (doc == null)
                 {
                     _logger.LogWarning("{DocumentId} content not found", genericRequest.DocumentId);
@@ -82,10 +85,10 @@ internal class Worker(
                 else
                 {
                     var uploadResponse = await documentWriter.SaveAsync(
-                        new DocumentSaveRequest
+                        new ReportSaveRequest
                         {
                             DocumentId = documentId,
-                            Content = Convert.FromBase64String(doc.Base64Content)
+                            Content = doc.Content
                         });
 
                     if (uploadResponse.StatusCode != Domain.Enums.StatusCode.DocumentUploaded)

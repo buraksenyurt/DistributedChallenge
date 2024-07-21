@@ -46,10 +46,10 @@ public class ReportDocumentAvailable(
             _logger.LogWarning("{DocumentId} is ready and fetching...", getReportResponse.DocumentId);
             var content = getReportResponse.Document;
             // Başka bir Business enstrüman kullanılarak yazma işlemi gerçekleştirilir
-            var docContent = new DocumentSaveRequest
+            var docContent = new ReportSaveRequest
             {
                 TraceId = appEvent.TraceId,
-                ReportTitle = appEvent.Title,
+                Title = appEvent.Title,
                 EmployeeId = appEvent.EmployeeId,
                 DocumentId = getReportResponse.DocumentId,
                 Content = content,

@@ -1,4 +1,5 @@
-﻿using GamersWorld.Application.Contracts.Document;
+﻿using GamersWorld.Application.Contracts.Data;
+using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Application.Contracts.Events;
 using GamersWorld.Application.Contracts.Notification;
 using GamersWorld.Domain.Constants;
@@ -9,11 +10,17 @@ using System.Text.Json;
 
 namespace GamersWorld.EventBusiness;
 
-public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentDataRepository documentDataRepository, IServiceProvider serviceProvider, INotificationService notificationService)
+public class ArchiveReport(
+    ILogger<ArchiveReport> logger
+    , IReportDocumentDataRepository reportDocumentDataRepository
+    , IReportDataRepository reportDataRepository
+    , IServiceProvider serviceProvider
+    , INotificationService notificationService)
     : IEventDriver<ArchiveReportRequestEvent>
 {
     private readonly ILogger<ArchiveReport> _logger = logger;
-    private readonly IDocumentDataRepository _documentDataRepository = documentDataRepository;
+    private readonly IReportDocumentDataRepository _reportDocumentDataRepository = reportDocumentDataRepository;
+    private readonly IReportDataRepository _reportDataRepository = reportDataRepository;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly INotificationService _notificationService = notificationService;
 
@@ -23,26 +30,26 @@ public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentDataRepositor
         {
             DocumentId = appEvent.DocumentId,
         };
-        var doc = await _documentDataRepository.ReadDocumentAsync(request);
-        if (doc == null || doc.Content == null)
+        var doc = await _reportDocumentDataRepository.ReadDocumentByIdAsync(request);
+        if (doc == null)
         {
             _logger.LogWarning("{DocumentId} content not found", appEvent.DocumentId);
             return;
         }
         var writeOperator = _serviceProvider.GetRequiredKeyedService<IDocumentWriter>(Names.FtpWriteService);
 
-        var writeResponse = await writeOperator.SaveAsync(new Domain.Requests.DocumentSaveRequest
+        var writeResponse = await writeOperator.SaveAsync(new Domain.Requests.ReportSaveRequest
         {
             DocumentId = appEvent.DocumentId,
             Content = doc.Content,
         });
         if (writeResponse.StatusCode != Domain.Enums.StatusCode.DocumentUploaded)
         {
-            _logger.LogWarning("{DocumentId} save operation failed", doc.DocumentId);
+            _logger.LogWarning("{DocumentId} save operation failed", appEvent.DocumentId);
             return;
         }
 
-        var updateResult = await _documentDataRepository.MarkDocumentToArchiveAsync(request);
+        var updateResult = await _reportDataRepository.MarkReportToArchiveAsync(request);
         if (updateResult == 1)
         {
             var notificationData = new ReportNotification
@@ -58,7 +65,7 @@ public class ArchiveReport(ILogger<ArchiveReport> logger, IDocumentDataRepositor
         }
         else
         {
-            _logger.LogWarning("{DocumentId} marked as archive from db operation failed", doc.DocumentId);
+            _logger.LogWarning("{DocumentId} marked as archive from db operation failed", appEvent.DocumentId);
         }
     }
 }
