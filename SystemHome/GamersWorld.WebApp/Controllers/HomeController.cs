@@ -86,10 +86,7 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
         }
     }
 
-    public IActionResult RequestConfirmed()
-    {
-        return View();
-    }
+    public IActionResult RequestConfirmed() => View();
 
     public IActionResult Lobby()
     {

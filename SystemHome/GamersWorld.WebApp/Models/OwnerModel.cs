@@ -8,8 +8,5 @@ public class OwnerModel
     [Required]
     public string? Title { get; set; }
     public string? EmployeeId { get; set; }
-    override public string ToString()
-    {
-        return $"{FullName}[{EmployeeId}], {Title}";
-    }
+    override public string ToString() => $"{FullName}[{EmployeeId}], {Title}";
 }

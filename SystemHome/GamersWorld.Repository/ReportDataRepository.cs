@@ -13,6 +13,42 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
 {
     private readonly ISecretStoreService _secretStoreService = secretStoreService;
     private readonly ILogger<ReportDataRepository> _logger = logger;
+    const string insertReport= @"
+                INSERT INTO report (trace_id, title, employee_id, document_id, insert_time, expire_time)
+                VALUES (@TraceId, @Title, @EmployeeId, @DocumentId, @InsertTime, @ExpireTime)
+                RETURNING report_id";
+    const string selectReport= @"
+                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
+                FROM report
+                WHERE document_id = @DocumentId";
+    const string selectAllReport = @"
+                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
+                FROM report
+                ORDER BY insert_time AND archived = False";
+    const string selectReportByEmployee = @"
+                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
+                FROM report
+                WHERE employee_id = @EmployeeId AND archived = False
+                ORDER BY insert_time";
+    const string updateReport = @"
+                UPDATE
+                report
+                SET archived = true
+                WHERE document_id = @DocumentId";
+    const string softDeleteReport = @"
+                UPDATE
+                report
+                SET deleted = true
+                WHERE document_id = @DocumentId";
+    const string selectExpiredReport = @"
+                SELECT document_id
+                FROM report
+                WHERE expire_time <=  @AdjustedTime AND archived = False"; // Expired but not marked as archived
+    const string selectReportOnRemove = @"
+            SELECT document_id
+            FROM report
+            WHERE expire_time <= @AdjustedTime AND archived = True AND deleted = False"; // Marked as archived and the expiretime ended with a delayed interval
+
 
     private async Task<NpgsqlConnection> GetOpenConnectionAsync()
     {
@@ -24,13 +60,8 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
 
     public async Task<int> InsertReportAsync(ReportSaveRequest requestData)
     {
-        const string sql = @"
-                INSERT INTO report (trace_id, title, employee_id, document_id, insert_time, expire_time)
-                VALUES (@TraceId, @Title, @EmployeeId, @DocumentId, @InsertTime, @ExpireTime)
-                RETURNING report_id";
-
         await using var dbConnection = await GetOpenConnectionAsync();
-        var insertedId = await dbConnection.ExecuteScalarAsync<int>(sql, new
+        var insertedId = await dbConnection.ExecuteScalarAsync<int>(insertReport, new
         {
             requestData.EmployeeId,
             requestData.Title,
@@ -45,13 +76,8 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
 
     public async Task<Report> ReadReportAsync(GenericDocumentRequest requestData)
     {
-        const string sql = @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
-                FROM report
-                WHERE document_id = @DocumentId";
-
         await using var dbConnection = await GetOpenConnectionAsync();
-        var queryResult = await dbConnection.QueryAsync(sql, new { requestData.DocumentId });
+        var queryResult = await dbConnection.QueryAsync(selectReport, new { requestData.DocumentId });
 
         if (queryResult == null)
         {
@@ -61,6 +87,7 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
                 DocumentId = requestData.DocumentId
             };
         }
+
         return queryResult.Select(r => new Report
         {
             DocumentId = r.report_id,
@@ -75,13 +102,8 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
 
     public async Task<IEnumerable<Report>> GetAllReportsAsync()
     {
-        const string sql = @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
-                FROM report
-                ORDER BY insert_time AND archived = False";
-
         await using var dbConnection = await GetOpenConnectionAsync();
-        var queryResult = await dbConnection.QueryAsync(sql);
+        var queryResult = await dbConnection.QueryAsync(selectAllReport);
 
         return queryResult.Select(r => new Report
         {
@@ -97,14 +119,8 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
 
     public async Task<IEnumerable<Report>> GetAllReportsByEmployeeAsync(GenericDocumentRequest requestData)
     {
-        const string sql = @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
-                FROM report
-                WHERE employee_id = @EmployeeId AND archived = False
-                ORDER BY insert_time";
-
         await using var dbConnection = await GetOpenConnectionAsync();
-        var queryResult = await dbConnection.QueryAsync(sql, new { requestData.EmployeeId });
+        var queryResult = await dbConnection.QueryAsync(selectReportByEmployee, new { requestData.EmployeeId });
 
         return queryResult.Select(r => new Report
         {
@@ -120,52 +136,35 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
 
     public async Task<int> MarkReportToArchiveAsync(GenericDocumentRequest requestData)
     {
-        const string sql = @"
-                UPDATE
-                report
-                SET archived = true
-                WHERE document_id = @DocumentId";
-
         await using var dbConnection = await GetOpenConnectionAsync();
-        var affectedRowCount = await dbConnection.ExecuteAsync(sql, new { requestData.DocumentId });
+        var affectedRowCount = await dbConnection.ExecuteAsync(updateReport, new { requestData.DocumentId });
+
         return affectedRowCount;
     }
 
     public async Task<int> MarkReportAsDeletedAsync(GenericDocumentRequest requestData)
     {
-        const string sql = @"
-                UPDATE
-                report
-                SET deleted = true
-                WHERE document_id = @DocumentId";
-
         await using var dbConnection = await GetOpenConnectionAsync();
-        var affectedRowCount = await dbConnection.ExecuteAsync(sql, new { requestData.DocumentId });
+        var affectedRowCount = await dbConnection.ExecuteAsync(softDeleteReport, new { requestData.DocumentId });
+
         return affectedRowCount;
     }
 
     public async Task<IEnumerable<string>> GetExpiredReportsAsync()
     {
-        const string sql = @"
-                SELECT document_id
-                FROM report
-                WHERE expire_time <=  @AdjustedTime AND archived = False"; // Expired but not marked as archived
         await using var dbConnection = await GetOpenConnectionAsync();
-        var documentIdList = await dbConnection.QueryAsync<string>(sql, new { AdjustedTime = DateTime.Now });
+        var documentIdList = await dbConnection.QueryAsync<string>(selectExpiredReport, new { AdjustedTime = DateTime.Now });
+
         return documentIdList;
     }
 
     public async Task<IEnumerable<string>> GetReportsOnRemoveAsync(TimeSpan interval)
     {
-        const string sql = @"
-            SELECT document_id
-            FROM report
-            WHERE expire_time <= @AdjustedTime AND archived = True AND deleted = False"; // Marked as archived and the expiretime ended with a delayed interval
-
         var adjustedTime = DateTime.Now - interval;
 
         await using var dbConnection = await GetOpenConnectionAsync();
-        var documentIdList = await dbConnection.QueryAsync<string>(sql, new { AdjustedTime = adjustedTime });
+        var documentIdList = await dbConnection.QueryAsync<string>(selectReportOnRemove, new { AdjustedTime = adjustedTime });
+
         return documentIdList;
     }
 }
