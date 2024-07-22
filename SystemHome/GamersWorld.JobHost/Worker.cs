@@ -48,17 +48,19 @@ internal class Worker(
     public async Task TruncateDeadReports()
     {
         _logger.LogInformation("Truncate Dead Reports started at: {ExecuteTime}", DateTime.Now);
-        var documentIdList = await _reportDataRepository.GetReportsOnRemoveAsync(interval: TimeSpan.FromHours(1));
+        var documentIdList = await _reportDataRepository.GetExpiredReportsAsync(interval: TimeSpan.FromHours(1));
         foreach (var documentId in documentIdList)
         {
             var request = new GenericDocumentRequest { DocumentId = documentId };
             _logger.LogInformation("{DocumentId} is deleting", documentId);
-            var affected = await _reportDocumentDataRepository.DeleteDocumentByIdAsync(request);
+            var affected = await _reportDocumentDataRepository.DeleteDocumentAsync(documentId);
             if (affected != 1)
             {
                 _logger.LogWarning("Error on 'delete document row' for {DocumentId}", documentId);
             }
-            var markResponse = await _reportDataRepository.MarkReportAsDeletedAsync(request);
+            var report = await _reportDataRepository.ReadReportAsync(documentId);
+            report.Deleted = true;
+            var markResponse = await _reportDataRepository.UpdateReportAsync(report);
             if (markResponse != 1)
             {
                 _logger.LogWarning("Error on 'marked as deleted' for {DocumentId}", documentId);
@@ -79,14 +81,15 @@ internal class Worker(
         var documentIdList = await _reportDataRepository.GetExpiredReportsAsync();
         foreach (var documentId in documentIdList)
         {
-            var genericRequest = new GenericDocumentRequest { DocumentId = documentId };
-            var updatedCount = await _reportDataRepository.MarkReportToArchiveAsync(genericRequest);
+            var report = await _reportDataRepository.ReadReportAsync(documentId);
+            report.Archived = true;
+            var updatedCount = await _reportDataRepository.UpdateReportAsync(report);
             if (updatedCount == 1)
             {
-                var doc = await _reportDocumentDataRepository.ReadDocumentByIdAsync(genericRequest);
+                var doc = await _reportDocumentDataRepository.ReadDocumentAsync(documentId);
                 if (doc == null)
                 {
-                    _logger.LogWarning("{DocumentId} content not found", genericRequest.DocumentId);
+                    _logger.LogWarning("{DocumentId} content not found", documentId);
                     continue;
                 }
                 else

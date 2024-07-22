@@ -1,4 +1,3 @@
-using Amazon.Runtime.Internal;
 using GamersWorld.Application;
 using GamersWorld.Application.Contracts.Data;
 using GamersWorld.Application.Contracts.Events;
@@ -14,7 +13,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
 using System.ComponentModel.DataAnnotations;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,10 +51,7 @@ var documentsGroup = app.MapGroup("/api/documents");
 documentsGroup.MapGet("/employee/{employeeId}", async (string employeeId, IReportDataRepository repository, ILogger<Program> logger) =>
 {
     logger.LogInformation("Request reports data for {EmployeeId}", employeeId);
-    var documents = await repository.GetAllReportsByEmployeeAsync(new GenericDocumentRequest
-    {
-        EmployeeId = employeeId,
-    });
+    var documents = await repository.ReadAllReportsAsync(employeeId);
 
     return Results.Json(documents);
 })
@@ -66,11 +61,7 @@ documentsGroup.MapGet("/employee/{employeeId}", async (string employeeId, IRepor
 documentsGroup.MapGet("/{documentId}", async (string documentId, IReportDocumentDataRepository repository, ILogger<Program> logger) =>
 {
     logger.LogInformation("Request report content for {DocumentId}", documentId);
-    var document = await repository.ReadDocumentByIdAsync(
-        new GenericDocumentRequest
-        {
-            DocumentId = documentId
-        });
+    var document = await repository.ReadDocumentAsync(documentId);
 
     if (document == null)
     {

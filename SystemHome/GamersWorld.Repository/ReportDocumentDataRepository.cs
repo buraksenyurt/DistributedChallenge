@@ -22,7 +22,7 @@ public class ReportDocumentDataRepository(ISecretStoreService secretStoreService
         return dbConnection;
     }
 
-    public async Task<int> InsertReportDocumentAsync(ReportDocumentSaveRequest requestData)
+    public async Task<int> CreateReportDocumentAsync(ReportDocument reportDocument)
     {
         const string sql = @"
                 INSERT INTO report_document (fk_report_id, content)
@@ -32,14 +32,16 @@ public class ReportDocumentDataRepository(ISecretStoreService secretStoreService
         await using var dbConnection = await GetOpenConnectionAsync();
         var insertedId = await dbConnection.ExecuteScalarAsync<int>(sql, new
         {
-            requestData.ReportId,
-            requestData.Content
+            reportDocument.ReportId,
+            reportDocument.Content
         });
+
+        _logger.LogInformation("New Repord Document, {InsertedId} has been created", insertedId);
 
         return insertedId;
     }
 
-    public async Task<ReportDocument?> ReadDocumentByIdAsync(GenericDocumentRequest requestData)
+    public async Task<ReportDocument?> ReadDocumentAsync(string documentId)
     {
         const string sql = @"
                 SELECT content 
@@ -48,11 +50,11 @@ public class ReportDocumentDataRepository(ISecretStoreService secretStoreService
                 WHERE r.document_id = @DocumentId";
 
         await using var dbConnection = await GetOpenConnectionAsync();
-        var reportDocument = await dbConnection.QueryFirstOrDefaultAsync<ReportDocument>(sql, new { requestData.DocumentId });
+        var reportDocument = await dbConnection.QueryFirstOrDefaultAsync<ReportDocument>(sql, new { DocumentId = documentId });
         return reportDocument;
     }
 
-    public async Task<int> GetDocumentLength(GenericDocumentRequest requestData)
+    public async Task<int> GetDocumentLength(string documentId)
     {
         const string sql = @"
                 SELECT LENGTH(content) AS ContentLength 
@@ -61,12 +63,12 @@ public class ReportDocumentDataRepository(ISecretStoreService secretStoreService
                 WHERE r.document_id = @DocumentId";
 
         await using var dbConnection = await GetOpenConnectionAsync();
-        var length = await dbConnection.QueryFirstOrDefaultAsync<int>(sql, new { requestData.DocumentId });
-
+        var length = await dbConnection.QueryFirstOrDefaultAsync<int>(sql, new { DocumentId = documentId });
+        _logger.LogInformation("{DocumentId} length is {TotalBytes}", documentId, length);
         return length;
     }
 
-    public async Task<int> DeleteDocumentByIdAsync(GenericDocumentRequest requestData)
+    public async Task<int> DeleteDocumentAsync(string documentId)
     {
         const string sql = @"
                 DELETE
@@ -74,7 +76,10 @@ public class ReportDocumentDataRepository(ISecretStoreService secretStoreService
                 WHERE fk_report_id = (SELECT report_id FROM report WHERE document_id = @DocumentId)";
 
         await using var dbConnection = await GetOpenConnectionAsync();
-        var affectedRowCount = await dbConnection.ExecuteAsync(sql, new { requestData.DocumentId });
+        var affectedRowCount = await dbConnection.ExecuteAsync(sql, new { DocumentId = documentId });
+
+        _logger.LogInformation("{AffectedRowCount} Repord Document has been deleted", affectedRowCount);
+
         return affectedRowCount;
     }
 }

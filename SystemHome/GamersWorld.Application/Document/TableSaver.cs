@@ -2,6 +2,7 @@ using GamersWorld.Application.Contracts.Data;
 using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Application.Contracts.Events;
 using GamersWorld.Application.Contracts.MessageQueue;
+using GamersWorld.Domain.Data;
 using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
@@ -35,9 +36,17 @@ public class TableSaver(
 
         try
         {
-            var insertedId = await _reportDataRepository.InsertReportAsync(payload);
+            var insertedId = await _reportDataRepository.CreateReportAsync(new Domain.Data.Report
+            {
+                TraceId = payload.TraceId,
+                EmployeeId = payload.EmployeeId,
+                Title = payload.Title,
+                DocumentId = payload.DocumentId,
+                InsertTime = payload.InsertTime,
+                ExpireTime = payload.ExpireTime
+            });
 
-            await _reportDocumentDataRepository.InsertReportDocumentAsync(new ReportDocumentSaveRequest
+            await _reportDocumentDataRepository.CreateReportDocumentAsync(new ReportDocument
             {
                 ReportId = insertedId,
                 Content = payload.Content
