@@ -7,7 +7,7 @@ CREATE TABLE report (
     insert_time TIMESTAMP,
     expire_time TIMESTAMP,
     archived BOOLEAN DEFAULT False,
-    deleted BOOLEAN DEFAULT False,
+    deleted BOOLEAN DEFAULT False
 );
 
 CREATE TABLE report_document (

@@ -1,19 +1,41 @@
-using System.ComponentModel.DataAnnotations;
-using System.Data;
+using Eval.AuditApi;
 using Eval.AuditApi.Contracts;
 using Eval.AuditApi.Model;
-using Eval.AuditApi;
 using JudgeMiddleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Resistance;
-using Resistance.Inconsistency;
-using Resistance.Latency;
-using Resistance.NetworkFailure;
-using Resistance.Outage;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
+//using Resistance;
+//using Resistance.Inconsistency;
+//using Resistance.Latency;
+//using Resistance.NetworkFailure;
+//using Resistance.Outage;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var systemName = "AuditApi";
+var environmentName = builder.Environment.EnvironmentName;
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("System", systemName)
+    .Enrich.WithProperty("Environment", environmentName)
+    .WriteTo.Console()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://host.docker.internal:9200"))
+    {
+        AutoRegisterTemplate = true,
+        IndexFormat = "auditapi-logs-development",
+        TypeName = null,
+        BatchAction = ElasticOpType.Create,
+        ModifyConnectionSettings = x => x.ServerCertificateValidationCallback((sender, cert, chain, errors) => true)
+    })
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
