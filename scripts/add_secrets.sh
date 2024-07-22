@@ -37,3 +37,4 @@ add_or_update_secret "Development" "HomeWebAppHubAddress" "localhost:5093/notify
 add_or_update_secret "Development" "FtpServerAddress" "localhost"
 add_or_update_secret "Development" "FtpUsername" "userone"
 add_or_update_secret "Development" "FtpPassword" "123"
+add_or_update_secret "Development" "ElastichsearchAddress" "localhost:9200"
