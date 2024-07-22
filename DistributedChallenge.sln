@@ -69,6 +69,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{8D8E097D-AE7F-48D5-8BDE-02560AA14D24}"
 	ProjectSection(SolutionItems) = preProject
 		images\current_inventory.png = images\current_inventory.png
+		images\elk_01.png = images\elk_01.png
 		images\first_test.png = images\first_test.png
 		images\heimdall_01.png = images\heimdall_01.png
 		images\heimdall_02.png = images\heimdall_02.png

@@ -26,6 +26,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Service Discovery ve Hashicorp Consul Entegrasonu](#service-discovery-ve-hashicorp-consul-entegrasonu)
     - [Ftp Entegrasyonu ile Arşivleme Stratejisi](#ftp-entegrasyonu-ile-arşivleme-stratejisi)
     - [Planlı İşler](#planlı-i̇şler)
+    - [Elasticsearch ve Kibana Entegrasyonu](#elasticsearch-ve-kibana-entegrasyonu)
   - [Bazı Düşünceler](#bazı-düşünceler)
   - [Tartışılabilecek Problemler](#tartışılabilecek-problemler)
   - [Youtube Anlatımları](#youtube-anlatımları)
@@ -569,6 +570,56 @@ Aşağıdaki ekran görüntülerinde arşivlenen ve süresi dolan raporların he
 ![After Archive Runtime](/images/runtime_16.png)
 
 Tabii burada açıkta kalan bir nokta daha var. Arşivlenmediği halde süresi dolan raporlar için de bir planlı iş eklemek gerekebilir. Bu tip raporlar ftp'de olmayan ama süresi dolduğu halde db'de kalmaya devam eden türden raporlardır.
+
+### Elasticsearch ve Kibana Entegrasyonu
+
+Sistemlerin ürettiği **log**ları uygulamaların terminal pencereleri yerine Kibana gibi araçlar üzerinden monitör etmek dağıtık sistemler için önemli bir ihtiyaç. Farklı uygulamalardan akan log sayısı arttıkça bunları pencerelerden takip etmek zorlaştığı gibi loglar üzerinde sorgulama yapmak da neredeyse imkansız hale geliyor. Yüksek log üretimini ve bu küme üzerinde hızlı arama operasyonunu **Elasticsearch** gibi bir çözümle giderebiliriz. Nitelik **Elasitcsearch**'e akan logları görsel olarak takip ederken de bir araca ihtiyacımız var. Bu noktada **Kibana** sık kullanılan çözümlerin başında gelmekte. 
+
+Bu çözümde **Elasticsearch** ve **Kibana** implemantasyonu için yine **docker-compose** kompozisyonundan yararlanıyoruz. Geliştirme ortamı baz alınarak hareket ettiğimizi ifade edebilirim. İlk implementasyonumuzu **AuditApi** servisi üstünde gerçekleştirdik. **Kibana** ile **Elasticsearch** arasındaki entegrasyonda halletmem gereken bazı sorunlar oluştu. Logları **Discover** arabiriminde göremedikten sonra biraz araştırma yaparak gerekli veri akışını *(Data Stream)* elle eklemeye karar verdim. Bunun için **Kibana Dev Tools** arabiriminden yararlanabiliriz. Bu arabirim bir servis API desteği sunarak bazı yönetsel işleri yapabilmemizi sağlamakta.
+
+Takip eden ilk komut ile bir index şablonu oluşturmaktayız. **index_patterns** kısmında geçen ifade aynı zamanda **AuditApi** kodu içerisinde belirttiğimiz log desenini işaret ediyor.
+
+```text
+PUT _index_template/auditapi-logs-template
+{
+  "index_patterns": ["auditapi-logs-development*"],
+  "data_stream": {},
+  "template": {
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "message": {
+          "type": "text"
+        },
+        "System": {
+          "type": "keyword"
+        },
+        "Environment": {
+          "type": "keyword"
+        },
+        "Level": {
+          "type": "keyword"
+        },
+        "SourceContext": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
+```
+
+Bu işlemin ardından da aşağıdaki komut ile yukarıdaki index şablonu için bir **Data Stream** oluşturuyoruz.
+
+```text
+PUT /_data_stream/auditapi-logs-development
+```
+
+Artık bir Data Stream mevcut olduğundan AuditApi kodundan gönderilen logların akacağı kanal tanımlanmış bulunuyor. Bu işlemler ardından Kibana'dan ilgili logları izleyebiliriz. Aşağıdaki ekran görüntüsünde örnek bir çıktı görmektesiniz. Zamanlar diğer sistemlerdeki uygulama loglarını da bu ortamlara alacağız.
+
+![ELK Runtime](/images/elk_01.png)
 
 ## Bazı Düşünceler
 
