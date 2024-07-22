@@ -17,7 +17,7 @@ public class TableReader(ILogger<FileSaver> logger, IReportDocumentDataRepositor
     {
         try
         {
-            var contentLength = await _reportDocumentDataRepository.GetDocumentLength(payload);
+            var contentLength = await _reportDocumentDataRepository.GetDocumentLength(payload.DocumentId);
             return new BusinessResponse
             {
                 StatusCode = StatusCode.DocumentReadable,

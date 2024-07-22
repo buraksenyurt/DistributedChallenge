@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using GamersWorld.Application.Contracts.Data;
 using GamersWorld.Application.Contracts.Events;
 using GamersWorld.Application.Contracts.Notification;
 using GamersWorld.Domain.Dtos;
 using GamersWorld.Domain.Enums;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using GamersWorld.Application.Contracts.Data;
 
 namespace GamersWorld.EventBusiness;
 
@@ -23,16 +23,14 @@ public class DeleteReport(
     public async Task Execute(DeleteReportRequestEvent appEvent)
     {
         _logger.LogInformation("{DocumentId} is deleting from system", appEvent.DocumentId);
-        var requestData = new Domain.Requests.GenericDocumentRequest
-        {
-            DocumentId = appEvent.DocumentId,
-        };
-        var deleteResult = await _reportDocumentDataRepository.DeleteDocumentByIdAsync(requestData);
+        var deleteResult = await _reportDocumentDataRepository.DeleteDocumentAsync(appEvent.DocumentId);
         if (deleteResult == 1)
         {
-            var archiveMark = await _reportDataRepository.MarkReportToArchiveAsync(requestData);
-            var deleteMark = await _reportDataRepository.MarkReportAsDeletedAsync(requestData);
-            if (archiveMark == 1 && deleteMark == 1)
+            var report = await _reportDataRepository.ReadReportAsync(appEvent.DocumentId);
+            report.Archived = true;
+            report.Deleted = true;
+            var updateResult = await _reportDataRepository.UpdateReportAsync(report);
+            if (updateResult == 1)
             {
                 _logger.LogInformation("{DocumentId} content has been deleted and main report marked as archived.", appEvent.DocumentId);
                 var notificationData = new ReportNotification

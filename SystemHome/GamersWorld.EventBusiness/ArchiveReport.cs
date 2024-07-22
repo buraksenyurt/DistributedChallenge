@@ -26,11 +26,7 @@ public class ArchiveReport(
 
     public async Task Execute(ArchiveReportRequestEvent appEvent)
     {
-        var request = new Domain.Requests.GenericDocumentRequest
-        {
-            DocumentId = appEvent.DocumentId,
-        };
-        var doc = await _reportDocumentDataRepository.ReadDocumentByIdAsync(request);
+        var doc = await _reportDocumentDataRepository.ReadDocumentAsync(appEvent.DocumentId);
         if (doc == null)
         {
             _logger.LogWarning("{DocumentId} content not found", appEvent.DocumentId);
@@ -49,7 +45,9 @@ public class ArchiveReport(
             return;
         }
 
-        var updateResult = await _reportDataRepository.MarkReportToArchiveAsync(request);
+        var report = await _reportDataRepository.ReadReportAsync(appEvent.DocumentId);
+        report.Archived = true;
+        var updateResult = await _reportDataRepository.UpdateReportAsync(report);
         if (updateResult == 1)
         {
             var notificationData = new ReportNotification
