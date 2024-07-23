@@ -625,7 +625,47 @@ PUT /_data_stream/auditapi-logs-development
 
 Artık bir Data Stream mevcut olduğundan AuditApi kodundan gönderilen logların akacağı kanal tanımlanmış bulunuyor. Bu işlemler ardından Kibana'dan ilgili logları izleyebiliriz. Aşağıdaki ekran görüntüsünde örnek bir çıktı görmektesiniz. Zamanlar diğer sistemlerdeki uygulama loglarını da bu ortamlara alacağız.
 
-![ELK Runtime](/images/elk_01.png)
+![ELK Dev Tools](/images/elk_01.png)
+
+MiddleEarth sisteminde yer alan ve Redis Stream üzerinden event yorumlayan Kahin.EventHost için de Kibana'nın aynı arabiriminden aşağıdaki sorguları kullandık.
+
+```
+PUT _index_template/kahin-event-host-logs-template
+{
+  "index_patterns": ["kahin-event-host-logs-development*"],
+  "data_stream": {},
+  "template": {
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "message": {
+          "type": "text"
+        },
+        "System": {
+          "type": "keyword"
+        },
+        "Environment": {
+          "type": "keyword"
+        },
+        "Level": {
+          "type": "keyword"
+        },
+        "SourceContext": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
+
+PUT /_data_stream/kahin-event-host-logs-development
+```
+
+Bu arada unutmamamız gereken bir adım da söz konusu veri akışları için birer **Data View** oluşturulması gerekliliği. Bunu da örneğin aşağıdaki ekran görüntüsünde olduğu gibi yapabiliriz.
+
+![ELK Add DataView](/images/elk_02.png)
 
 ## Bazı Düşünceler
 
