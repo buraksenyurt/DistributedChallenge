@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using Heimdall.Services;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using SecretsAgent;
-using Steeltoe.Discovery.Client;
 using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,48 +46,54 @@ ILogger<SecretStoreService> logger = loggerFactory.CreateLogger<SecretStoreServi
 IConfiguration configuration = builder.Configuration;
 var secretStoreService = new SecretStoreService(logger, configuration);
 
+//TODO@buraksenyurt Need to resolve via DI
+var clientFactory = builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>();
+
 builder.Services.AddHealthChecks()
     .AddRedis(
-        redisConnectionString: secretStoreService.GetSecretAsync("RedisConnectionString")
-                    .GetAwaiter().GetResult(),
+        redisConnectionString: secretStoreService.GetSecretAsync("RedisConnectionString").GetAwaiter().GetResult(),
         name: "Redis",
         tags: ["Docker-Compose", "Redis"])
     .AddRabbitMQ(
-        rabbitConnectionString: secretStoreService.GetSecretAsync("RabbitAmqpConnectionString")
-                    .GetAwaiter().GetResult(),
+        rabbitConnectionString: secretStoreService.GetSecretAsync("RabbitAmqpConnectionString").GetAwaiter().GetResult(),
         name: "RabbitMQ",
         tags: ["Docker-Compose", "RabbitMQ"])
-    .AddNpgSql(connectionString: secretStoreService.GetSecretAsync("GamersWorldDbConnStr")
-                    .GetAwaiter().GetResult(),
+    .AddNpgSql(
+        connectionString: secretStoreService.GetSecretAsync("GamersWorldDbConnStr").GetAwaiter().GetResult(),
         name: "Report Db",
         tags: ["Docker-Compose", "PostgreSQL", "Database"]
     )
     .AddConsul(setup =>
-        {
-            setup.HostName = "localhost";
-            setup.Port = 8500;
-            setup.RequireHttps = false;
-        },
+    {
+        setup.HostName = "localhost";
+        setup.Port = 8500;
+        setup.RequireHttps = false;
+    },
         name: "Consul",
         tags: ["Docker-Compose", "Consul", "Service-Discovery", "hashicorp"]
         )
+    .AddElasticsearch(
+        $"http://{secretStoreService.GetSecretAsync("ElastichsearchAddress").GetAwaiter().GetResult()}",
+        name: "Elasticsearch",
+        tags: ["Docker-Compose", "Elasticsearch", "Logging", "Analytics"]
+    )
     .AddCheck("GamersWorld Messenger",
-        instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "HomeMessengerApi"),
+        instance: new HealthChecker(clientFactory, "HomeMessengerApi"),
         tags: ["SystemHOME", "REST", "BackendApi"]
     )
     .AddCheck(
         name: "Audit Api",
-        instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "HalAuditApi"),
+        instance: new HealthChecker(clientFactory, "HalAuditApi"),
         tags: ["SystemHAL", "REST", "AuditApi"]
     )
     .AddCheck(
         name: "Kahin Reporting Gateway",
-        instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "MiddleEarthGatewayApi"),
+        instance: new HealthChecker(clientFactory, "MiddleEarthGatewayApi"),
         tags: ["SystemMIDDLE_EARTH", "REST"]
     )
     .AddCheck(
         name: "GamersWorld Gateway",
-        instance: new HealthChecker(builder.Services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>(), "HomeGatewayApi"),
+        instance: new HealthChecker(clientFactory, "HomeGatewayApi"),
         tags: ["SystemHOME", "REST"]
     );
 
