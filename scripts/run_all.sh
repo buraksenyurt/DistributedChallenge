@@ -9,11 +9,15 @@ gnome-terminal --title="HOME - Messenger Service" -- bash -c "cd ../SystemHome/G
 # Start Home EventHost
 gnome-terminal --title="HOME - Event Consumer Host" -- bash -c "cd ../SystemHome/GamersWorld.EventHost && dotnet run; exec bash"
 
+# Start Home JobHost
+gnome-terminal --title="HOME - Scheduled Job Host" -- bash -c "cd ../SystemHome/GamersWorld.JobHost && dotnet run; exec bash"
+
 # Start Home Gateway Service
 gnome-terminal --title="HOME - Gateway Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Gateway && dotnet run; exec bash"
 
 # Start Eval.Api Service
-gnome-terminal --title="HAL - Expression Auditor" -- bash -c "cd ../SystemHAL/Eval.AuditApi && dotnet run; exec bash"
+# Docker Service haline getirildiği için gerek kalmadı
+# gnome-terminal --title="HAL - Expression Auditor" -- bash -c "cd ../SystemHAL/Eval.AuditApi && dotnet run; exec bash"
 
 # Start Web App
 gnome-terminal --title="HOME - Web App" -- bash -c "cd ../SystemHome/GamersWorld.WebApp && dotnet run; exec bash"

@@ -104,6 +104,7 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 | HOME           | GamersWorld.Service.Messenger    | REST        | Web önyüz için backend servisi                       | localhost:5234 |
 | HOME           | GamersWorld.WebApp               | Self Hosted | Web uygulaması                                       | localhost:5093 |
 | HOME           | GamersWorld.EventHost            | Self Hosted | Home sistemindeki event yönetim hizmeti              | N/A            |
+| HOME           | GamersWorld.JobHost              | Self Hosted | Planlı işler işletmecisi                             | N/A            |
 | MIDDLE EARTH   | Kahin.Service.ReportingGateway   | REST        | Rapor hazırlama, yollama ve durum güncellemesi       | localhost:5218 |
 | MIDDLE EARTH   | Kahin.EventHost                  | Self Hosted | Middle Earth tarafında çalışan event yönetim hizmeti | N/A            |
 | DOCKER COMPOSE | RabbitMQ                         |             | Async Event Queue                                    | localhost:5672 |
@@ -113,6 +114,8 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 | DOCKER COMPOSE | Postgresql                       |             | Rapor veritabanı                                     | N/A            |
 | DOCKER COMPOSE | Consul                           |             | Service Discovery için                               | localhost:8500 |
 | DOCKER COMPOSE | Ftp Server                       |             | Ftp senaryolarını işletmek için                      | localhost      |
+| DOCKER COMPOSE | Elasticsearch                    |             | Uygulama loglarını depolamak için                    | localhost:9200 |
+| DOCKER COMPOSE | Kibana                           |             | Logları izlemek için                                 | localhost:5601 |
 | SYSTEM ASGARD  | Heimdall                         | Self Hosted | Servis izleme uygulaması                             | localhost:5247 |
 
 **NOT: Yeni servisler ilave edildikçe burası güncellenmelidir.**
@@ -187,6 +190,9 @@ gnome-terminal --title="HOME - Messenger Service" -- bash -c "cd ../SystemHome/G
 
 # Start Home EventHost
 gnome-terminal --title="HOME - Event Consumer Host" -- bash -c "cd ../SystemHome/GamersWorld.EventHost && dotnet run; exec bash"
+
+# Start Home JobHost
+gnome-terminal --title="HOME - Scheduled Job Host" -- bash -c "cd ../SystemHome/GamersWorld.JobHost && dotnet run; exec bash"
 
 # Start Home Gateway
 gnome-terminal --title="HOME - Gateway Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Gateway && dotnet run; exec bash"
