@@ -31,7 +31,7 @@ get_secret $environment "HomeWebAppHubAddress"
 get_secret $environment "FtpServerAddress"
 get_secret $environment "FtpUsername"
 get_secret $environment "FtpPassword"
-get_secret $environment "ElastichsearchAddress"
+get_secret $environment "ElasticsearchAddress"
 
 # environment="Test"
 

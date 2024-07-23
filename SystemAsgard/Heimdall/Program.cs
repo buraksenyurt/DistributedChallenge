@@ -73,7 +73,7 @@ builder.Services.AddHealthChecks()
         tags: ["Docker-Compose", "Consul", "Service-Discovery", "hashicorp"]
         )
     .AddElasticsearch(
-        $"http://{secretStoreService.GetSecretAsync("ElastichsearchAddress").GetAwaiter().GetResult()}",
+        $"http://{secretStoreService.GetSecretAsync("ElasticsearchAddress").GetAwaiter().GetResult()}",
         name: "Elasticsearch",
         tags: ["Docker-Compose", "Elasticsearch", "Logging", "Analytics"]
     )
