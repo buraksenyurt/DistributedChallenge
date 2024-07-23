@@ -7,8 +7,28 @@ using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Logging;
 using Polly;
 using SecretsAgent;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
+
+var systemName = "KahinEventHost";
+var environmentName = "Development";
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("System", systemName)
+    .Enrich.WithProperty("Environment", environmentName)
+    .WriteTo.Console()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200")) //TODO@buraksenyurt Read via SecretService
+    {
+        AutoRegisterTemplate = true,
+        IndexFormat = "kahin-event-host-logs-development",
+        TypeName = null,
+        BatchAction = ElasticOpType.Create,
+        ModifyConnectionSettings = x => x.ServerCertificateValidationCallback((sender, cert, chain, errors) => true)
+    })
+    .CreateLogger();
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
@@ -37,6 +57,7 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddSingleton(context.Configuration);
     })
+    .UseSerilog()
     .Build();
 
 var logger = host.Services.GetRequiredService<ILogger<Program>>();
@@ -44,8 +65,5 @@ var logger = host.Services.GetRequiredService<ILogger<Program>>();
 var httpClientFactory = host.Services.GetRequiredService<IHttpClientFactory>();
 var httpClient = httpClientFactory.CreateClient("HomeGatewayService");
 await ServiceController.IsReportingServiceAlive(httpClient, logger);
-
-//Console.WriteLine("Press any key to start Host App");
-//Console.ReadLine();
 
 await host.RunAsync();
