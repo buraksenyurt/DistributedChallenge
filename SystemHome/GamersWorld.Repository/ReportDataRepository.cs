@@ -13,19 +13,19 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
     private readonly ISecretStoreService _secretStoreService = secretStoreService;
     private readonly ILogger<ReportDataRepository> _logger = logger;
     const string createReport= @"
-                INSERT INTO report (trace_id, title, employee_id, document_id, insert_time, expire_time)
-                VALUES (@TraceId, @Title, @EmployeeId, @DocumentId, @InsertTime, @ExpireTime)
+                INSERT INTO report (trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted)
+                VALUES (@TraceId, @Title, @EmployeeId, @DocumentId, @InsertTime, @ExpireTime, @Archived, @Deleted)
                 RETURNING report_id";
     const string selectReportByDocumentId = @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
+                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted
                 FROM report
                 WHERE document_id = @DocumentId";
     const string selectAllReport= @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
+                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted
                 FROM report
                 ORDER BY insert_time AND archived = False";
     const string selectReportByEmployeeId = @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
+                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted
                 FROM report
                 WHERE employee_id = @EmployeeId AND archived = False
                 ORDER BY insert_time";
@@ -69,7 +69,9 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
             report.TraceId,
             report.DocumentId,
             report.InsertTime,
-            report.ExpireTime
+            report.ExpireTime,
+            report.Archived,
+            report.Deleted
         });
 
         return insertedId;
@@ -97,7 +99,9 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
             EmployeeId = r.employee_id,
             ExpireTime = r.expire_time,
             InsertTime = r.insert_time,
-            ReportId = r.report_id
+            ReportId = r.report_id,
+            Archived = r.archived,
+            Deleted = r.deleted
         }).First();
     }
 
@@ -114,7 +118,9 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
             InsertTime = r.insert_time,
             ReportId = r.report_id,
             Title = r.title,
-            TraceId = r.trace_id
+            TraceId = r.trace_id,
+            Archived = r.archived,
+            Deleted = r.deleted
         });
     }
 
@@ -131,7 +137,9 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
             InsertTime = r.insert_time,
             ReportId = r.report_id,
             Title = r.title,
-            TraceId = r.trace_id
+            TraceId = r.trace_id,
+            Archived = r.archived,
+            Deleted = r.deleted
         });
     }
 

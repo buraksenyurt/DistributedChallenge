@@ -1,6 +1,7 @@
 ﻿using Kahin.Common.Services;
 using Kahin.EventHost;
 using Kahin.MQ;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http.Resilience;
@@ -12,25 +13,11 @@ using Serilog.Sinks.Elasticsearch;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
 
-var systemName = "KahinEventHost";
-var environmentName = "Development";
-
-Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .Enrich.WithProperty("System", systemName)
-    .Enrich.WithProperty("Environment", environmentName)
-    .WriteTo.Console()
-    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200")) //TODO@buraksenyurt Read via SecretService
-    {
-        AutoRegisterTemplate = true,
-        IndexFormat = "kahin-event-host-logs-development",
-        TypeName = null,
-        BatchAction = ElasticOpType.Create,
-        ModifyConnectionSettings = x => x.ServerCertificateValidationCallback((sender, cert, chain, errors) => true)
-    })
-    .CreateLogger();
-
 var host = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((context, config) =>
+    {
+        config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+    })
     .ConfigureServices((context, services) =>
     {
         services.AddSingleton<ISecretStoreService, SecretStoreService>();
@@ -56,6 +43,26 @@ var host = Host.CreateDefaultBuilder(args)
             });
 
         services.AddSingleton(context.Configuration);
+
+        var serviceProvider = services.BuildServiceProvider();
+        var secretStoreService = serviceProvider.GetRequiredService<ISecretStoreService>();
+        var elasticsearchAddress = $"http://{secretStoreService.GetSecretAsync("ElasticsearchAddress").GetAwaiter().GetResult()}";
+        var environment = context.Configuration["Environment"] ?? "Development";
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(context.Configuration)
+            .Enrich.FromLogContext()
+            .Enrich.WithProperty("System", "KahinEventHost")
+            .Enrich.WithProperty("Environment", environment)
+            .WriteTo.Console()
+            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticsearchAddress))
+            {
+                AutoRegisterTemplate = true,
+                IndexFormat = $"kahin-event-host-logs-{environment.ToLower()}",
+                TypeName = null,
+                BatchAction = ElasticOpType.Create,
+                ModifyConnectionSettings = x => x.ServerCertificateValidationCallback((sender, cert, chain, errors) => true)
+            })
+            .CreateLogger();
     })
     .UseSerilog()
     .Build();

@@ -15,6 +15,6 @@ public class Report
     public DateTime InsertTime { get; set; }
 
     public DateTime ExpireTime { get; set; }
-    public bool Deleted { get; set; }
-    public bool Archived { get; set; }
+    public bool Deleted { get; set; } = false;
+    public bool Archived { get; set; } = false;
 }
