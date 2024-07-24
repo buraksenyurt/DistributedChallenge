@@ -24,8 +24,8 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
     public async Task<int> CreateReportAsync(Report report)
     {
         const string sql = @"
-                INSERT INTO report (trace_id, title, employee_id, document_id, insert_time, expire_time)
-                VALUES (@TraceId, @Title, @EmployeeId, @DocumentId, @InsertTime, @ExpireTime)
+                INSERT INTO report (trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted)
+                VALUES (@TraceId, @Title, @EmployeeId, @DocumentId, @InsertTime, @ExpireTime, @Archived, @Deleted)
                 RETURNING report_id";
 
         await using var dbConnection = await GetOpenConnectionAsync();
@@ -36,7 +36,9 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
             report.TraceId,
             report.DocumentId,
             report.InsertTime,
-            report.ExpireTime
+            report.ExpireTime,
+            report.Archived,
+            report.Deleted
         });
 
         return insertedId;
@@ -45,7 +47,7 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
     public async Task<Report> ReadReportAsync(string documentId)
     {
         const string sql = @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
+                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted
                 FROM report
                 WHERE document_id = @DocumentId";
 
@@ -68,14 +70,16 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
             EmployeeId = r.employee_id,
             ExpireTime = r.expire_time,
             InsertTime = r.insert_time,
-            ReportId = r.report_id
+            ReportId = r.report_id,
+            Archived = r.archived,
+            Deleted = r.deleted
         }).First();
     }
 
     public async Task<IEnumerable<Report>> ReadAllReportsAsync()
     {
         const string sql = @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
+                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted
                 FROM report
                 ORDER BY insert_time AND archived = False";
 
@@ -90,14 +94,16 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
             InsertTime = r.insert_time,
             ReportId = r.report_id,
             Title = r.title,
-            TraceId = r.trace_id
+            TraceId = r.trace_id,
+            Archived = r.archived,
+            Deleted = r.deleted
         });
     }
 
     public async Task<IEnumerable<Report>> ReadAllReportsAsync(string employeeId)
     {
         const string sql = @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time
+                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted
                 FROM report
                 WHERE employee_id = @EmployeeId AND archived = False
                 ORDER BY insert_time";
@@ -113,7 +119,9 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
             InsertTime = r.insert_time,
             ReportId = r.report_id,
             Title = r.title,
-            TraceId = r.trace_id
+            TraceId = r.trace_id,
+            Archived = r.archived,
+            Deleted = r.deleted
         });
     }
 

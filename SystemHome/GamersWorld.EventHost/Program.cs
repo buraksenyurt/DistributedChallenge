@@ -18,7 +18,6 @@ var configuration = new ConfigurationBuilder()
 
 var services = new ServiceCollection();
 
-// DI Servis eklemeleri
 services.AddSingleton<IConfiguration>(configuration);
 services.AddLogging(cfg =>
 {
