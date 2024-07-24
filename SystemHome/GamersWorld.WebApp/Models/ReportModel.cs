@@ -4,6 +4,7 @@ public record ReportModel
 {
     public int Id { get; set; }
     public string? Title { get; set; }
+    public string? Expression { get; set; }
     public string? DocumentId { get; set; }
     public DateTime InsertTime { get; set; }
     public DateTime ExpireTime { get; set; }

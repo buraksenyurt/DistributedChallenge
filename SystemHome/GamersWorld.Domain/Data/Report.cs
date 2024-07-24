@@ -7,6 +7,7 @@ public class Report
     public Guid TraceId { get; set; }
 
     public string? Title { get; set; }
+    public string? Expression { get; set; }
 
     public string? EmployeeId { get; set; }
 

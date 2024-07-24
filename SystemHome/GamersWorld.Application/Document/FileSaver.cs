@@ -38,6 +38,7 @@ public class FileSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueS
             {
                 Time = DateTime.Now,
                 Title = payload.Title,
+                Expression = payload.Expression,
                 TraceId = payload.TraceId,
                 CreatedReportId = payload.DocumentId,
             };

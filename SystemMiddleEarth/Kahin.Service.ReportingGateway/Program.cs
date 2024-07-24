@@ -57,7 +57,7 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
 
         var reportContent = await File.ReadAllBytesAsync("SampleReport.dat");
 
-        logger.LogWarning("Referenced '{DocumentId}' lenth is  {Length} bytes.", request.DocumentId, reportContent.Length);
+        logger.LogWarning("Referenced '{DocumentId}' length is  {Length} bytes.", request.DocumentId, reportContent.Length);
 
         response = new GetReportResponse
         {

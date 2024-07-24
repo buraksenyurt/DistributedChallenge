@@ -1,7 +1,6 @@
 using Dapper;
 using GamersWorld.Application.Contracts.Data;
 using GamersWorld.Domain.Data;
-using GamersWorld.Domain.Requests;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using SecretsAgent;
@@ -27,7 +26,7 @@ public class ReportDocumentDataRepository(ISecretStoreService secretStoreService
                 FROM report_document rd JOIN report r 
                 ON rd.fk_report_id = r.report_id
                 WHERE r.document_id = @DocumentId";
-    const string deleteDocument= @"
+    const string deleteDocument = @"
                 DELETE
                 FROM report_document
                 WHERE fk_report_id = (SELECT report_id FROM report WHERE document_id = @DocumentId)";
@@ -50,7 +49,7 @@ public class ReportDocumentDataRepository(ISecretStoreService secretStoreService
             reportDocument.Content
         });
 
-        _logger.LogInformation("New Repord Document, {InsertedId} has been created", insertedId);
+        _logger.LogInformation("New Report Document, {InsertedId} has been created", insertedId);
 
         return insertedId;
     }
@@ -76,7 +75,7 @@ public class ReportDocumentDataRepository(ISecretStoreService secretStoreService
         await using var dbConnection = await GetOpenConnectionAsync();
         var affectedRowCount = await dbConnection.ExecuteAsync(deleteDocument, new { DocumentId = documentId });
 
-        _logger.LogInformation("{AffectedRowCount} Repord Document has been deleted", affectedRowCount);
+        _logger.LogInformation("{AffectedRowCount} Report Document has been deleted", affectedRowCount);
 
         return affectedRowCount;
     }

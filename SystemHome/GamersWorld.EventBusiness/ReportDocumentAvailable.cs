@@ -50,6 +50,7 @@ public class ReportDocumentAvailable(
             {
                 TraceId = appEvent.TraceId,
                 Title = appEvent.Title,
+                Expression = appEvent.Expression,
                 EmployeeId = appEvent.EmployeeId,
                 DocumentId = getReportResponse.DocumentId,
                 Content = content,

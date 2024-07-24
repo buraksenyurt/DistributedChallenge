@@ -12,38 +12,39 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
 {
     private readonly ISecretStoreService _secretStoreService = secretStoreService;
     private readonly ILogger<ReportDataRepository> _logger = logger;
-    const string createReport= @"
-                INSERT INTO report (trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted)
-                VALUES (@TraceId, @Title, @EmployeeId, @DocumentId, @InsertTime, @ExpireTime, @Archived, @Deleted)
+    const string createReport = @"
+                INSERT INTO report (trace_id, title, expression, employee_id, document_id, insert_time, expire_time, archived, deleted)
+                VALUES (@TraceId, @Title, @Expression, @EmployeeId, @DocumentId, @InsertTime, @ExpireTime, @Archived, @Deleted)
                 RETURNING report_id";
     const string selectReportByDocumentId = @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted
+                SELECT report_id, trace_id, title, expression, employee_id, document_id, insert_time, expire_time, archived, deleted
                 FROM report
                 WHERE document_id = @DocumentId";
-    const string selectAllReport= @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted
+    const string selectAllReport = @"
+                SELECT report_id, trace_id, title, expression, employee_id, document_id, insert_time, expire_time, archived, deleted
                 FROM report
                 ORDER BY insert_time AND archived = False";
     const string selectReportByEmployeeId = @"
-                SELECT report_id, trace_id, title, employee_id, document_id, insert_time, expire_time, archived, deleted
+                SELECT report_id, trace_id, title, expression, employee_id, document_id, insert_time, expire_time, archived, deleted
                 FROM report
                 WHERE employee_id = @EmployeeId AND archived = False
                 ORDER BY insert_time";
-    const string selectReport= @"
+    const string selectReport = @"
                 SELECT document_id
                 FROM report
                 WHERE expire_time <=  @AdjustedTime AND archived = False"; // Expired but not marked as archived
-    const string selectExpiredReport= @"
-            SELECT document_id
-            FROM report
-            WHERE expire_time <= @AdjustedTime AND archived = True AND deleted = False"; // Marked as archived and the expiretime ended with a delayed interval
-    const string updateReport= @"
+    const string selectExpiredReport = @"
+                SELECT document_id
+                FROM report
+                WHERE expire_time <= @AdjustedTime AND archived = True AND deleted = False"; // Marked as archived and the expiretime ended with a delayed interval
+    const string updateReport = @"
                 UPDATE
                 report
                 SET      
                     trace_id = @TraceId,
                     employee_id = @EmployeeId,
                     title = @Title,
+                    expression = @Expression
                     insert_time = @InsertTime,
                     expire_time = @ExpireTime,
                     deleted = @Deleted,
@@ -66,6 +67,7 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
         {
             report.EmployeeId,
             report.Title,
+            report.Expression,
             report.TraceId,
             report.DocumentId,
             report.InsertTime,
@@ -95,6 +97,7 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
         {
             DocumentId = r.document_id,
             Title = r.title,
+            Expression = r.expression,
             TraceId = r.trace_id,
             EmployeeId = r.employee_id,
             ExpireTime = r.expire_time,
@@ -112,13 +115,14 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
 
         return queryResult.Select(r => new Report
         {
-            EmployeeId = r.employee_id,
             DocumentId = r.document_id,
+            Title = r.title,
+            Expression = r.expression,
+            TraceId = r.trace_id,
+            EmployeeId = r.employee_id,
             ExpireTime = r.expire_time,
             InsertTime = r.insert_time,
             ReportId = r.report_id,
-            Title = r.title,
-            TraceId = r.trace_id,
             Archived = r.archived,
             Deleted = r.deleted
         });
@@ -131,13 +135,14 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
 
         return queryResult.Select(r => new Report
         {
-            EmployeeId = r.employee_id,
             DocumentId = r.document_id,
+            Title = r.title,
+            Expression = r.expression,
+            TraceId = r.trace_id,
+            EmployeeId = r.employee_id,
             ExpireTime = r.expire_time,
             InsertTime = r.insert_time,
             ReportId = r.report_id,
-            Title = r.title,
-            TraceId = r.trace_id,
             Archived = r.archived,
             Deleted = r.deleted
         });
@@ -169,6 +174,7 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
             report.TraceId,
             report.EmployeeId,
             report.Title,
+            report.Expression,
             report.InsertTime,
             report.ExpireTime,
             report.Deleted,
