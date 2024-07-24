@@ -36,11 +36,12 @@ public class TableSaver(
 
         try
         {
-            var insertedId = await _reportDataRepository.CreateReportAsync(new Domain.Data.Report
+            var insertedId = await _reportDataRepository.CreateReportAsync(new Report
             {
                 TraceId = payload.TraceId,
                 EmployeeId = payload.EmployeeId,
                 Title = payload.Title,
+                Expression = payload.Expression,
                 DocumentId = payload.DocumentId,
                 InsertTime = payload.InsertTime,
                 ExpireTime = payload.ExpireTime

@@ -7,4 +7,5 @@ public class ReportIsHereEvent : IEvent
     public string? EmployeeId { get; set; }
     public DateTime Time { get; set; }
     public string? CreatedReportId { get; set; }
+    public string? Expression { get; internal set; }
 }

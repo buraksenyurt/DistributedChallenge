@@ -33,6 +33,7 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
             {
                 Id = reportDocument.ReportId,
                 Title = reportDocument.Title,
+                Expression = reportDocument.Expression,
                 DocumentId = reportDocument.DocumentId,
                 InsertTime = reportDocument.InsertTime,
                 ExpireTime = reportDocument.ExpireTime

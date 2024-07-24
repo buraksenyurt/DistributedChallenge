@@ -40,6 +40,7 @@ public class Worker(
                             TraceId = eventData.TraceId,
                             EmployeeId = eventData.EmployeeId,
                             ReportTitle = eventData.ReportTitle,
+                            Expression = eventData.Expression,
                             StatusCode = (int)StatusCode.ReportReady,
                             ExpireTime = eventData.ReportExpireTime,
                             StatusMessage = $"Report is ready and live for {eventData.ReportExpireTime.TotalMinutes} minutes",

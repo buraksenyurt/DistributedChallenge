@@ -11,4 +11,5 @@ public class ReportStatusRequest
     public string? StatusMessage { get; set; }
     public string? Detail { get; set; }
     public TimeSpan ExpireTime { get; set; }
+    public string? Expression { get; set; }
 }
