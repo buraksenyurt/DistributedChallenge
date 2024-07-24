@@ -44,7 +44,7 @@ public class ReportDataRepository(ISecretStoreService secretStoreService, ILogge
                     trace_id = @TraceId,
                     employee_id = @EmployeeId,
                     title = @Title,
-                    expression = @Expression
+                    expression = @Expression,
                     insert_time = @InsertTime,
                     expire_time = @ExpireTime,
                     deleted = @Deleted,
