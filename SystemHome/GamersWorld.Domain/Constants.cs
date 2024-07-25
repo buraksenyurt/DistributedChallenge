@@ -23,4 +23,6 @@ public static class Names
     public const string WebSignalR = "WebSignalRAddress";
     public const string DbWriteService = "DbWriteService";
     public const string FtpWriteService = "FtpWriteService";
+    public const string ReportArchiver = "ReportArchiver";
+    public const string ReportEraser = "ReportEraser";
 }
