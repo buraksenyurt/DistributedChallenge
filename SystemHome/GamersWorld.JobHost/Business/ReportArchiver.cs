@@ -3,6 +3,8 @@ using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Application.Tasking;
 using GamersWorld.Domain.Constants;
 using GamersWorld.Domain.Requests;
+using GamersWorld.JobHost.Monitoring;
+using Hangfire;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -11,40 +13,50 @@ namespace GamersWorld.JobHost.Business
     public class ReportArchiver(IServiceProvider serviceProvider, IReportDataRepository reportDataRepository, IReportDocumentDataRepository reportDocumentDataRepository, ILogger<ReportArchiver> logger)
         : IJobAction
     {
+        [JobDisplayName("Archiver Job")]
         public async Task Execute()
         {
             logger.LogInformation("Archive the expired reports to ftp process started at: {ExecuteTime}", DateTime.Now);
-
-            var documentWriter = serviceProvider.GetRequiredKeyedService<IDocumentWriter>(Names.FtpWriteService);            
-            var documentIdList = await reportDataRepository.GetExpiredReportsAsync();
-            foreach (var documentId in documentIdList)
+            try
             {
-                var report = await reportDataRepository.ReadReportAsync(documentId);
-                report.Archived = true;
-                var updatedCount = await reportDataRepository.UpdateReportAsync(report);
-                if (updatedCount == 1)
+                var documentWriter = serviceProvider.GetRequiredKeyedService<IDocumentWriter>(Names.FtpWriteService);
+                var documentIdList = await reportDataRepository.GetExpiredReportsAsync();
+                foreach (var documentId in documentIdList)
                 {
-                    var doc = await reportDocumentDataRepository.ReadDocumentAsync(documentId);
-                    if (doc == null)
+                    var report = await reportDataRepository.ReadReportAsync(documentId);
+                    report.Archived = true;
+                    var updatedCount = await reportDataRepository.UpdateReportAsync(report);
+                    if (updatedCount == 1)
                     {
-                        logger.LogWarning("{DocumentId} content not found", documentId);
-                        continue;
-                    }
-                    else
-                    {
-                        var uploadResponse = await documentWriter.SaveAsync(
-                            new ReportSaveRequest
-                            {
-                                DocumentId = documentId,
-                                Content = doc.Content
-                            });
-
-                        if (uploadResponse.StatusCode != Domain.Enums.StatusCode.DocumentUploaded)
+                        var doc = await reportDocumentDataRepository.ReadDocumentAsync(documentId);
+                        if (doc == null)
                         {
-                            logger.LogError("Error on ftp upload operation.{StatusCode}", uploadResponse.StatusCode);
+                            logger.LogWarning("{DocumentId} content not found", documentId);
+                            continue;
+                        }
+                        else
+                        {
+                            var uploadResponse = await documentWriter.SaveAsync(
+                                new ReportSaveRequest
+                                {
+                                    DocumentId = documentId,
+                                    Content = doc.Content
+                                });
+
+                            if (uploadResponse.StatusCode != Domain.Enums.StatusCode.DocumentUploaded)
+                            {
+                                logger.LogError("Error on ftp upload operation.{StatusCode}", uploadResponse.StatusCode);
+                            }
                         }
                     }
                 }
+
+                HangfireMetrics.ArchiverJobSuccessCounter.Inc();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Exception on report archive process");
+                HangfireMetrics.ArchiverJobFailureCounter.Inc();
             }
 
             logger.LogInformation("Archive the expired reports to ftp process has been completed at: {ExecuteTime}", DateTime.Now);

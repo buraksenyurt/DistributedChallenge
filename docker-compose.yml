@@ -106,12 +106,29 @@ services:
     ports:
       - "5147:8080"
 
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=123456
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
 volumes:
   localstack_data:
   baget_data:
   postgres_data:
   ftp_data:
   es_data:
+  grafana-storage:
   
 networks:
   elk-network:
