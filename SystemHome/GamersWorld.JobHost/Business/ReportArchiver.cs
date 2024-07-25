@@ -7,6 +7,7 @@ using GamersWorld.JobHost.Monitoring;
 using Hangfire;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Prometheus;
 
 namespace GamersWorld.JobHost.Business
 {
@@ -17,6 +18,7 @@ namespace GamersWorld.JobHost.Business
         public async Task Execute()
         {
             logger.LogInformation("Archive the expired reports to ftp process started at: {ExecuteTime}", DateTime.Now);
+            var timer = HangfireMetrics.ArchiverJobDuration.NewTimer();
             try
             {
                 var documentWriter = serviceProvider.GetRequiredKeyedService<IDocumentWriter>(Names.FtpWriteService);
@@ -57,6 +59,10 @@ namespace GamersWorld.JobHost.Business
             {
                 logger.LogError(ex, "Exception on report archive process");
                 HangfireMetrics.ArchiverJobFailureCounter.Inc();
+            }
+            finally
+            {
+                timer.ObserveDuration();
             }
 
             logger.LogInformation("Archive the expired reports to ftp process has been completed at: {ExecuteTime}", DateTime.Now);

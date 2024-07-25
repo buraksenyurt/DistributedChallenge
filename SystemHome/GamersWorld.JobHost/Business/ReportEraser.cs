@@ -5,6 +5,7 @@ using GamersWorld.Domain.Requests;
 using GamersWorld.JobHost.Monitoring;
 using Hangfire;
 using Microsoft.Extensions.Logging;
+using Prometheus;
 
 namespace GamersWorld.JobHost.Business
 {
@@ -15,6 +16,7 @@ namespace GamersWorld.JobHost.Business
         public async Task Execute()
         {
             logger.LogInformation("Truncate the Archived Reports started at: {ExecuteTime}", DateTime.Now);
+            var timer = HangfireMetrics.EraserJobDuration.NewTimer();
             try
             {
                 var documentIdList = await reportDataRepository.GetExpiredReportsAsync(interval: TimeSpan.FromHours(1));
@@ -47,6 +49,10 @@ namespace GamersWorld.JobHost.Business
             {
                 logger.LogError(ex, "Exception on report ereasing job");
                 HangfireMetrics.EraserJobFailureCounter.Inc();
+            }
+            finally
+            {
+                timer.ObserveDuration();
             }
             logger.LogInformation("Truncate the Archived Reports has been completed at: {ExecuteTime}", DateTime.Now);
         }
