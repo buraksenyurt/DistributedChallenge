@@ -1,4 +1,7 @@
 ﻿using GamersWorld.Application;
+using GamersWorld.Application.Contracts.Data;
+using GamersWorld.Application.Contracts.Document;
+using GamersWorld.Application.Document;
 using GamersWorld.JobHost;
 using GamersWorld.JobHost.Model;
 using GamersWorld.Repository;
@@ -19,6 +22,7 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services.AddApplication();
         services.AddData();
+        services.AddWorkers();
 
         services.Configure<JobHeader>(context.Configuration.GetSection("JobHeader"));
         services.AddHangfire(config =>
@@ -28,6 +32,9 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddHangfireServer();
         services.AddTransient<Worker>();
+        services.AddTransient<IReportDataRepository, ReportDataRepository>();
+        services.AddTransient<IReportDocumentDataRepository, ReportDocumentDataRepository>();
+        services.AddTransient<IDocumentDestroyer, FtpDestroyer>();
         services.AddSingleton<IRecurringJobManager, RecurringJobManager>();
         services.AddSingleton<IBackgroundJobClient, BackgroundJobClient>();
     })
