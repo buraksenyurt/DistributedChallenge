@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using JudgeMiddleware;
 using Kahin.Common.Constants;
 using Kahin.Common.Entities;
@@ -8,15 +7,24 @@ using Kahin.Common.Responses;
 using Kahin.Common.Validation;
 using Kahin.MQ;
 using Kahin.Service.ReportingGateway;
+using Serilog;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
+using System.ComponentModel.DataAnnotations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDependencies();
 builder.Services.AddServiceDiscovery(o => o.UseConsul());
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+
+var systemName = "KahinReportingService";
+var environmentName = builder.Environment.EnvironmentName;
+
+Log.Logger = new LoggerConfiguration()
+    .UseElasticsearch(systemName, environmentName)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 app.AddJudgeMiddleware(new Options
@@ -53,9 +61,7 @@ app.MapPost("/getReport", async (GetReportRequest request, ILogger<Program> logg
 
         var documentId = ReferenceDocumentId.Parse(request.DocumentId);
 
-        // Önceden hazırlanmış raporlar için Redis tabanlı bir caching konulabilir
-
-        var reportContent = await File.ReadAllBytesAsync("SampleReport.dat");
+        var reportContent = await File.ReadAllBytesAsync("SampleReport.dat"); // Just for testing
 
         logger.LogWarning("Referenced '{DocumentId}' length is  {Length} bytes.", request.DocumentId, reportContent.Length);
 
