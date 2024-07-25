@@ -27,6 +27,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Ftp Entegrasyonu ile Arşivleme Stratejisi](#ftp-entegrasyonu-ile-arşivleme-stratejisi)
     - [Planlı İşler](#planlı-i̇şler)
     - [Elasticsearch ve Kibana Entegrasyonu](#elasticsearch-ve-kibana-entegrasyonu)
+    - [Ölçüm Metrikleri için Prometheus ve Grafana Entegrasyonu](#ölçüm-metrikleri-için-prometheus-ve-grafana-entegrasyonu)
   - [Bazı Düşünceler](#bazı-düşünceler)
   - [Tartışılabilecek Problemler](#tartışılabilecek-problemler)
   - [Youtube Anlatımları](#youtube-anlatımları)
@@ -97,26 +98,28 @@ Senaryoda dikkat edileceği üzere bazı ihlal noktaları da vardır. Örneğin 
 
 Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulamalara ait envanter aşağıdaki gibidir.
 
-| **Sistem**     | **Servis**                       | **Tür**     | **Görev**                                            | **Dev Adres**  |
-|----------------|----------------------------------|-------------|------------------------------------------------------|----------------|
-| HAL            | Eval.AuditApi                    | REST        | Rapor talebindeki ifadeyi denetlemek                 | localhost:5147 |
-| HOME           | GamersWorld.Service.Gateway      | REST        | Middle Earth için rapor statü güncelleme hizmeti     | localhost:5102 |
-| HOME           | GamersWorld.Service.Messenger    | REST        | Web önyüz için backend servisi                       | localhost:5234 |
-| HOME           | GamersWorld.WebApp               | Self Hosted | Web uygulaması                                       | localhost:5093 |
-| HOME           | GamersWorld.EventHost            | Self Hosted | Home sistemindeki event yönetim hizmeti              | N/A            |
-| HOME           | GamersWorld.JobHost              | Self Hosted | Planlı işler işletmecisi                             | N/A            |
-| MIDDLE EARTH   | Kahin.Service.ReportingGateway   | REST        | Rapor hazırlama, yollama ve durum güncellemesi       | localhost:5218 |
-| MIDDLE EARTH   | Kahin.EventHost                  | Self Hosted | Middle Earth tarafında çalışan event yönetim hizmeti | N/A            |
-| DOCKER COMPOSE | RabbitMQ                         |             | Async Event Queue                                    | localhost:5672 |
-| DOCKER COMPOSE | Redis                            |             | Distributed Key Value Store                          | localhost:6379 |
-| DOCKER COMPOSE | LocalStack                       |             | Local AWS Secrets Manager                            | localhost:4566 |
-| DOCKER COMPOSE | BaGet                            |             | Local NuGet Server                                   | localhost:5000 |
-| DOCKER COMPOSE | Postgresql                       |             | Rapor veritabanı                                     | N/A            |
-| DOCKER COMPOSE | Consul                           |             | Service Discovery için                               | localhost:8500 |
-| DOCKER COMPOSE | Ftp Server                       |             | Ftp senaryolarını işletmek için                      | localhost      |
-| DOCKER COMPOSE | Elasticsearch                    |             | Uygulama loglarını depolamak için                    | localhost:9200 |
-| DOCKER COMPOSE | Kibana                           |             | Logları izlemek için                                 | localhost:5601 |
-| SYSTEM ASGARD  | Heimdall                         | Self Hosted | Servis izleme uygulaması                             | localhost:5247 |
+| **Sistem**     | **Servis**                       | **Tür**     | **Görev**                                                 | **Dev Adres**  |
+|----------------|----------------------------------|-------------|-----------------------------------------------------------|----------------|
+| HAL            | Eval.AuditApi                    | REST        | Rapor talebindeki ifadeyi denetlemek                      | localhost:5147 |
+| HOME           | GamersWorld.Service.Gateway      | REST        | Middle Earth için rapor statü güncelleme hizmeti          | localhost:5102 |
+| HOME           | GamersWorld.Service.Messenger    | REST        | Web önyüz için backend servisi                            | localhost:5234 |
+| HOME           | GamersWorld.WebApp               | Self Hosted | Web uygulaması                                            | localhost:5093 |
+| HOME           | GamersWorld.EventHost            | Self Hosted | Home sistemindeki event yönetim hizmeti                   | N/A            |
+| HOME           | GamersWorld.JobHost              | Self Hosted | Planlı işler işletmecisi                                  | N/A            |
+| MIDDLE EARTH   | Kahin.Service.ReportingGateway   | REST        | Rapor hazırlama, yollama ve durum güncellemesi            | localhost:5218 |
+| MIDDLE EARTH   | Kahin.EventHost                  | Self Hosted | Middle Earth tarafında çalışan event yönetim hizmeti      | N/A            |
+| DOCKER COMPOSE | RabbitMQ                         |             | Async Event Queue                                         | localhost:5672 |
+| DOCKER COMPOSE | Redis                            |             | Distributed Key Value Store                               | localhost:6379 |
+| DOCKER COMPOSE | LocalStack                       |             | Local AWS Secrets Manager                                 | localhost:4566 |
+| DOCKER COMPOSE | BaGet                            |             | Local NuGet Server                                        | localhost:5000 |
+| DOCKER COMPOSE | Postgresql                       |             | Rapor veritabanı                                          | N/A            |
+| DOCKER COMPOSE | Consul                           |             | Service Discovery için                                    | localhost:8500 |
+| DOCKER COMPOSE | Ftp Server                       |             | Ftp senaryolarını işletmek için                           | localhost      |
+| DOCKER COMPOSE | Elasticsearch                    |             | Uygulama loglarını depolamak için                         | localhost:9200 |
+| DOCKER COMPOSE | Kibana                           |             | Logları izlemek için                                      | localhost:5601 |
+| DOCKER COMPOSE | Prometheus                       |             | Ölçüm metriklerini toplamak için                          | localhost:9090 |
+| DOCKER COMPOSE | Grafana                          |             | Prometheus'e akan metrikleri görsel olarak izlemek için   | localhost:3000 |
+| SYSTEM ASGARD  | Heimdall                         | Self Hosted | Servis izleme uygulaması                                  | localhost:5247 |
 
 **NOT: Yeni servisler ilave edildikçe burası güncellenmelidir.**
 
@@ -144,7 +147,7 @@ Envanterimize göre sistemin genel dayanıklılığını test edebileceğimiz ve
 - [x] Servis fonksiyon çağrılarının response time değerlerinin ölçümü için middleware tarafına ek bir nuget paketi yazılabilir.
 - [ ] Bazı kütüphaneler için birim testler _(Unit Tests)_ yazılarak **Code Coverage** değerleri yükseltilebilir.
 - [ ] Kahin _(SystemMiddleEarth)_ sistemindeki projeler için ayrı bir **Solution** açılabilir.
-- [ ] Loglama altyapısı **Elasticsearch**'e alınabilir.
+- [x] Loglama altyapısı **Elasticsearch**'e alınabilir. _(Birkaç uygulama için gerçekleştirildi)_
 - [ ] Messenger servisi **gRPC** türüne evrilebilir.
 - [ ] Bazı **Exception** durumları için **Custom Exception** sınıfları yazılabilir. Ancak servis tarafında Exception döndürmek yerine hata ile ilgili bilgi barındıran bir Response mesaj döndürülmesi daha iyi olabilir.
 - [ ] Daha önceden çekilmiş raporlar için tekrardan üretim sürecini başlatmak yerine **Redis** tabanlı bir caching sistemi kullanılabilir.
@@ -157,7 +160,7 @@ Envanterimize göre sistemin genel dayanıklılığını test edebileceğimiz ve
 - [ ] Birçok fonksiyonda standart girdi çıktı loglaması, **exception handling** gibi **Cross-Cutting Concern** olarak da adlandırılan işlemler söz konusu. Bu kullanımda **AOP**_(Aspect Oriented Programming)_ tabanlı bir yaklaşıma gidilebilir belki.
 - [x] Sistemdeki servisleri izlemek için Microsoft **HealthCheck** paketinden yararlanılan bir arabirim geliştirilebilir.
 - [ ] **SystemAsgard**'daki **Heimdall** uygulamasındaki monitoring bilgileri **Prometheus, Application Insights, Seq, Datadog** gibi dış araçlara gönderilebilir.
-- [ ] SystemHome tarafındaki web uygulaması için kimlik ve yetki kontrol mekanizması ilave edilip SignalR mesajlarının belirli kullanıcılar için çıkması sağlanabilir.
+- [x] **SystemHome** tarafındaki web uygulaması için kimlik ve yetki kontrol mekanizması ilave edilip **SignalR** mesajlarının belirli kullanıcılar için çıkması sağlanabilir.
 
 ## Sistemin Çalıştırılması
 
@@ -177,15 +180,16 @@ sudo docker-compose logs -f
 sudo docker-compose down
 ```
 
-Solution içerisinde yer alan uygulamaları tek seferde çalıştırmak için run_all isimli bir shell script dosyası hazırlanmıştır.
+Solution içerisinde yer alan uygulamaları tek seferde çalıştırmak için run_all isimli bir shell script dosyası hazırlanmıştır. 
+_(Bu arada eğer Windows tabanlı bir sistemde ve Visual Studio ortamında çalışıyorsanız Solution'ı başlatmanız yeterlidir. Tüm servis ve uygulamalar otomatik açılır. Tabii bunun için Solution özelliklerinden Multiple Startup Projects'in seçili olması gerektiğini unutmayalım)_
 
 ```bash
 #!/bin/bash
 
-# Start ReportingGateway
+# Start ReportingGateway Service
 gnome-terminal --title="MIDDLE EARTH - Reporting Gateway" -- bash -c "cd ../SystemMiddleEarth/Kahin.Service.ReportingGateway && dotnet run; exec bash"
 
-# Start Messenger
+# Start Messenger Service
 gnome-terminal --title="HOME - Messenger Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Messenger && dotnet run; exec bash"
 
 # Start Home EventHost
@@ -194,11 +198,12 @@ gnome-terminal --title="HOME - Event Consumer Host" -- bash -c "cd ../SystemHome
 # Start Home JobHost
 gnome-terminal --title="HOME - Scheduled Job Host" -- bash -c "cd ../SystemHome/GamersWorld.JobHost && dotnet run; exec bash"
 
-# Start Home Gateway
+# Start Home Gateway Service
 gnome-terminal --title="HOME - Gateway Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Gateway && dotnet run; exec bash"
 
-# Start Eval.Api
-gnome-terminal --title="HAL - Expression Auditor" -- bash -c "cd ../SystemHAL/Eval.AuditApi && dotnet run; exec bash"
+# Start Eval.Api Service
+# Docker Service haline getirildiği için gerek kalmadı
+# gnome-terminal --title="HAL - Expression Auditor" -- bash -c "cd ../SystemHAL/Eval.AuditApi && dotnet run; exec bash"
 
 # Start Web App
 gnome-terminal --title="HOME - Web App" -- bash -c "cd ../SystemHome/GamersWorld.WebApp && dotnet run; exec bash"
@@ -666,6 +671,10 @@ PUT /_data_stream/kahin-event-host-logs-development
 Bu arada unutmamamız gereken bir adım da söz konusu veri akışları için birer **Data View** oluşturulması gerekliliği. Bunu da örneğin aşağıdaki ekran görüntüsünde olduğu gibi yapabiliriz.
 
 ![ELK Add DataView](/images/elk_02.png)
+
+### Ölçüm Metrikleri için Prometheus ve Grafana Entegrasyonu
+
+TODO@buraksenyurt Yazılacak
 
 ## Bazı Düşünceler
 
