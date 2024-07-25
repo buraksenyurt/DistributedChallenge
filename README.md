@@ -674,7 +674,34 @@ Bu arada unutmamamız gereken bir adım da söz konusu veri akışları için bi
 
 ### Ölçüm Metrikleri için Prometheus ve Grafana Entegrasyonu
 
-TODO@buraksenyurt Yazılacak
+System HOME içerisinde geliştirdiğimiz JobHost isimli bir terminal uygulamamız var. Bu uygulama belli periyotlarda planlı işler yürütmekte. Bunun için Hangfire paketinden yararlanıyoruz. Çok doğal olarak belirli periyotlarda çalışan bu işlerin çalışma zamanı metrikleri hakkında bilgi sahibi olmak önemli. Örneğin kaç iş başarılı oldu, kaçı hata aldı ya da ortalama çalışma süreleri gibi değerler sistemdeki sorunları gözlemlemek, erken tedbirler almak veya türlü alarm sistemlerini tetiklemek için kritik öneme sahip.
+
+Bu noktada sık kullanılan yöntemlerden birisi host uygulamada oluşan metrikleri Prometheus gibi bir sisteme yollamak ve Grafana ile monitör etmek. Bunun için JobHost uygulaması içerisinde metrik değerleri veren bir server yer alıyor. Örneğimizde 1903 nolu porttan ulaşılmakta. Hatta aşağıdaki gibi bir çıktı elde edilmesi bekleniyor.
+
+![Metric Server](/images/metric_server.png)
+
+Docker-Compose dosyasında detaylarını görebileceğiniz Prometheus hizmeti, prometheus.yml dosyasında belirtilen süre aralıklarına göre bu adrese gelip ölçüm değerlerini alıyor. Ölçüm değerlerini kod içerisinden göndermekteyiz. Counter ve Histogram türlü birkaç örnek yer alıyor. Prometheus tarafında toplanan verilerin görsel olarak ele alınması içinse Grafana'ya başvuruyoruz. Eğer her şey yolunda giderse Grafana tarafında bir Dashboard oluştururken örnek olarak isimlendirdiğimiz aşağıdaki metriklere ulaşabilmemiz lazım.
+
+- archiver_job_success_total
+- archiver_job_failure_total
+- eraser_job_success_total
+- eraser_job_failure_total
+- archiver_job_duration_seconds
+- eraser_job_duration_seconds
+
+Host uygulama, Prometheus ve Grafana arasındaki iletişimi aşağıdaki grafikle de özetleyebiliriz. Bahsi geçen Archiver ve Eraser isimli işler FTP sunucusu ve Postgresql veri tabanını kullanan bazı süreçleri işletiyorlar. Dolayısıyla süreçlerin ortlama işlem süreleri veya olası sorunlar sebebiyle başarısız sonuçlanmalarına dair sıklık sayıları bir dağıtık sistem çözümü düşünüldüğünde bilinmesi gereken metrik değerler.
+
+![Prometheus Diagram](/images/prometheus_00.png)
+
+Grafana üzerine aldığımız metriklere ait örnek bir Dashboard'u aşağıda görebilirsiniz. Burada Archiver işinin çalışma sürelerini görüntülemekteyiz. 
+
+![Grafana Rapor](/images/prometheus_01.png)
+
+Elbette Grafana ve Prometheus sistemine akan metrikleri yorumlamak ve doğru Dashboard panellerini hazırlamak bana kalırsa biraz daha farklı uzmanlıklar gerektiriyor gibi. Hatta tam anlamıyla bir DevOps konusu olarak da düşünülebilir. Söz gelimi Prometheus'da akan verileri sorgulamak için PromQL isimli kendi sorgulama dilini kullanabiliyoruz. Yukarıdaki grafik için aşağıdaki sorgu kullanıldı örneğin.
+
+```PromQL
+rate(archiver_job_duration_seconds_sum[1m])
+```
 
 ## Bazı Düşünceler
 
