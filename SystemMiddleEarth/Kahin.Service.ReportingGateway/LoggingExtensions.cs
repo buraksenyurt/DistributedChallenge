@@ -12,7 +12,7 @@ public static class LoggingExtensions
             .Enrich.WithProperty("System", systemName)
             .Enrich.WithProperty("Environment", environmentName)
             .WriteTo.Console()
-            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
+            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200")) //TODO@buraksenyurt Read via SecretService
             {
                 AutoRegisterTemplate = true,
                 IndexFormat = $"kahin-reporting-service-logs-{environmentName.ToLower()}",

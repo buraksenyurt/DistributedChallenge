@@ -4,6 +4,7 @@ using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Application.Document;
 using GamersWorld.JobHost;
 using GamersWorld.JobHost.Model;
+using GamersWorld.JobHost.Monitoring;
 using GamersWorld.Repository;
 using Hangfire;
 using Hangfire.MemoryStorage;
@@ -37,6 +38,8 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddTransient<IDocumentDestroyer, FtpDestroyer>();
         services.AddSingleton<IRecurringJobManager, RecurringJobManager>();
         services.AddSingleton<IBackgroundJobClient, BackgroundJobClient>();
+
+        services.AddHostedService<MetricsServer>();
     })
     .ConfigureLogging(logging =>
     {
