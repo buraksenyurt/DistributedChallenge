@@ -1,6 +1,6 @@
 using Dapper;
 using GamersWorld.Application.Contracts.Data;
-using GamersWorld.Domain.Data;
+using GamersWorld.Domain.Entity;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using SecretsAgent;

@@ -27,11 +27,10 @@ public class Worker(
             var eventData = await _redisService.Pop(Names.EventStream);
             if (eventData != null)
             {
-                _logger.LogWarning("Received eventData: {EventData}", eventData);
-
                 switch (eventData.EventType)
                 {
                     case EventType.ReportRequested:
+                        _logger.LogWarning("New Report Requested. {EventData}", eventData);
                         await PrepareReportAsync(eventData, stoppingToken);
                         break;
                     case EventType.ReportReady:

@@ -21,7 +21,7 @@ public class FileSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueS
             _logger.LogError("Paylod or content is null");
             return new BusinessResponse
             {
-                StatusCode = StatusCode.Fail,
+                Status = Status.Fail,
                 Message = "Payload or content is null"
             };
         }
@@ -36,17 +36,20 @@ public class FileSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueS
 
             var reportIsHereEvent = new ReportIsHereEvent
             {
-                Time = DateTime.Now,
+                EventData = new BaseEventData
+                {
+                    TraceId = payload.TraceId,
+                    Time = DateTime.Now
+                },
                 Title = payload.Title,
                 Expression = payload.Expression,
-                TraceId = payload.TraceId,
                 CreatedReportId = payload.DocumentId,
             };
             _eventQueueService.PublishEvent(reportIsHereEvent);
 
             return new BusinessResponse
             {
-                StatusCode = StatusCode.DocumentSaved,
+                Status = Status.DocumentSaved,
                 Message = $"{payload.Content.Length} bytes saved."
             };
         }
@@ -56,7 +59,7 @@ public class FileSaver(ILogger<FileSaver> logger, IEventQueueService eventQueueS
             _logger.LogError(excp, "Error on document saving!");
             return new BusinessResponse
             {
-                StatusCode = StatusCode.Fail,
+                Status = Status.Fail,
                 Message = $"Exception. {excp.Message}"
             };
         }

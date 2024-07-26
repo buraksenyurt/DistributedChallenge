@@ -43,22 +43,25 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapHealthChecks("/health");
 
-app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
+app.MapPost("/", (UpdateReportStatusRequest request, IEventQueueService eventQueueService, ILogger<Program> logger) =>
 {
     if (!Guid.TryParse(request.TraceId, out var traceId))
     {
         return Results.BadRequest();
     }
 
-    if (request.StatusCode == (int)StatusCode.ReportReady)
+    if (request.StatusCode == (int)Status.ReportReady)
     {
         var reportReadyEvent = new ReportReadyEvent
         {
-            TraceId = traceId,
+            EventData = new BaseEventData
+            {
+                TraceId = traceId,
+                Time = DateTime.Now
+            },
             EmployeeId = request.EmployeeId,
             Title = request.ReportTitle,
             Expression = request.Expression,
-            Time = DateTime.UtcNow,
             CreatedReportId = request.DocumentId,
             ExpireTime = request.ExpireTime
         };
@@ -68,14 +71,17 @@ app.MapPost("/", (ReportStatusRequest request, IEventQueueService eventQueueServ
             "ReporReadyEvent sent. TraceId: {TraceId}, DocumentId: {DocumentId}"
             , traceId, request.DocumentId);
     }
-    else if (request.StatusCode == (int)StatusCode.InvalidExpression)
+    else if (request.StatusCode == (int)Status.InvalidExpression)
     {
         var invalidExpressionEvent = new InvalidExpressionEvent
         {
-            TraceId = traceId,
+            EventData = new BaseEventData
+            {
+                TraceId = traceId,
+                Time = DateTime.Now
+            },
             Expression = request.Detail,
             Reason = request.StatusMessage,
-            Time = DateTime.Now,
             EmployeeId = request.EmployeeId,
         };
         eventQueueService.PublishEvent(invalidExpressionEvent);

@@ -19,18 +19,18 @@ public class UsePreparedReport(ILogger<UsePreparedReport> logger, IDocumentReade
     public async Task Execute(ReportIsHereEvent appEvent)
     {
         _logger.LogInformation("Document Accepted, Trace Id : {TraceId}, Document Id : {CreatedReportId}"
-            , appEvent.TraceId, appEvent.CreatedReportId);
+            , appEvent.EventData.TraceId, appEvent.CreatedReportId);
 
         var response = await _documentReader.GetLength(new GenericDocumentRequest
         {
             DocumentId = appEvent.CreatedReportId,
-            TraceId = appEvent.TraceId
+            TraceId = appEvent.EventData.TraceId
         });
-        if (response is { StatusCode: StatusCode.DocumentReadable })
+        if (response is { Status: Status.DocumentReadable })
         {
             _logger.LogInformation("{Message}", response.Message);
 
-            var notificationData = new ReportNotification
+            var notificationData = new ReportNotificationDto
             {
                 DocumentId = appEvent.CreatedReportId,
                 Content = appEvent.Title,

@@ -20,7 +20,7 @@ public class TableReader(ILogger<FileSaver> logger, IReportDocumentDataRepositor
             var contentLength = await _reportDocumentDataRepository.GetDocumentLength(payload.DocumentId);
             return new BusinessResponse
             {
-                StatusCode = StatusCode.DocumentReadable,
+                Status = Status.DocumentReadable,
                 Message = $"{contentLength} bytes length document is ready."
             };
         }
@@ -29,7 +29,7 @@ public class TableReader(ILogger<FileSaver> logger, IReportDocumentDataRepositor
             _logger.LogError(excp, "Error on document reading!");
             return new BusinessResponse
             {
-                StatusCode = StatusCode.Fail,
+                Status = Status.Fail,
                 Message = $"Exception. {excp.Message}"
             };
         }

@@ -2,9 +2,8 @@
 
 public class ArchiveReportRequestEvent : IEvent
 {
-    public Guid TraceId { get; set; }
+    public BaseEventData EventData { get; set; } = new BaseEventData();
     public string? DocumentId { get; set; }
     public string? Title { get; set; }
-    public DateTime Time { get; set; }
     public string? ClientId { get; set; }
 }

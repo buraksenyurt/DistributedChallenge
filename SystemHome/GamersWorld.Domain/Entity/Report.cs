@@ -1,4 +1,4 @@
-namespace GamersWorld.Domain.Data;
+namespace GamersWorld.Domain.Entity;
 
 public class Report
 {

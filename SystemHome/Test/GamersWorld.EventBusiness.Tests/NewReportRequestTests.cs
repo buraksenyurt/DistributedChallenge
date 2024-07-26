@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -42,14 +43,18 @@ public class NewReportRequestTests
         // Arrange
         var eventPayload = new ReportRequestedEvent
         {
-            TraceId = Guid.NewGuid(),
+            EventData = new BaseEventData
+            {
+                TraceId = Guid.NewGuid(),
+                Time = DateTime.Now
+            },
             Title = "Yıllık bazda en iyi yorum alan oyun satışları",
             Expression = "SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc"
         };
 
         var createReportResponse = new CreateReportResponse
         {
-            Status = StatusCode.Success,
+            Status = Status.Success,
             DocumentId = "1001-12-edd4e07d-2391-47c1-bf6f-96a96c447585"
         };
 
@@ -90,7 +95,11 @@ public class NewReportRequestTests
         // Arrange
         var eventPayload = new ReportRequestedEvent
         {
-            TraceId = Guid.NewGuid(),
+            EventData = new BaseEventData
+            {
+                TraceId = Guid.NewGuid(),
+                Time = DateTime.Now
+            },
             Title = "Yıllık bazda en iyi yorum alan oyun satışları",
             Expression = "SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc"
         };
@@ -125,14 +134,18 @@ public class NewReportRequestTests
         // Arrange
         var eventPayload = new ReportRequestedEvent
         {
-            TraceId = Guid.NewGuid(),
+            EventData = new BaseEventData
+            {
+                TraceId = Guid.NewGuid(),
+                Time = DateTime.Now
+            },
             Title = "Yıllık bazda en iyi yorum alan oyun satışları",
             Expression = "SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc"
         };
 
         var createReportResponse = new CreateReportResponse
         {
-            Status = StatusCode.Fail,
+            Status = Status.Fail,
         };
 
         var responseContent = new StringContent(

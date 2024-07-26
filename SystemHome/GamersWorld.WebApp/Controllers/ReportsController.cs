@@ -53,10 +53,7 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
     public async Task<IActionResult> Download(string documentId)
     {
         var document = await _messengerServiceClient
-            .GetReportDocumentByIdAsync(new DocumentIdRequest
-            {
-                DocumentId = documentId
-            });
+            .GetReportDocumentByIdAsync(documentId);
         if (document?.Base64Content != null)
         {
             var content = Convert.FromBase64String(document.Base64Content);
@@ -76,7 +73,7 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
                 EmployeeId = employeeId,
                 Title = title
             });
-        if (response.StatusCode == Domain.Enums.StatusCode.DeleteRequestAccepted)
+        if (response.Status == Domain.Enums.Status.DeleteRequestAccepted)
         {
             TempData["Notification"] = "Document deleting request has been sent.";
             return RedirectToAction("Index");
@@ -96,7 +93,7 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
                 DocumentId = documentId,
                 EmployeeId = employeeId
             });
-        if (response.StatusCode == Domain.Enums.StatusCode.Success)
+        if (response.Status == Domain.Enums.Status.Success)
         {
             TempData["Notification"] = "Document archiving request has been sent.";
             return RedirectToAction("Index");

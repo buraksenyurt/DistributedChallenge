@@ -2,7 +2,7 @@ using GamersWorld.Application.Contracts.Data;
 using GamersWorld.Application.Contracts.Document;
 using GamersWorld.Application.Contracts.Events;
 using GamersWorld.Application.Contracts.MessageQueue;
-using GamersWorld.Domain.Data;
+using GamersWorld.Domain.Entity;
 using GamersWorld.Domain.Enums;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
@@ -29,7 +29,7 @@ public class TableSaver(
             _logger.LogError("Paylod or content is null");
             return new BusinessResponse
             {
-                StatusCode = StatusCode.Fail,
+                Status = Status.Fail,
                 Message = "Payload or content is null"
             };
         }
@@ -55,9 +55,12 @@ public class TableSaver(
 
             var reportIsHereEvent = new ReportIsHereEvent
             {
-                Time = DateTime.Now,
+                EventData = new BaseEventData
+                {
+                    TraceId = payload.TraceId,
+                    Time = DateTime.Now
+                },
                 Title = payload.Title,
-                TraceId = payload.TraceId,
                 CreatedReportId = payload.DocumentId,
                 EmployeeId = payload.EmployeeId,
             };
@@ -65,7 +68,7 @@ public class TableSaver(
 
             return new BusinessResponse
             {
-                StatusCode = StatusCode.DocumentSaved,
+                Status = Status.DocumentSaved,
                 Message = $"{payload.Content.Length} bytes saved to database table."
             };
         }
@@ -74,7 +77,7 @@ public class TableSaver(
             _logger.LogError(excp, "Error on document saving!");
             return new BusinessResponse
             {
-                StatusCode = StatusCode.Fail,
+                Status = Status.Fail,
                 Message = $"Exception. {excp.Message}"
             };
         }

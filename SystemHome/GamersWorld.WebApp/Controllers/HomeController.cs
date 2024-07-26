@@ -53,7 +53,7 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
 
             var response = await _messengerServiceClient.SendNewReportRequestAsync(payload);
             _logger.LogInformation("Messenger service response is '{Response}'", response);
-            if (response.StatusCode == Domain.Enums.StatusCode.Success)
+            if (response.Status == Domain.Enums.Status.Success)
             {
                 return RedirectToAction("RequestConfirmed");
             }
