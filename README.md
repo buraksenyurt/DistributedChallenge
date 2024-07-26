@@ -28,7 +28,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Planlı İşler](#planlı-i̇şler)
     - [Elasticsearch ve Kibana Entegrasyonu](#elasticsearch-ve-kibana-entegrasyonu)
     - [Ölçüm Metrikleri için Prometheus ve Grafana Entegrasyonu](#ölçüm-metrikleri-için-prometheus-ve-grafana-entegrasyonu)
-  - [Bazı Düşünceler](#bazı-düşünceler)
+  - [POCO Diagramları](#poco-diagramları)
   - [Tartışılabilecek Problemler](#tartışılabilecek-problemler)
   - [Youtube Anlatımları](#youtube-anlatımları)
 
@@ -703,14 +703,13 @@ Elbette Grafana ve Prometheus sistemine akan metrikleri yorumlamak ve doğru Das
 rate(archiver_job_duration_seconds_sum[1m])
 ```
 
-## Bazı Düşünceler
+## POCO Diagramları
 
-- Senaryoda farklı sistemler olduğunu düşünmeliyiz. **SystemMiddleEarth** raporlama tarafını üstleniyor. Gelen rapor ifadesini anlamlı bir betiğe dönüştürmek, işletmek, pdf gibi çıktısını hazırlamak ve hazır olduğuna dair **SystemHome**' ü bilgilendirmek görevleri arasında. Kendi içerisindeki süreçlerin yönetiminde de **Event** bazlı bir yaklaşıma gidebilir. Söz gelimi ifadenin bir **Gen AI** ile anlamlı hale dönüştürülmesi birkaç saniye sürebilecek bir iş olabilir. Dönüştürme işi başarısız ise bununla ilgili olarak da **SystemHome**'ü bilgilendirmesi gerekebilir. Dolayısıyla bu da yeni bir olayın üretilmesi, **SystemHome**'e aktarılması ve **SystemHome** tarafında bu hatanın ele alınmasını gerektirecektir _(Çizelgede e1 ile ifade edilen kısım)_ Tüm çözümü zorlaştırmamak adına belki bu kısım şimdilik atlanabilir.
-- **Expression Interpretter :** Rapor talebi yapılan ekranda girilen isteğin anlaşılarak bir **SQL** ifadesine dönüştürülmesinde **Gen AI** araçlarına ait bir **API**'den yararlanabiliriz. Örneğin metin kutusuna **"Son bir yılda yapılan oyun satışlarından, en olumlu yorum sayısına sahip ilk 50sini getir"** dediğimizde Gen AI API'si bunu anlayıp raporlama tarafından çalıştırılması istenen SQL ifadesini veya farklı bir script ifadeyi hazırlayıp Event mesajına bilgi olarak bırakabilir.
-- **İsimlendirmeler** konusu da önemli. **Event** olarak ifade ettiğimiz nesneler esasında process'lerde oluşturulup mesaj kuyruğuna bırakılan **POCO**'lar _(Plain Old CLR Objects)_ Bunları kullanan business nesnelerimiz de var. Yani bir olayla ilgili aksiyon alan _(bir eylem icra eden)_ sınıflar. Bunlar ortak sözleşmeleri _(interfaces)_ uygulamak durumundalar ki **Dependency Injection Container** çalışma zamanlarınca çalıştırılabilsinler. Tüm bunlarda proje, nesne, metot, değişken isimlendirmeleri kod okunurluğu ve başka programcıların kodu anlaması, neyi nereye koymaları gerektiğini kolayca bulması açısından mühim bir mesele.
-- **gRPC Taşımaları :** Sistem içerisinde koşan servislerden bazılarını **REST** tabanlı tasarlamak yerine **gRPC** gibi de tasarlayabiliriz. **SystemMiddleEarth** ile **SystemHome**'ün aralarında Internet olduğunu düşünürsek buradaki haberleşme kanalları pekala **REST** Api'ler ile tesis edilebilir.
-- **Resilience Durumları :** Her iki sistemde de ağ üzerinden HTTP protokolleri ile erişilen servisler söz konusu. Bu servislere erişilememe, beklenen sürede cevap alamama gibi durumlar oluşabilir. Dağıtık mimarilerin doğası gereği bunlar olası. Dolayısıyla Resilience stratejilerini de işin içerisine katmak gerekebilir. Bu sürecin ilerki aşamalarında değerlendirebileceğim bir mevzu.
-- **Performans İyileştirmeleri :** Benzer raporlar şirket kademesindeki farklı personeller tarafından talep edilebilir. Raporun geçerliliğine göre kabul edilebilir bir zaman dilim boyunca rapor taleplerinin **SystemMiddleEarth** tarafında cache'lenerek saklanması düşünülebilir. **SystemHome** tarafından yapılan bir rapor talebi bilindiği üzere Kahin sistemine ulaştığında 3ncü parti bir servis sağlayıcı API'si kullanılarak geçerli bir sorgu ifadesine de dönüştürülüyor. Bu kısımda yapılan **Evaluate** işlemini aynı türde talepler için bir cache mekanizması ile pekala destekleyebiliriz. Bu **Gen AI** bazlı yorumlayıcının gereksiz yere çağrılmasının da önüne geçer ve hem kaynak tüketimi hem de hızlı reaksiyon verilmesi babında işleri iyileştirir.
+Çözümün 26.07.2024 tarihli resmine baktığımızda HAL, MiddleEarth, Home, Asgard ve Sergeant isimli farklı sistemlerden oluştuğunu görüyoruz. Bu sistemlerden Home, HAL ve MiddleEarth birbirlileriye daha ilişkili süreçler içeriyor. Şu ana kadar uygulanan düzensiz kodlama taktikleri veya gerilla kodlama pratikleri içeride teknik borç yükünü artırmaya başladı. Bunlardan birisi de bolca kullandığımız POCO _(Plain OLD CLR Objects)_ türlerimiz. Örneğin HOME sisteminde kullanılan ve Domain projesinde konuşlandırılmış tiplerin durumu aşağıdaki gibi.
+
+![System HOME POCO Diagrams](/images/sys_home_pocos.png)
+
+Buna göre bazı düzeltmeler yapılması yerinde olacak gibi duruyor.Örneğin HAL sadece expression kontrolü yaparken, Middle Earth rapor hazırlayıp dokümantasonu geri vermekle yükümlü. Ancak Middle Earth ile Home arasında taşınan nesnelerde gereksi veriler de gidiyor gibi. Bir konsolidasyon gerekli. İsimlendirmeler biraz daha açıklayıcı olabilir. Kim DTO, kim Web API için bir payload çok da anlaşılmıyor. 
 
 ## Tartışılabilecek Problemler
 
