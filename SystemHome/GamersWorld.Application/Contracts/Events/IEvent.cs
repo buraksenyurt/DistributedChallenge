@@ -2,6 +2,5 @@
 
 public interface IEvent
 {
-    Guid TraceId { get; set; }
-    DateTime Time { get; set; }
+    public BaseEventData EventData { get; set; }
 }

@@ -39,7 +39,7 @@ public class ArchiveReport(
             DocumentId = appEvent.DocumentId,
             Content = doc.Content,
         });
-        if (writeResponse.StatusCode != Domain.Enums.StatusCode.DocumentUploaded)
+        if (writeResponse.Status != Domain.Enums.Status.DocumentUploaded)
         {
             _logger.LogWarning("{DocumentId} save operation failed", appEvent.DocumentId);
             return;
@@ -50,7 +50,7 @@ public class ArchiveReport(
         var updateResult = await _reportDataRepository.UpdateReportAsync(report);
         if (updateResult == 1)
         {
-            var notificationData = new ReportNotification
+            var notificationData = new ReportNotificationDto
             {
                 DocumentId = appEvent.DocumentId,
                 Content = appEvent.Title,

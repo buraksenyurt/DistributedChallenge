@@ -21,7 +21,7 @@ public class FtpWriter(ILogger<FileSaver> logger, ISecretStoreService secretStor
             _logger.LogError("Paylod or content is null");
             return new BusinessResponse
             {
-                StatusCode = StatusCode.Fail,
+                Status = Status.Fail,
                 Message = "Payload or content is null"
             };
         }
@@ -33,14 +33,14 @@ public class FtpWriter(ILogger<FileSaver> logger, ISecretStoreService secretStor
             {
                 return new BusinessResponse
                 {
-                    StatusCode = StatusCode.DocumentUploaded,
+                    Status = Status.DocumentUploaded,
                     Message = $"{payload.Content.Length} bytes saved."
                 };
             }
 
             return new BusinessResponse
             {
-                StatusCode = StatusCode.Fail,
+                Status = Status.Fail,
                 Message = "Ftp save error"
             };
         }
@@ -49,7 +49,7 @@ public class FtpWriter(ILogger<FileSaver> logger, ISecretStoreService secretStor
             _logger.LogError(excp, "Error on document saving!");
             return new BusinessResponse
             {
-                StatusCode = StatusCode.Fail,
+                Status = Status.Fail,
                 Message = $"Exception. {excp.Message}"
             };
         }

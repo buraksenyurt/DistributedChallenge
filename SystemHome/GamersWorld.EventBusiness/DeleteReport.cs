@@ -33,7 +33,7 @@ public class DeleteReport(
             if (updateResult == 1)
             {
                 _logger.LogInformation("{DocumentId} content has been deleted and main report marked as archived.", appEvent.DocumentId);
-                var notificationData = new ReportNotification
+                var notificationData = new ReportNotificationDto
                 {
                     DocumentId = appEvent.DocumentId,
                     Content = appEvent.Title,

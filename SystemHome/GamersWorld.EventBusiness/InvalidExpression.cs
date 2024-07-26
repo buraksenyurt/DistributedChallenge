@@ -13,7 +13,7 @@ public class InvalidExpression(ILogger<InvalidExpression> logger, INotificationS
 
     public async Task Execute(InvalidExpressionEvent appEvent)
     {
-        var notificationData = new ReportNotification
+        var notificationData = new ReportNotificationDto
         {
             DocumentId = "Audit validation error occured!",
             Content = appEvent.Title,

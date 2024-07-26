@@ -33,7 +33,7 @@ public class FtpDestroyer(ILogger<FtpDestroyer> logger, ISecretStoreService secr
                 _logger.LogInformation("{DocumentId} has been deleted", payload.DocumentId);
                 return new BusinessResponse
                 {
-                    StatusCode = StatusCode.Success,
+                    Status = Status.Success,
                     Message = $"{payload.DocumentId} has been deleted"
                 };
             } else
@@ -41,7 +41,7 @@ public class FtpDestroyer(ILogger<FtpDestroyer> logger, ISecretStoreService secr
                 _logger.LogWarning("{DocumentId} not found on ftp", payload.DocumentId);
                 return new BusinessResponse
                 {
-                    StatusCode = StatusCode.DocumentNotFound,
+                    Status = Status.DocumentNotFound,
                     Message = $"{payload.DocumentId} not found on ftp"
                 };
             }
@@ -51,7 +51,7 @@ public class FtpDestroyer(ILogger<FtpDestroyer> logger, ISecretStoreService secr
             _logger.LogError(ex, "Exception on Ftp file delete operation");
             return new BusinessResponse
             {
-                StatusCode = StatusCode.Fail,
+                Status = Status.Fail,
                 Message = ex.Message
             };
         }

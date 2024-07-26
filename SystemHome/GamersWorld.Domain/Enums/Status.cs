@@ -1,5 +1,5 @@
 namespace GamersWorld.Domain.Enums;
-public enum StatusCode
+public enum Status
 {
     Success = 1,
     ReportReady = 200,
@@ -8,7 +8,7 @@ public enum StatusCode
     DocumentReadable = 206,
     DocumentUploaded = 207,
     InvalidExpression = 400,
-    ValidationErrors = 400,
+    ValidationErrors = 403,
     DocumentNotFound = 404,
     Fail = 500
 }

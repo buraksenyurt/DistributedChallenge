@@ -38,9 +38,9 @@ namespace GamersWorld.JobHost.Business
                     }
 
                     var delResponse = await documentDestroyer.DeleteAsync(request);
-                    if (delResponse.StatusCode != Domain.Enums.StatusCode.Success)
+                    if (delResponse.Status != Domain.Enums.Status.Success)
                     {
-                        logger.LogError("Error on ftp delete operation.{StatusCode}", delResponse.StatusCode);
+                        logger.LogError("Error on ftp delete operation.{StatusCode}", delResponse.Status);
                     }
                 }
                 HangfireMetrics.EraserJobSuccessCounter.Inc();

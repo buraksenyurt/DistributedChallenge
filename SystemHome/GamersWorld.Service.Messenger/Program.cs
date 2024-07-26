@@ -13,6 +13,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,7 +68,7 @@ documentsGroup.MapGet("/{documentId}", async (string documentId, IReportDocument
     {
         var errorResponse = new BusinessResponse
         {
-            StatusCode = StatusCode.DocumentNotFound,
+            Status = Status.DocumentNotFound,
             Message = "Document not found",
             ValidationErrors = null
         };
@@ -75,7 +76,7 @@ documentsGroup.MapGet("/{documentId}", async (string documentId, IReportDocument
         return Results.Json(errorResponse, statusCode: 404);
     }
 
-    return Results.Json(new DocumentContent
+    return Results.Json(new DocumentContentDto
     {
         Base64Content = Convert.ToBase64String(document.Content ?? []),
         ContentSize = document.Content.Length
@@ -102,7 +103,7 @@ documentsGroup.MapPost("/", (NewReportRequest request, IEventQueueService eventQ
 
         var errorResponse = new BusinessResponse
         {
-            StatusCode = StatusCode.ValidationErrors,
+            Status = Status.ValidationErrors,
             Message = "Validation errors occurred.",
             ValidationErrors = errors
         };
@@ -112,22 +113,25 @@ documentsGroup.MapPost("/", (NewReportRequest request, IEventQueueService eventQ
 
     var reportRequestedEvent = new ReportRequestedEvent
     {
-        TraceId = Guid.NewGuid(),
+        EventData = new BaseEventData
+        {
+            TraceId = Guid.NewGuid(),
+            Time = DateTime.Now
+        },
         EmployeeId = request.EmployeeId,
         Title = request.Title ?? "Last Sales Report",
         Expression = request.Expression ?? "Güncel ülke bazlı satış raporlarının özet dökümü.",
-        Time = DateTime.Now,
         Lifetime = request.Lifetime,
     };
 
     eventQueueService.PublishEvent(reportRequestedEvent);
     logger.LogInformation(
         "ReportRequestedEvent sent. TraceId: {TraceId}, Expression: {Expression}"
-        , reportRequestedEvent.TraceId, reportRequestedEvent.Expression);
+        , reportRequestedEvent.EventData.TraceId, reportRequestedEvent.Expression);
 
     var response = new BusinessResponse
     {
-        StatusCode = StatusCode.Success,
+        Status = Status.Success,
         Message = "Successfully sent"
     };
     return Results.Json(response);
@@ -140,11 +144,14 @@ documentsGroup.MapDelete("/{documentId}", (string documentId, [FromBody] DeleteR
     logger.LogInformation("Delete report request for {DocumentId}", request.DocumentId);
     var deleteReportEvent = new DeleteReportRequestEvent
     {
-        TraceId = Guid.NewGuid(),
+        EventData = new BaseEventData
+        {
+            TraceId = Guid.NewGuid(),
+            Time = DateTime.Now
+        },
         DocumentId = request.DocumentId,
         ClientId = request.EmployeeId,
-        Title = request.Title,
-        Time = DateTime.Now,
+        Title = request.Title
     };
     eventQueueService.PublishEvent(deleteReportEvent);
 
@@ -170,7 +177,7 @@ documentsGroup.MapPost("/archive", (ArchiveReportRequest request, IEventQueueSer
 
         var errorResponse = new BusinessResponse
         {
-            StatusCode = StatusCode.ValidationErrors,
+            Status = Status.ValidationErrors,
             Message = "Validation errors occurred.",
             ValidationErrors = errors
         };
@@ -180,11 +187,14 @@ documentsGroup.MapPost("/archive", (ArchiveReportRequest request, IEventQueueSer
 
     var archiveReportEvent = new ArchiveReportRequestEvent
     {
-        TraceId = Guid.NewGuid(),
+        EventData = new BaseEventData
+        {
+            TraceId = Guid.NewGuid(),
+            Time = DateTime.Now
+        },
         DocumentId = request.DocumentId,
         ClientId = request.EmployeeId,
-        Title = request.Title,
-        Time = DateTime.Now,
+        Title = request.Title
     };
 
     eventQueueService.PublishEvent(archiveReportEvent);
@@ -194,7 +204,7 @@ documentsGroup.MapPost("/archive", (ArchiveReportRequest request, IEventQueueSer
 
     var response = new BusinessResponse
     {
-        StatusCode = StatusCode.Success,
+        Status = Status.Success,
         Message = "Successfully sent"
     };
     return Results.Json(response);

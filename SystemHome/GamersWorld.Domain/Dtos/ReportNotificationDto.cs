@@ -2,7 +2,7 @@
 
 namespace GamersWorld.Domain.Dtos;
 
-public record ReportNotification
+public record ReportNotificationDto
 {
     public string? DocumentId { get; set; }
     public string? Content { get; set; }

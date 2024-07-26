@@ -6,7 +6,7 @@ namespace GamersWorld.Domain.Responses
     public class CreateReportResponse
     {
         [JsonPropertyName("status")]
-        public StatusCode Status { get; set; }
+        public Status Status { get; set; }
         [JsonPropertyName("documentId")]
         public string? DocumentId { get; set; }
         [JsonPropertyName("explanation")]

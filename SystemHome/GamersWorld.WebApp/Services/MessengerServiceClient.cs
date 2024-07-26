@@ -1,6 +1,6 @@
 namespace GamersWorld.WebApp.Services;
 
-using GamersWorld.Domain.Data;
+using GamersWorld.Domain.Entity;
 using GamersWorld.Domain.Dtos;
 using GamersWorld.Domain.Requests;
 using GamersWorld.Domain.Responses;
@@ -23,15 +23,15 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
         return response;
     }
 
-    public async Task<DocumentContent?> GetReportDocumentByIdAsync(DocumentIdRequest request)
+    public async Task<DocumentContentDto?> GetReportDocumentByIdAsync(string documentId)
     {
-        var response = await _httpClient.GetFromJsonAsync<DocumentContent>($"/api/documents/{request.DocumentId}");
+        var response = await _httpClient.GetFromJsonAsync<DocumentContentDto>($"/api/documents/{documentId}");
         if (response == null || response.Base64Content == null)
         {
-            _logger.LogWarning("Requested {DocumentId} is null", request.DocumentId);
+            _logger.LogWarning("Requested {DocumentId} is null", documentId);
             return null;
         }
-        return new DocumentContent
+        return new DocumentContentDto
         {
             Base64Content = response.Base64Content,
             ContentSize = response.Base64Content.Length
@@ -57,7 +57,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
 
             return errorResponse ?? new BusinessResponse
             {
-                StatusCode = Domain.Enums.StatusCode.Fail,
+                Status = Domain.Enums.Status.Fail,
                 Message = "Not OK(200)"
             };
         }
@@ -68,7 +68,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
             {
                 return new BusinessResponse
                 {
-                    StatusCode = Domain.Enums.StatusCode.Fail,
+                    Status = Domain.Enums.Status.Fail,
                     Message = "Not OK(200)"
                 };
             }
@@ -89,7 +89,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
         {
             return new BusinessResponse
             {
-                StatusCode = Domain.Enums.StatusCode.Fail,
+                Status = Domain.Enums.Status.Fail,
                 Message = "Fail on document delete"
             };
         }
@@ -98,13 +98,13 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
             _logger.LogInformation("{DocumentId} delete request has been sent.", request.DocumentId);
             return new BusinessResponse
             {
-                StatusCode = Domain.Enums.StatusCode.DeleteRequestAccepted,
+                Status = Domain.Enums.Status.DeleteRequestAccepted,
                 Message = "Document delete request has been sent."
             };
         }
         return new BusinessResponse
         {
-            StatusCode = Domain.Enums.StatusCode.Fail,
+            Status = Domain.Enums.Status.Fail,
             Message = "Document deletion unsuccesfull!"
         };
     }
@@ -116,7 +116,7 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
         {
             return new BusinessResponse
             {
-                StatusCode = Domain.Enums.StatusCode.Fail,
+                Status = Domain.Enums.Status.Fail,
                 Message = "Fail on document archive"
             };
         }
@@ -125,13 +125,13 @@ public class MessengerServiceClient(HttpClient httpClient, ILogger<MessengerServ
             _logger.LogInformation("{DocumentId} archived", request.DocumentId);
             return new BusinessResponse
             {
-                StatusCode = Domain.Enums.StatusCode.Success,
+                Status = Domain.Enums.Status.Success,
                 Message = "Document succesfully archived!"
             };
         }
         return new BusinessResponse
         {
-            StatusCode = Domain.Enums.StatusCode.Fail,
+            Status = Domain.Enums.Status.Fail,
             Message = "Document archive process unsuccesfull!"
         };
     }

@@ -23,7 +23,7 @@ public class ReportDocumentAvailable(
     public async Task Execute(ReportReadyEvent appEvent)
     {
         var client = _httpClientFactory.CreateClient(Names.KahinGateway);
-        _logger.LogInformation("{TraceId}, Ref Doc: {CreatedReportId}", appEvent.TraceId, appEvent.CreatedReportId);
+        _logger.LogInformation("{TraceId}, Ref Doc: {CreatedReportId}", appEvent.EventData.TraceId, appEvent.CreatedReportId);
 
         var payload = new
         {
@@ -41,14 +41,14 @@ public class ReportDocumentAvailable(
 
         var getReportResponse = await response.Content.ReadFromJsonAsync<GetReportResponse>();
 
-        if (getReportResponse is { StatusCode: StatusCode.ReportReady })
+        if (getReportResponse is { StatusCode: Status.ReportReady })
         {
             _logger.LogWarning("{DocumentId} is ready and fetching...", getReportResponse.DocumentId);
             var content = getReportResponse.Document;
-            // Başka bir Business enstrüman kullanılarak yazma işlemi gerçekleştirilir
+
             var docContent = new ReportSaveRequest
             {
-                TraceId = appEvent.TraceId,
+                TraceId = appEvent.EventData.TraceId,
                 Title = appEvent.Title,
                 Expression = appEvent.Expression,
                 EmployeeId = appEvent.EmployeeId,
@@ -62,7 +62,7 @@ public class ReportDocumentAvailable(
 
             var saveResponse = await writeOperator.SaveAsync(docContent);
             _logger.LogInformation("Save response is {StatusCode} and message is {Message}"
-            , saveResponse.StatusCode, saveResponse.Message);
+            , saveResponse.Status, saveResponse.Message);
         }
     }
 }

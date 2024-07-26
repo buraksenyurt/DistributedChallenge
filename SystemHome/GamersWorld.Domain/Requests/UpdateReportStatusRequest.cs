@@ -1,5 +1,5 @@
 namespace GamersWorld.Domain.Requests;
-public class ReportStatusRequest
+public class UpdateReportStatusRequest
 {
     public string? TraceId { get; set; }
     public string? EmployeeId { get; set; }

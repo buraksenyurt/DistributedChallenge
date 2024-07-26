@@ -45,9 +45,9 @@ namespace GamersWorld.JobHost.Business
                                     Content = doc.Content
                                 });
 
-                            if (uploadResponse.StatusCode != Domain.Enums.StatusCode.DocumentUploaded)
+                            if (uploadResponse.Status != Domain.Enums.Status.DocumentUploaded)
                             {
-                                logger.LogError("Error on ftp upload operation.{StatusCode}", uploadResponse.StatusCode);
+                                logger.LogError("Error on ftp upload operation.{StatusCode}", uploadResponse.Status);
                             }
                         }
                     }

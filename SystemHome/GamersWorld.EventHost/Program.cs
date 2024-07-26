@@ -44,7 +44,7 @@ services.AddHttpClient(Names.KahinGateway, client =>
         {
             BackoffType = DelayBackoffType.Exponential,
             MaxRetryAttempts = 5,
-            Delay = TimeSpan.FromSeconds(3),
+            Delay = TimeSpan.FromSeconds(5),
             UseJitter = true
         });
     });

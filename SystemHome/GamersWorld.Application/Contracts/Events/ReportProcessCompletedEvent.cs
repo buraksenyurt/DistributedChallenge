@@ -2,7 +2,6 @@
 
 public class ReportProcessCompletedEvent : IEvent
 {
-    public Guid TraceId { get; set; }
-    public DateTime Time { get; set; }
+    public BaseEventData EventData { get; set; } = new BaseEventData();
     public Guid CreatedReportId { get; set; }
 }

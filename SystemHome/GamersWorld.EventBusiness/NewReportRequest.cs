@@ -16,11 +16,11 @@ public class NewReportRequest(ILogger<NewReportRequest> logger, IHttpClientFacto
     public async Task Execute(ReportRequestedEvent appEvent)
     {
         var client = _httpClientFactory.CreateClient(Names.KahinGateway);
-        _logger.LogInformation("{TraceId}, {Title}, {Expression}", appEvent.TraceId, appEvent.Title, appEvent.Expression);
+        _logger.LogInformation("{TraceId}, {Title}, {Expression}", appEvent.EventData.TraceId, appEvent.Title, appEvent.Expression);
 
         var payload = new
         {
-            appEvent.TraceId,
+            appEvent.EventData.TraceId,
             appEvent.Title,
             appEvent.Expression,
             appEvent.EmployeeId,
@@ -34,7 +34,7 @@ public class NewReportRequest(ILogger<NewReportRequest> logger, IHttpClientFacto
         {
             var createReportResponse = await response.Content.ReadFromJsonAsync<CreateReportResponse>();
 
-            if (createReportResponse is { Status: StatusCode.Success })
+            if (createReportResponse is { Status: Status.Success })
             {
                 _logger.LogInformation("Report request sent({Status}). {DocumentId}"
                     , createReportResponse.Status, createReportResponse.DocumentId);
