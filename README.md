@@ -16,9 +16,9 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [İkinci Zaman Kapısı (30 Mayıs 2024, 22:00 suları)](#i̇kinci-zaman-kapısı-30-mayıs-2024-2200-suları)
     - [Üçüncü Zaman Kapısı (7 Temmuz 2024, 17:30 Suları)](#üçüncü-zaman-kapısı-7-temmuz-2024-1730-suları)
     - [Dördüncü Zaman Kapısı (13 Temmuz 2024, 00:10 Suları)](#dördüncü-zaman-kapısı-13-temmuz-2024-0010-suları)
-  - [Zamanla Yapılan Eklemeler](#zamanla-yapılan-eklemeler)
-    - [Redis Stream Entgrasyonu (9 Haziran 2024)](#redis-stream-entgrasyonu-9-haziran-2024)
-    - [SonarQube Genişletmesi](#sonarqube-genişletmesi)
+  - [Dış Sistem Entegrasyonları](#dış-sistem-entegrasyonları)
+    - [Redis Stream Entgrasyonu ile Event Takibi](#redis-stream-entgrasyonu-ile-event-takibi)
+    - [SonarQube ile Kod Kalite Ölçümü](#sonarqube-ile-kod-kalite-ölçümü)
     - [Secure Vault Entegrasyonu](#secure-vault-entegrasyonu)
     - [Local NuGet Entegrasyonu](#local-nuget-entegrasyonu)
     - [Github Actions ve Local Nuget Repo Problemi](#github-actions-ve-local-nuget-repo-problemi)
@@ -26,8 +26,8 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Resiliency Deneyleri](#resiliency-deneyleri)
     - [Service Discovery ve Hashicorp Consul Entegrasonu](#service-discovery-ve-hashicorp-consul-entegrasonu)
     - [Ftp Entegrasyonu ile Arşivleme Stratejisi](#ftp-entegrasyonu-ile-arşivleme-stratejisi)
-    - [Planlı İşler](#planlı-i̇şler)
-    - [Elasticsearch ve Kibana Entegrasyonu](#elasticsearch-ve-kibana-entegrasyonu)
+    - [Planlı İşler (Scheduled Jobs)](#planlı-i̇şler-scheduled-jobs)
+    - [Elasticsearch ve Kibana Entegrasyonu ile Log Takibi](#elasticsearch-ve-kibana-entegrasyonu-ile-log-takibi)
     - [Ölçüm Metrikleri için Prometheus ve Grafana Entegrasyonu](#ölçüm-metrikleri-için-prometheus-ve-grafana-entegrasyonu)
   - [POCO Diagramları](#poco-diagramları)
   - [Tartışılabilecek Problemler](#tartışılabilecek-problemler)
@@ -61,15 +61,16 @@ Ancak bunların haricinde herhangi bir lokasyondan da çalışma şansımız var
 
 Kullanıcılarına oyun kiralayan bir internet şirketi olduğunu düşünelim. Şirketin son kullanıcılara _(End Users)_ sunduğu web ve mobile bazlı uygulamalar dışında şirket genel merkezinde kullanılan Back Office tadında farklı bir programları daha var. Bu programda yer alan ekranlardan birisi de raporlama talepleri için kullanılıyor. Şirketin sahip olduğu veri miktarı ve rapor taleplerinin belli bir onay sürecinden geçip içeriklerini farklı alanlardan toplaması nedeniyle bir raporun çekilmesi bazen birkaç dakikayı bulabiliyor. Her ne kadar şirket içerisinde bu işleri üstelenen bir raporlama ekibi bulunsa da personelin kullandığı web sayfalarında bu şekilde belirsiz süreyle beklenmeleri istenmiyor. Çözüm olarak rapor talebinin girildiği bir formun tasarlanması ve talebin raporlama ekibine ait uygulamalara ulaştırılıp hazır hale geldikten sonra personelin bilgilendirilmesi şeklinde bir yol izlenmesine karar veriliyor. Tüm bu sürecin tamamen sistem tarafından gerçekleştirilmesi ve otomatize edilmesi isteniyor. İşte Örnek Birkaç Rapor İfadesi;
 
-| Rapor Başlığı                           | İfade (Expression)                                                                                           |
-|-----------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| En Pozitif Yorumları Toplayanlar        | Geçtiğimiz yıl kiraladığımız oyunlardan en çok pozitif yorum alan ilk 25 adedinin ülke bazlı satış rakamları.|
-| Güncel Firma Bazlı Kiralamalar          | Dün yapılan kiralamalardan firma ve oyun türü bazında gruplanmış kar değerleri.                              |
-| En İyi Oyuncuların Harcamaları          | Geçen ay en yüksek puan alan oyuncuların yaptığı oyun için satın alma harcamalarının toplam tutarları.       |
-| Çak Norizin Bireysel Başarımları        | Dövüş oyunlarından puan olarak benimkini geçen en iyi 10 oyunun kullanım istatistikleri.                     |
-| En Sağlıklı Oyuncularımız               | Oyun oynarken platformumuz üzerinden yemek siparişi verenler arasında en sağlıklı şekilde tıkınanlar         |
-| Patlamış Mısır Sevdalıları              | Hafta sonu oyuncularından en çok patlamış mısır siparişi veren ilk 1000 kullanıcının tercih ettiği markalar  |
-| AFK Modunda Takılan Sakinler            | Oyunun başından kalkıp AFK modundan kalan kullanıcılardan son bir ayda en yüksek süre duraksayanlar          |
+| Rapor Başlığı | İfade (Expression)  |
+|---------------|---------------------|
+| En Pozitif Yorumları Toplayanlar  | Geçtiğimiz yıl kiraladığımız oyunlardan en çok pozitif yorum alan ilk 25 adedinin ülke bazlı satış rakamları.|
+| Güncel Firma Bazlı Kiralamalar  | Dün yapılan kiralamalardan firma ve oyun türü bazında gruplanmış kar değerleri. |
+| En İyi Oyuncuların Harcamaları  | Geçen ay en yüksek puan alan oyuncuların yaptığı oyun için satın alma harcamalarının toplam tutarları.  |
+| Çak Norizin Bireysel Başarımları  | Dövüş oyunlarından puan olarak benimkini geçen en iyi 10 oyunun kullanım istatistikleri.  |
+| En Sağlıklı Oyuncularımız | Oyun oynarken platformumuz üzerinden yemek siparişi verenler arasında en sağlıklı şekilde tıkınanlar  |
+| Patlamış Mısır Sevdalıları  | Hafta sonu oyuncularından en çok patlamış mısır siparişi veren ilk 1000 kullanıcının tercih ettiği markalar |
+| AFK Modunda Takılan Sakinler  | Oyunun başından kalkıp AFK modundan kalan kullanıcılardan son bir ayda en yüksek süre duraksayanlar |
+| Strateji Oyunlarından Vazgeçmeyenler  |Kırk yaş üstü olup 90lı yılların en popüler strateji oyunlarını kiralamaya devam edenlerin ülke bazlı harcama değerleri.  |
 
 ## Aday Çözüm
 
@@ -119,6 +120,7 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 | DOCKER COMPOSE | Elasticsearch                    |             | Uygulama loglarını depolamak için                         | localhost:9200 |
 | DOCKER COMPOSE | Kibana                           |             | Logları izlemek için                                      | localhost:5601 |
 | DOCKER COMPOSE | Prometheus                       |             | Ölçüm metriklerini toplamak için                          | localhost:9090 |
+| DOCKER COMPOSE | Sonarqube                        |             | Statik kod taraması ile kod kalite metriklerini almak için| localhost:9000 |
 | DOCKER COMPOSE | Grafana                          |             | Prometheus'e akan metrikleri görsel olarak izlemek için   | localhost:3000 |
 | SYSTEM ASGARD  | Heimdall                         | Self Hosted | Servis izleme uygulaması                                  | localhost:5247 |
 
@@ -230,6 +232,7 @@ Bu büyük çaplı çalışmada birçok servis docker-compose aracılığıyla a
 | Kibana, Elasticsearch ile veri görselleştirmesi yapar. | kibana       | localhost:5601   |
 | Prometheus, sistem izleme ve uyarı işlevi görür. | prometheus   | localhost:9090   |
 | Grafana, metriklerin ve logların görselleştirilmesi için kullanılır. | grafana      | localhost:3000   |
+| Sonarqube, statik kod tarama aracı. | sonarqube | localhost:9000  |
 
 ## Sistem Çıktıları
 
@@ -313,11 +316,11 @@ Diğer yandan rapor görüntüleme ekranına silme fonksiyonelliği de kazandır
 
 ![Runtime 13](/images/runtime_13.png)
 
-Dikkat edileceği üzere artık System Home tarafına inen rapor dokümanları için zaman aşımı entegrasyonuna başlandı. Yaşan süresi _(Expire Time)_ dolan rapor dokümanlarını kalıcı ortamlarından silecek takvimlendirilmiş _(Scheduled)_ bir mekanizma üzerinde geliştirme yapılacak. Background Worker türünden bir host uygulamanın iş göreceğini düşünüyorum. 
+Dikkat edileceği üzere artık System Home tarafına inen rapor dokümanları için zaman aşımı entegrasyonuna başlandı. Yaşan süresi _(Expire Time)_ dolan rapor dokümanlarını kalıcı ortamlarından silecek takvimlendirilmiş _(Scheduled)_ bir mekanizma üzerinde geliştirme yapılacak. Background Worker türünden bir host uygulamanın iş göreceğini düşünüyorum.
 
-## Zamanla Yapılan Eklemeler
+## Dış Sistem Entegrasyonları
 
-### Redis Stream Entgrasyonu (9 Haziran 2024)
+### Redis Stream Entgrasyonu ile Event Takibi
 
 **System MiddleEarth** içerisinde yer alan **Kahin.Service.ReportingGateway**, gelen bir rapor talebini aldıktan sonra raporun hazırlanması için bir süreç başlatır. Bu süreç muhtemelen uzun sürebilecek bir iştir. Bu nedenle **System MiddleEarth** içinde bir mesajlaşma kuyruğu söz konusudur. Bu sefer **RabbitMQ** yerine **Redis** kullanılmıştır. Redis tarafı in-memory de çalışabilen dağıtık bir key:value store olarak düşünülür ancak aynı zamanda **Pub/Sub** modelini de destekler. Dolayısıyla gelen rapor talebini burada kuyruğa bırakıp bir dinleyicinin almasını ve işlemleri ilerletmesini sağlayabiliriz. **Redis** tarafı yine **docker-compose** içerisinde konuşlandırılmıştır. Sistemde bir docker imajı olarak ayağa kalkar. Web uygulamasından geçerli bir rapor **talebi Kahin.Service.ReportingGateway**'e ulaştığında redis'e düşen mesaj kabaca aşağıdaki komutlar ile yakalanabilir.
 
@@ -336,7 +339,7 @@ Bir deneme sonrası sistemde oluşan görüntü aşağıdaki gibidir.
 
 ![Runtime_06](./images/runtime_06.png)
 
-### SonarQube Genişletmesi
+### SonarQube ile Kod Kalite Ölçümü
 
 Projenin teknik borçlanma değerlerini ölçümlemek ve kod kalitesini iyileştirmek için **Sonarqube** aracını kullanmaya karar verdim. **Local** ortamda **Sonarqube** kurulumu için Docker imajından yararlanılabilir. _(Artık Sonarqube hizmetini docker-compose dosyasından işletmekteyiz)_
 
@@ -580,7 +583,7 @@ Sonuç olarak önyüzden arşivleme işlemi başlatıldığında bir başka even
 
 ![Runtime 14](/images/runtime_14.png)
 
-### Planlı İşler
+### Planlı İşler (Scheduled Jobs)
 
 Pek çok büyük sistemde belli periyotlarda tekrarlanan işler söz konusudur. Örneğin bizim uygulamamızda tüm raporların için kullanıclar tarafından belirlenen yaşam süreleri var. 10 dakika, Yarım saat, 1 Saat, 1 gün gibi. Bu süreler dolduğunda ilgili kaynaklardaki _(veri tabanı, ftp sunucusu vb)_ içeriklerin temizlenmesi planlı işlerden birisi olabilir. Bu tip bir iş örneğin 10 dakikada bir çalışacak şekilde planlanabilir. .Net tarafında basit bir timer mekanizması ile ilerlenebileceği gibi [Quartz](https://www.nuget.org/packages/Quartz)   veya **Hangfire** gibi paketlerden de yararlanılabilir. Örneğimizde **GamersWorld.JobHost** isimli terminal uygulamasını [Hangfire](https://www.nuget.org/packages/Hangfire/) ile çalışacak şekilde genişlettik. Planlı işler bazı durumlarda sistemde beklenmedik sorunlara da neden olabiliyor. Özellikle dağıtık sistemlerde entegre oldukları noktalar açısından düşünülünce bu önemli bir detay olabiliyor. Kurumsal ölçekteki sistemlerde n sayıda planlanmış ve oldukça karmaşık süreçler koşturan planlı işler *(Scheduled Jobs)* sistemleri inanılaz derecede yorabiliyorlar. Bizim örneğimizde şimdilik tek bir iş var. Süresi dolan rapoları veri tabanı ve ftp'den silmek. Peki işlemler sırasında veritabanı bağlantısı yoksa ya da ftp'ye ulaşılamıyorsa sistemin genelinin vereceği tepki ne olmalı? Bu vakayı da dayanıklılık senaryolarımıza dahil edebiliriz.
 
@@ -594,7 +597,7 @@ Aşağıdaki ekran görüntülerinde arşivlenen ve süresi dolan raporların he
 
 Tabii burada açıkta kalan bir nokta daha var. Arşivlenmediği halde süresi dolan raporlar için de bir planlı iş eklemek gerekebilir. Bu tip raporlar ftp'de olmayan ama süresi dolduğu halde db'de kalmaya devam eden türden raporlardır.
 
-### Elasticsearch ve Kibana Entegrasyonu
+### Elasticsearch ve Kibana Entegrasyonu ile Log Takibi
 
 Sistemlerin ürettiği **log**ları uygulamaların terminal pencereleri yerine Kibana gibi araçlar üzerinden monitör etmek dağıtık sistemler için önemli bir ihtiyaç. Farklı uygulamalardan akan log sayısı arttıkça bunları pencerelerden takip etmek zorlaştığı gibi loglar üzerinde sorgulama yapmak da neredeyse imkansız hale geliyor. Yüksek log üretimini ve bu küme üzerinde hızlı arama operasyonunu **Elasticsearch** gibi bir çözümle giderebiliriz. Nitelik **Elasitcsearch**'e akan logları görsel olarak takip ederken de bir araca ihtiyacımız var. Bu noktada **Kibana** sık kullanılan çözümlerin başında gelmekte. 
 
@@ -721,7 +724,7 @@ rate(archiver_job_duration_seconds_sum[1m])
 
 ![System HOME POCO Diagrams](/images/sys_home_pocos.png)
 
-Buna göre bazı düzeltmeler yapılması yerinde olacak gibi duruyor.Örneğin HAL sadece expression kontrolü yaparken, Middle Earth rapor hazırlayıp dokümantasonu geri vermekle yükümlü. Ancak Middle Earth ile Home arasında taşınan nesnelerde gereksi veriler de gidiyor gibi. Bir konsolidasyon gerekli. İsimlendirmeler biraz daha açıklayıcı olabilir. Kim DTO, kim Web API için bir payload çok da anlaşılmıyor. 
+Buna göre bazı düzeltmeler yapılması yerinde olacak gibi duruyor.Örneğin HAL sadece expression kontrolü yaparken, Middle Earth rapor hazırlayıp dokümantasonu geri vermekle yükümlü. Ancak Middle Earth ile Home arasında taşınan nesnelerde gereksi veriler de gidiyor gibi. Bir konsolidasyon gerekli. İsimlendirmeler biraz daha açıklayıcı olabilir. Kim DTO, kim Web API için bir payload çok da anlaşılmıyor.
 
 ## Tartışılabilecek Problemler
 
@@ -738,4 +741,3 @@ Kodlar üzerinde ilerledikçe çözüm gittikçe büyümeye ve karmaşıklaşmay
 - [.Net 8 ile Distributed Systems Challenge - 04 - Güncel Durum Değerlendirmesi](https://youtu.be/LvZOCmnqujE)
 - [.Net 8 ile Distributed Systems Challenge - 05 - Health Checks](https://youtu.be/dtiTMet4qFM)
 - ...
-
