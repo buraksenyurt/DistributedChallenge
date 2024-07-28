@@ -1,20 +1,27 @@
 services:
   rabbitmq:
     image: rabbitmq:management
+    container_name: dc-rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: scothtiger
       RABBITMQ_DEFAULT_PASS: 123456
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - dc-network
 
   redis:
     image: redis:latest
+    container_name: dc-redis
     ports:
       - "6379:6379"
+    networks:
+      - dc-network
 
   localstack:
     image: localstack/localstack:latest
+    container_name: dc-localstack
     ports:
       - "4566:4566"
       - "4571:4571"
@@ -24,9 +31,12 @@ services:
       - DATA_DIR=/var/lib/localstack/data
     volumes:
       - localstack_data:/var/lib/localstack
+    networks:
+      - dc-network
 
   baget:
     image: loicsharma/baget:latest
+    container_name: dc-baget
     ports:
       - "5000:80"
     environment:
@@ -36,9 +46,12 @@ services:
       - Baget__Storage__Path=/var/baget/packages
     volumes:
       - baget_data:/var/baget
+    networks:
+      - dc-network
 
   postgres:
     image: postgres:latest
+    container_name: dc-postgres
     environment:
       POSTGRES_USER: johndoe
       POSTGRES_PASSWORD: somew0rds
@@ -47,9 +60,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgres/data
+    networks:
+      - dc-network
 
   pgadmin:
     image: dpage/pgadmin4:latest
+    container_name: dc-pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: scoth@tiger.com
       PGADMIN_DEFAULT_PASSWORD: 123456
@@ -57,14 +73,20 @@ services:
       - "5050:80"
     depends_on:
       - postgres
+    networks:
+      - dc-network
 
   consul:
     image: hashicorp/consul:latest
+    container_name: dc-consul
     ports:
       - '8500:8500'
+    networks:
+      - dc-network
   
   ftp-server:
     image: delfer/alpine-ftp-server
+    container_name: dc-ftp-server
     ports:
       - "21:21"
       - "21000-21010:21000-21010"
@@ -75,9 +97,12 @@ services:
       PASV_MAX_PORT: 21010
     volumes:
       - ftp_data:/home/ftpuser/ftp_data
+    networks:
+      - dc-network
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+    container_name: dc-elasticsearch
     environment:
       - xpack.security.enabled=false
       - xpack.security.enrollment.enabled=false
@@ -88,10 +113,11 @@ services:
     volumes:
       - es_data:/usr/share/elasticsearch/data
     networks:
-      - elk-network
+      - dc-network
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.14.3
+    container_name: dc-kibana
     ports:
       - "5601:5601"
     environment:
@@ -99,28 +125,37 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk-network
+      - dc-network
 
   audit-web-api:
     image: systemhome/evalapi
+    container_name: dc-audit-web-api
     ports:
       - "5147:8080"
+    networks:
+      - dc-network
 
   prometheus:
     image: prom/prometheus:latest
+    container_name: dc-prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
+    networks:
+      - dc-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Added for accessing localhost metric servers
 
   grafana:
     image: grafana/grafana:latest
+    container_name: dc-grafana
     ports:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=123456
     volumes:
       - grafana-storage:/var/lib/grafana
+    networks:
+      - dc-network
 
 volumes:
   localstack_data:
@@ -131,5 +166,5 @@ volumes:
   grafana-storage:
   
 networks:
-  elk-network:
+  dc-network:
     driver: bridge

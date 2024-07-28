@@ -25,7 +25,7 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.WithProperty("System", systemName)
     .Enrich.WithProperty("Environment", environmentName)
     .WriteTo.Console()
-    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://host.docker.internal:9200"))
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://elasticsearch:9200"))
     {
         AutoRegisterTemplate = true,
         IndexFormat = "auditapi-logs-development",
