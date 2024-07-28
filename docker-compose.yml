@@ -156,6 +156,16 @@ services:
       - grafana-storage:/var/lib/grafana
     networks:
       - dc-network
+  
+  sonarqube:
+    image: sonarqube:latest
+    container_name: dc-sonarqube
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+    ports:
+      - "9000:9000"
+    networks:
+      - dc-network
 
 volumes:
   localstack_data:
