@@ -2,10 +2,10 @@
 
 Köklü değişikliğe sebep olabilecek özellikler veaya araştırmalar ile ilgili açılan alt branch'lere ait detaylı bilgiler.
 
-- [Feature(POC) Çalışmaları](#feature-poc-çalışmaları)
-	- [System HAL Servisinin Ayrıştırılması](#system-hal-servisinin-ayrıştırılması)
-		- [Plan](#plan)
-		- [Uygulama](#uygulama)
+- [Feature(POC) Çalışmaları](#featurepoc-çalışmaları)
+  - [System HAL Servisinin Ayrıştırılması](#system-hal-servisinin-ayrıştırılması)
+    - [Plan](#plan)
+    - [Uygulama](#uygulama)
 
 ## System HAL Servisinin Ayrıştırılması
 
@@ -28,14 +28,20 @@ Yukarıda bahsedilen maddeler plan dahilinde çözümlenmesi gereken meselelerdi
 
 ### Uygulama
 
-**PRB01** kodlu sorun için root klasörde **nuget.config** dosyası oluşturuldu ve BaGet adresi olarak **host.docker.internal:5000/v3/index.json** kullanıldı. Ancak bu çözüm, docker imajı için build alınırken işe yarıyor. Projeyi bu **nuget.config** dosyası ile build ettiğimizde bu sefer de **localhost:5000** adresli nuget adresine bakmadığı için **Restore** işlemleri sırasında hata alınıyor.
+**PRB01(Windows Sistemler için Geçerli)** kodlu sorun için root klasörde **nuget.config** dosyası oluşturuldu ve BaGet adresi olarak **host.docker.internal:5000/v3/index.json** kullanıldı. Ancak bu çözüm, docker imajı için build alınırken işe yarıyor. Projeyi bu **nuget.config** dosyası ile build ettiğimizde bu sefer de **localhost:5000** adresli nuget adresine bakmadığı için **Restore** işlemleri sırasında hata alınıyor.
+
+*Not : Bu sorun windows sistemlerde yaşanıyor nitekim Linux tabanlı sistemlerde host.docker.internal şeklinde bir kavram bulunmuyor. Doğrudan localhost kullanılabilir.*
 
 ```bash
-# Docker imajını oluşturmak için root klasördeyken aşağıdaki komutu çalıştırmak yeterli
+# Docker imajını oluşturmak için root klasördeyken aşağıdaki komutu çalıştırmak yeterli (Windows için)
 docker build -t systemhome/evalapi -f Eval.AuditApi/Dockerfile .
+
+# Linux sistemde çalışırken host.docker.internal adresi geçerli olmayacaktır
+# Bu nedenle aşağıdaki komut ile ilerlemek gerekecektir.
+sudo docker build --network host -t systemhome/evalapi -f Eval.AuditApi/Dockerfile .
 ```
 
-**PRB02** kodlu problemin çözümü için programın Consule hizmetine ait konfigurasyon ayarları aşağıdaki gibi değiştirildi.
+**PRB02(Windows Sistemler için Geçerli)** kodlu problemin çözümü için programın Consule hizmetine ait konfigurasyon ayarları aşağıdaki gibi değiştirildi.
 
 ```json
 "Consul": {

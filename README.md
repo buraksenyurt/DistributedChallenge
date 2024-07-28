@@ -7,9 +7,10 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
   - [Senaryo](#senaryo)
   - [Aday Çözüm](#aday-çözüm)
   - [Envanter](#envanter)
-    - [Baş Ağrıtacak Dayanıklılık Senaryoları](#baş-ağrıtacak-dayanıklılık-senaryoları)
+  - [Baş Ağrıtacak Dayanıklılık Senaryoları](#baş-ağrıtacak-dayanıklılık-senaryoları)
   - [Yapılacaklar Listesi _(ToDo List)_](#yapılacaklar-listesi-todo-list)
   - [Sistemin Çalıştırılması](#sistemin-çalıştırılması)
+  - [Docker Unsurları](#docker-unsurları)
   - [Sistem Çıktıları](#sistem-çıktıları)
     - [İlk Zaman Kapısı (29 Mayıs 2024, 21:00 suları)](#i̇lk-zaman-kapısı-29-mayıs-2024-2100-suları)
     - [İkinci Zaman Kapısı (30 Mayıs 2024, 22:00 suları)](#i̇kinci-zaman-kapısı-30-mayıs-2024-2200-suları)
@@ -125,7 +126,7 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 
 ![inventory](./images/current_inventory.png)
 
-### Baş Ağrıtacak Dayanıklılık Senaryoları
+## Baş Ağrıtacak Dayanıklılık Senaryoları
 
 Envanterimize göre sistemin genel dayanıklılığını test edebileceğimiz ve Resilience taktiklerini ele alabileceğimiz senaryoları aşağıdaki listeye ekleyebiliriz. [Netflix'in Chaos Monkey'si](https://netflix.github.io/chaosmonkey/) tadında sistemde bu tip sorunları çıkartabilecek bazı uygulamalar üzerinde de çalışılabilir.
 
@@ -201,10 +202,6 @@ gnome-terminal --title="HOME - Scheduled Job Host" -- bash -c "cd ../SystemHome/
 # Start Home Gateway Service
 gnome-terminal --title="HOME - Gateway Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Gateway && dotnet run; exec bash"
 
-# Start Eval.Api Service
-# Docker Service haline getirildiği için gerek kalmadı
-# gnome-terminal --title="HAL - Expression Auditor" -- bash -c "cd ../SystemHAL/Eval.AuditApi && dotnet run; exec bash"
-
 # Start Web App
 gnome-terminal --title="HOME - Web App" -- bash -c "cd ../SystemHome/GamersWorld.WebApp && dotnet run; exec bash"
 
@@ -214,6 +211,25 @@ gnome-terminal --title="MIDDLE EARTH - Event Consumer Host" -- bash -c "cd ../Sy
 # Start Asgard System Heimdall
 gnome-terminal --title="ASGARD - Heimdall Monitoring UI" -- bash -c "cd ../SystemAsgard/Heimdall && dotnet run; exec bash"
 ```
+
+## Docker Unsurları
+
+Bu büyük çaplı çalışmada birçok servis docker-compose aracılığıyla ayağa kaldırılıyor. Postgres, PgAdmin, Elastichsearch, Kibana gibi bilinen hizmetler dışında EvalApi isimli servis uygulamamızda aynı network içerisinde çalıştırılmakta. Kullandığımız güncel servislere ait bilgileri aşağıdaki tabloda bulabilirsiniz.
+
+| Hizmet Adı                 | Servis Adı   | Adresi                   |
+|----------------------------|--------------|--------------------------|
+| RabbitMQ, mesaj kuyruğu yönetimini sağlar. | rabbitmq    | amqp, localhost:15672  |
+| Redis, key:value store türlü veri tabanıdır. Burada stream özelliği ile mesajlaşma özelliği kullanılıyor. | redis        | localhost:6379          |
+| LocalStack, AWS servislerinin lokal ortamda taklit edilmesini sağlar. | localstack   | localhost:4566   |
+| BaGet, NuGet paket yönetimi için kullanılan bir sunucu uygulamasıdır. | baget        | localhost:5000   |
+| PostgreSQL, ilişkisel bir veritabanı yönetim sistemidir. | postgres     | localhost:5432          |
+| PgAdmin, PostgreSQL veritabanlarını yönetmek için kullanılan bir web arayüzüdür. | pgadmin      | localhost:5050   |
+| Consul, servis keşfi ve yapılandırma yönetimini kolaylaştırır. Burada Service Discovery için kullanılıyor. | consul       | localhost:8500   |
+| FTP Sunucusu, dosya transferi için kullanılır. | ftp-server   | ftp, localhost:21      |
+| Elasticsearch, tam metin arama(full text search) ve analiz motorudur. Burada daha çok logları akıttığımız yer. | elasticsearch | localhost:9200   |
+| Kibana, Elasticsearch ile veri görselleştirmesi yapar. | kibana       | localhost:5601   |
+| Prometheus, sistem izleme ve uyarı işlevi görür. | prometheus   | localhost:9090   |
+| Grafana, metriklerin ve logların görselleştirilmesi için kullanılır. | grafana      | localhost:3000   |
 
 ## Sistem Çıktıları
 
@@ -543,7 +559,7 @@ Tabii consul ürününün çok fazla meziyeti var. Ben şimdilik sadece Service 
 
 ### Ftp Entegrasyonu ile Arşivleme Stratejisi
 
-Birden fazla sistemin bir arada olduğu senaryolarda ftp bazlı süreçler de olabiliyor. Bunu deneyimlemek için yine docker-compose üzerinden kullanabileceğimiz bir ftp imajına başvurduk. [Alpine tabanlı bu basit ftp imajı](https://hub.docker.com/r/delfer/alpine-ftp-server) ile sistemde sanki bir ftp sunucusu ile işlem yapıyormuşuz stratejisini hayata geçirebildik. Senaryomuza göre önyüzde hali hazırda duran bazı raporlar için doğrudan silme ve arşive gönderme seçeneklerimiz var. Arşive gönderme aslında raporun veritabanından silinmesi ama belli bir süre zarfında ftp sunucusunda yaşatılması anlamına gelmekte. Elbette bu bizim uydurduğumuz bir senaryo. Ftp-server imajı ile çalışırken bazı problemler de yaşadım. Bunlardan birisi docker-compose dosyasında belirtilen kullanıcının bir türlü oluşturulmamasıydı. Bu nedenle docker container'a bir terminal açıp ilgili kullanıcıyı manuel olarak ekledim. 
+Birden fazla sistemin bir arada olduğu senaryolarda ftp bazlı süreçler de olabiliyor. Bunu deneyimlemek için yine docker-compose üzerinden kullanabileceğimiz bir ftp imajına başvurduk. [Alpine tabanlı bu basit ftp imajı](https://hub.docker.com/r/delfer/alpine-ftp-server) ile sistemde sanki bir ftp sunucusu ile işlem yapıyormuşuz stratejisini hayata geçirebildik. Senaryomuza göre önyüzde hali hazırda duran bazı raporlar için doğrudan silme ve arşive gönderme seçeneklerimiz var. Arşive gönderme aslında raporun veritabanından silinmesi ama belli bir süre zarfında ftp sunucusunda yaşatılması anlamına gelmekte. Elbette bu bizim uydurduğumuz bir senaryo. Ftp-server imajı ile çalışırken bazı problemler de yaşadım. Bunlardan birisi docker-compose dosyasında belirtilen kullanıcının bir türlü oluşturulmamasıydı. Bu nedenle docker container'a bir terminal açıp ilgili kullanıcıyı manuel olarak ekledim.
 
 Diğer bir sorunda FTP upload işlemleri için kullandığım FluentFTP paketinin dosya yazma işini bir türlü gerçekleştiremeyişiydi. Bunun sebebi ise ftpuser klasöründe documents'ı oluşturmaması ve buraya ftp kullanıcısı için yazma hakkı vermememizdi. Bu nedenle aşağıdaki komutları not olarak eklemek istedim.
 
@@ -634,7 +650,7 @@ Artık bir Data Stream mevcut olduğundan AuditApi kodundan gönderilen logları
 
 MiddleEarth sisteminde yer alan ve Redis Stream üzerinden event yorumlayan Kahin.EventHost için de Kibana'nın aynı arabiriminden aşağıdaki sorguları kullandık.
 
-```
+```text
 PUT _index_template/kahin-event-host-logs-template
 {
   "index_patterns": ["kahin-event-host-logs-development*"],
