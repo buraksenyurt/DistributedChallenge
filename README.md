@@ -195,6 +195,9 @@ gnome-terminal --title="MIDDLE EARTH - Reporting Gateway" -- bash -c "cd ../Syst
 # Start Messenger Service
 gnome-terminal --title="HOME - Messenger Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Messenger && dotnet run; exec bash"
 
+# Start JWT Token Service
+gnome-terminal --title="HOME - JWT Token Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Identity && dotnet run; exec bash"
+
 # Start Home EventHost
 gnome-terminal --title="HOME - Event Consumer Host" -- bash -c "cd ../SystemHome/GamersWorld.EventHost && dotnet run; exec bash"
 
@@ -203,6 +206,10 @@ gnome-terminal --title="HOME - Scheduled Job Host" -- bash -c "cd ../SystemHome/
 
 # Start Home Gateway Service
 gnome-terminal --title="HOME - Gateway Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Gateway && dotnet run; exec bash"
+
+# Start Eval.Api Service
+# Docker Service haline getirildiği için gerek kalmadı
+# gnome-terminal --title="HAL - Expression Auditor" -- bash -c "cd ../SystemHAL/Eval.AuditApi && dotnet run; exec bash"
 
 # Start Web App
 gnome-terminal --title="HOME - Web App" -- bash -c "cd ../SystemHome/GamersWorld.WebApp && dotnet run; exec bash"
@@ -740,4 +747,5 @@ Kodlar üzerinde ilerledikçe çözüm gittikçe büyümeye ve karmaşıklaşmay
 - [.Net 8 ile Distributed Systems Challenge - 03 - Secrets Management](https://youtu.be/kozb3c37f9k)
 - [.Net 8 ile Distributed Systems Challenge - 04 - Güncel Durum Değerlendirmesi](https://youtu.be/LvZOCmnqujE)
 - [.Net 8 ile Distributed Systems Challenge - 05 - Health Checks](https://youtu.be/dtiTMet4qFM)
+- [.Net 8 ile Distributed Systems Challenge - 06 - SignalR ile Push Notification](https://youtu.be/P2IUqybwIKA)
 - ...
