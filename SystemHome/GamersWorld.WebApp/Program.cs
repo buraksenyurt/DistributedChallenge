@@ -8,7 +8,7 @@ using Steeltoe.Discovery.Client;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddDependencies();
+builder.Services.AddDependencies(); 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Services.AddSignalR();
@@ -27,6 +27,13 @@ builder.Services.AddDiscoveryClient();
 builder.Services.AddHttpClient<MessengerServiceClient>(client =>
 {
     client.BaseAddress = new Uri("http://web-backend-service");
+})
+.AddServiceDiscovery()
+.AddRoundRobinLoadBalancer();
+
+builder.Services.AddHttpClient<IdentityServiceClient>(client =>
+{
+    client.BaseAddress = new Uri("http://web-identity-service");
 })
 .AddServiceDiscovery()
 .AddRoundRobinLoadBalancer();
@@ -50,12 +57,13 @@ app.UseHealthChecks("/health");
 app.UseSession();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapHub<StatusHub>("notifyHub");
+app.MapHub<StatusHub>("/notifyHub");
 
 app.Run();

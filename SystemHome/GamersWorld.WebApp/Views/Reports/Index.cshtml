@@ -6,9 +6,9 @@
 @if (TempData["Notification"] != null)
 {
     <div class="alert alert-info alert-dismissible fade show" role="alert" id="deleteInfoPopup">
-        @TempData["Notification"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    @TempData["Notification"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 }
 
 <input type="hidden" id="employeeId" value="@Model.EmployeeId" />
@@ -38,17 +38,20 @@
                         <td>@report.InsertTime</td>
                         <td>@report.ExpireTime</td>
                         <td>
-                            <a href="@Url.Action("Download", "Reports", new { documentId = report.DocumentId })" class="btn btn-primary">
+                            <a href="@Url.Action("Download", "Reports", new { documentId = report.DocumentId })"
+                                class="btn btn-primary">
                                 <i class="bi bi-download"></i>
                             </a>
                         </td>
                         <td>
-                            <a href="@Url.Action("Delete", "Reports",new { documentId = report.DocumentId, title=report.Title, employeeId=Model.EmployeeId })" class="btn btn-danger">
+                            <a href="@Url.Action("Delete", "Reports",new { documentId = report.DocumentId, title=report.Title, employeeId=Model.EmployeeId })"
+                                class="btn btn-danger">
                                 <i class="bi bi-trash"></i>
                             </a>
                         </td>
                         <td>
-                            <a href="@Url.Action("Archive", "Reports", new { documentId = report.DocumentId, title=report.Title, employeeId=Model.EmployeeId })" class="btn btn-secondary">
+                            <a href="@Url.Action("Archive", "Reports", new { documentId = report.DocumentId, title=report.Title, employeeId=Model.EmployeeId })"
+                                class="btn btn-secondary">
                                 <i class="bi bi-archive"></i>
                             </a>
                         </td>
@@ -66,6 +69,15 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            var token = '@ViewBag.JWToken';
+            var employeeId = '@ViewBag.EmployeeId';
+            if (token) {
+                sessionStorage.setItem('JWToken', token);
+            }
+            if (employeeId) {
+                sessionStorage.setItem('EmployeeId', employeeId);
+            }
+
             var notificationPopup = document.getElementById('deleteInfoPopup');
             if (notificationPopup) {
                 setTimeout(function () {

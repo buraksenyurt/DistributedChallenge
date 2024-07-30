@@ -13,17 +13,19 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
 
     public async Task<IActionResult> Index()
     {
-        var ownerEmployeeId = HttpContext.Session.GetString("OwnerEmployeeId");
+        var employeeId = HttpContext.Session.GetString("EmployeeId");
+        var token = HttpContext.Session.GetString("JWToken");
 
-        if (string.IsNullOrEmpty(ownerEmployeeId))
+        if (string.IsNullOrEmpty(employeeId) || string.IsNullOrEmpty(token))
         {
-            return RedirectToAction("Lobby", "Home");
+            return RedirectToAction("Login", "Account");
         }
-        _logger.LogInformation("Getting reports for {OwnerEmployeeId}", ownerEmployeeId);
+
+        _logger.LogInformation("Getting reports for {EmployeeId}", employeeId);
 
         var request = new GetReportsByEmployeeRequest
         {
-            EmployeeId = ownerEmployeeId
+            EmployeeId = employeeId
         };
         var reportDocuments = await _messengerServiceClient.GetReportDocumentsByEmployeeAsync(request);
         var reports = new List<ReportModel>();
@@ -42,12 +44,13 @@ public class ReportsController(ILogger<ReportsController> logger, MessengerServi
 
         var viewModel = new ReportViewModel
         {
-            EmployeeId = ownerEmployeeId,
+            EmployeeId = employeeId,
             Reports = reports
         };
 
         return View(viewModel);
     }
+
 
     [HttpGet("Reports/Download")]
     public async Task<IActionResult> Download(string documentId)

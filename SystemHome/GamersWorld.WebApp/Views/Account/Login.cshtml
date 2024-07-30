@@ -1,0 +1,19 @@
+@model GamersWorld.WebApp.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+<form asp-action="Login" method="post" class="needs-validation" novalidate>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="RegistrationId" class="form-label"></label>
+        <input asp-for="RegistrationId" class="form-control" required />
+        <div asp-validation-for="RegistrationId" class="text-danger"></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" required type="password" />
+        <div asp-validation-for="Password" class="text-danger"></div>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>

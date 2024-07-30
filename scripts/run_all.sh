@@ -6,6 +6,9 @@ gnome-terminal --title="MIDDLE EARTH - Reporting Gateway" -- bash -c "cd ../Syst
 # Start Messenger Service
 gnome-terminal --title="HOME - Messenger Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Messenger && dotnet run; exec bash"
 
+# Start JWT Token Service
+gnome-terminal --title="HOME - JWT Token Service" -- bash -c "cd ../SystemHome/GamersWorld.Service.Identity && dotnet run; exec bash"
+
 # Start Home EventHost
 gnome-terminal --title="HOME - Event Consumer Host" -- bash -c "cd ../SystemHome/GamersWorld.EventHost && dotnet run; exec bash"
 

@@ -50,3 +50,18 @@
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
     <partial name="_NotificationPopup" />
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            var token = '@ViewBag.JWToken';
+            var employeeId = '@ViewBag.EmployeeId';
+            if (token) {
+                sessionStorage.setItem('JWToken', token);
+            }
+            if (employeeId) {
+                sessionStorage.setItem('EmployeeId', employeeId);
+            }
+        });
+    </script>
+}

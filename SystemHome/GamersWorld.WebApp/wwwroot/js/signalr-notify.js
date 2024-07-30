@@ -1,12 +1,16 @@
 ﻿document.addEventListener('DOMContentLoaded', (_event) => {
-    const employeeIdElement = document.getElementById('employeeId');
-    if (!employeeIdElement) {
+    const employeeId = sessionStorage.getItem('EmployeeId');
+    if (!employeeId) {
         return;
     }
-    const employeeId = employeeIdElement.value;
+
+    const token = sessionStorage.getItem('JWToken');
+    console.log('Token information: ' + token);
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/notifyHub?employeeId=" + employeeId)
+        .withUrl("/notifyHub", {
+            accessTokenFactory: () => token
+        })
         .build();
 
     connection.on("ReadNotification", function (data) {
@@ -27,7 +31,7 @@
             popupElement.classList.add("bg-warning", "text-dark");
         }
 
-        if (notification.Topic == 'Ready') {
+        if (notification.Topic === 'Ready') {
             lnkReportsElement.style.display = "inline";
         } else {
             lnkReportsElement.style.display = "none";
@@ -64,17 +68,17 @@
     }
 
     (function () {
-        'use strict'
-        let forms = document.querySelectorAll('.needs-validation')
+        'use strict';
+        let forms = document.querySelectorAll('.needs-validation');
         Array.prototype.slice.call(forms)
             .forEach(function (form) {
                 form.addEventListener('submit', function (event) {
                     if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
+                        event.preventDefault();
+                        event.stopPropagation();
                     }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
+                    form.classList.add('was-validated');
+                }, false);
+            });
+    })();
 });

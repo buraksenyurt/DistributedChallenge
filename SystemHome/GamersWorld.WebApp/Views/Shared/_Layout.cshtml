@@ -33,12 +33,21 @@
                             </a>
                         </li>
                     </ul>
-                    @if (HttpContextAccessor.HttpContext.Session.GetString("OwnerEmployeeId") != null)
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("EmployeeId") != null)
                     {
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home"
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account"
                                    asp-action="Logout">Logout</a>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account"
+                                   asp-action="Login">Login</a>
                             </li>
                         </ul>
                     }

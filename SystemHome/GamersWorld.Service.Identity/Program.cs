@@ -71,7 +71,13 @@ app.MapPost("/api/login", async (LoginDto login, IEmployeeDataRepository reposit
         var key = Encoding.UTF8.GetBytes(jwtKey);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity([new Claim("id", login.RegistrationId)]),
+            Subject = new ClaimsIdentity(
+            [
+                new Claim(JwtRegisteredClaimNames.Sub, login.RegistrationId),
+                new Claim(JwtRegisteredClaimNames.Name, employee.Fullname),
+                new Claim(JwtRegisteredClaimNames.Email, employee.Email),
+                new Claim("id", login.RegistrationId)
+            ]),
             Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtExpiryMinutes)),
             Issuer = jwtIssuer,
             Audience = jwtAudience,
@@ -80,9 +86,14 @@ app.MapPost("/api/login", async (LoginDto login, IEmployeeDataRepository reposit
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var jwtToken = tokenHandler.WriteToken(token);
 
-        return Results.Ok(new { Token = jwtToken });
+        return Results.Ok(new
+        {
+            //TODO@buraksenyurt Return more employee information for using UI
+            Token = jwtToken
+        });
     }
     return Results.Unauthorized();
 });
+
 
 app.Run();
