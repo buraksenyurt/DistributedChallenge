@@ -102,6 +102,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kahin.Service.ReportingGate
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamersWorld.JobHost", "SystemHome\GamersWorld.JobHost\GamersWorld.JobHost.csproj", "{3A1D83B4-63C6-415E-B7EA-BED303B8DB87}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamersWorld.Service.Identity", "SystemHome\GamersWorld.Service.Identity\GamersWorld.Service.Identity.csproj", "{8D2162C6-2E47-4313-9CEC-5A22FC412F3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -176,6 +178,10 @@ Global
 		{3A1D83B4-63C6-415E-B7EA-BED303B8DB87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A1D83B4-63C6-415E-B7EA-BED303B8DB87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A1D83B4-63C6-415E-B7EA-BED303B8DB87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D2162C6-2E47-4313-9CEC-5A22FC412F3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2162C6-2E47-4313-9CEC-5A22FC412F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2162C6-2E47-4313-9CEC-5A22FC412F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2162C6-2E47-4313-9CEC-5A22FC412F3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,6 +206,7 @@ Global
 		{B126D807-BA40-4C7E-929C-EDCEEA33995E} = {240FFDD2-9F18-4446-B05D-FE0411C6C2B6}
 		{9019F921-71B0-4C8F-91FD-1FD607846FC5} = {240FFDD2-9F18-4446-B05D-FE0411C6C2B6}
 		{3A1D83B4-63C6-415E-B7EA-BED303B8DB87} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
+		{8D2162C6-2E47-4313-9CEC-5A22FC412F3D} = {91F564C9-09D8-465B-8980-DAEE8065B13B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {27DE64F9-8957-49D0-9C64-45382EB49614}

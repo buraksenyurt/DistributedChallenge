@@ -13,7 +13,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
