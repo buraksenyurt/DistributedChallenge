@@ -16,3 +16,12 @@ CREATE TABLE report_document (
     fk_report_id int NOT NULL,
     Content BYTEA NOT NULL
 );
+
+CREATE TABLE employee (
+    employee_id SERIAL PRIMARY KEY,
+	full_name VARCHAR(100) NOT NULL,
+	email VARCHAR(35) NOT NULL,
+    title VARCHAR(50) NOT NULL,
+	registration_id VARCHAR(10) NOT NULL,
+    password_hash VARCHAR(60) NOT NULL
+);
