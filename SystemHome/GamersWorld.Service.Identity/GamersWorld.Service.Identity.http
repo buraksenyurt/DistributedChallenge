@@ -1,6 +1,24 @@
 @GamersWorld.Service.Identity_HostAddress = http://localhost:5259
 
-GET {{GamersWorld.Service.Identity_HostAddress}}/weatherforecast/
+POST {{GamersWorld.Service.Identity_HostAddress}}/register/
 Accept: application/json
+
+{
+  "fullname": "Jonh Doe",
+  "email": "jd@gamersworld.com",
+  "title": "Programmer",
+  "registrationId": "PRG-1903",
+  "password": "123456"
+}
+
+###
+
+POST {{GamersWorld.Service.Identity_HostAddress}}/login/
+Accept: application/json
+
+{
+  "registrationId": "PRG-1903",
+  "password": "123456"
+}
 
 ###

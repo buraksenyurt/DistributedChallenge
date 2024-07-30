@@ -41,7 +41,7 @@ public class EmployeeDataRepository(ISecretStoreService secretStoreService, ILog
             employee.RegistrationId,
             employee.PasswordHash
         });
-        if (insertedId == 1)
+        if (insertedId > 0)
         {
             _logger.LogInformation("New employee created with {InsertedId}", insertedId);
         }

@@ -15,4 +15,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GamersWorld.Application\GamersWorld.Application.csproj" />
+    <ProjectReference Include="..\GamersWorld.Domain\GamersWorld.Domain.csproj" />  
+    <ProjectReference Include="..\GamersWorld.Repository\GamersWorld.Repository.csproj" />  
+  </ItemGroup>
+
 </Project>

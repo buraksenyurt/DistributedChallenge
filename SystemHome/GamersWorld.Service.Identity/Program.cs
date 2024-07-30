@@ -1,7 +1,20 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using GamersWorld.Application;
+using GamersWorld.Application.Contracts.Data;
+using GamersWorld.Domain.Dtos;
+using GamersWorld.Domain.Entity;
+using GamersWorld.Repository;
+using Microsoft.IdentityModel.Tokens;
+using SecretsAgent;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplication();
+builder.Services.AddData();
 
 var app = builder.Build();
 
@@ -13,29 +26,60 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapPost("/register", async (EmployeeDto employeeDto, IEmployeeDataRepository repository, ILogger<Program> logger) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    var passwordHash = BCrypt.Net.BCrypt.HashPassword(employeeDto.Password);
 
-app.MapGet("/weatherforecast", () =>
+    logger.LogInformation("Password hash created");
+
+    var insertedId = await repository.Register(new Employee
+    {
+        Fullname = employeeDto.Fullname,
+        Email = employeeDto.Email,
+        Title = employeeDto.Title,
+        RegistrationId = employeeDto.RegistrationId,
+        PasswordHash = passwordHash
+    });
+
+    logger.LogInformation("Employee created with Id {InsertedId}", insertedId);
+
+    return Results.Ok("Employee registered successfully!");
+});
+
+app.MapPost("/login", async (LoginDto login, IEmployeeDataRepository repository, ISecretStoreService secretService, ILogger<Program> logger) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+    var employee = await repository.Get(login.RegistrationId);
+    if (employee == null)
+    {
+        logger.LogError("Employee did not found");
+        return Results.Unauthorized();
+    }
+
+    if (employee.PasswordHash != null && BCrypt.Net.BCrypt.Verify(login.Password, employee.PasswordHash))
+    {
+        var jwtKey = await secretService.GetSecretAsync("JwtKey");
+        var jwtExpiryMinutes = await secretService.GetSecretAsync("JwtExpiryMinutes");
+        var jwtIssuer = await secretService.GetSecretAsync("JwtIssuer");
+        var jwtAudience = await secretService.GetSecretAsync("JwtAudience");
+
+        logger.LogInformation("Jwt Issuer {Issuer}/{Audience}. Expire in {ExpireIn} minutes.", jwtIssuer, jwtAudience, jwtExpiryMinutes);
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(jwtKey);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity([new Claim("id", login.RegistrationId)]),
+            Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtExpiryMinutes)),
+            Issuer = jwtIssuer,
+            Audience = jwtAudience,
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var jwtToken = tokenHandler.WriteToken(token);
+
+        return Results.Ok(new { Token = jwtToken });
+    }
+    return Results.Unauthorized();
+});
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
