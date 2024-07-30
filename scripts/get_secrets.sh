@@ -32,6 +32,10 @@ get_secret $environment "FtpServerAddress"
 get_secret $environment "FtpUsername"
 get_secret $environment "FtpPassword"
 get_secret $environment "ElasticsearchAddress"
+get_secret $environment "JwtKey"
+get_secret $environment "JwtIssuer"
+get_secret $environment "JwtAudience"
+get_secret $environment "JwtExpiryMinutes"
 
 # environment="Test"
 
