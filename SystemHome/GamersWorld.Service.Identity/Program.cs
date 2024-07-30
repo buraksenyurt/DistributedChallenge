@@ -8,6 +8,8 @@ using GamersWorld.Domain.Entity;
 using GamersWorld.Repository;
 using Microsoft.IdentityModel.Tokens;
 using SecretsAgent;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddData();
+builder.Services.AddServiceDiscovery(o => o.UseConsul());
 
 var app = builder.Build();
 
@@ -26,7 +29,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/register", async (EmployeeDto employeeDto, IEmployeeDataRepository repository, ILogger<Program> logger) =>
+app.MapPost("/api/register", async (EmployeeDto employeeDto, IEmployeeDataRepository repository, ILogger<Program> logger) =>
 {
     var passwordHash = BCrypt.Net.BCrypt.HashPassword(employeeDto.Password);
 
@@ -46,7 +49,7 @@ app.MapPost("/register", async (EmployeeDto employeeDto, IEmployeeDataRepository
     return Results.Ok("Employee registered successfully!");
 });
 
-app.MapPost("/login", async (LoginDto login, IEmployeeDataRepository repository, ISecretStoreService secretService, ILogger<Program> logger) =>
+app.MapPost("/api/login", async (LoginDto login, IEmployeeDataRepository repository, ISecretStoreService secretService, ILogger<Program> logger) =>
 {
     var employee = await repository.Get(login.RegistrationId);
     if (employee == null)

@@ -1,6 +1,6 @@
 @GamersWorld.Service.Identity_HostAddress = http://localhost:5259
 
-POST {{GamersWorld.Service.Identity_HostAddress}}/register/
+POST {{GamersWorld.Service.Identity_HostAddress}}/api/register/
 Accept: application/json
 
 {
@@ -13,7 +13,7 @@ Accept: application/json
 
 ###
 
-POST {{GamersWorld.Service.Identity_HostAddress}}/login/
+POST {{GamersWorld.Service.Identity_HostAddress}}/api/login/
 Accept: application/json
 
 {
