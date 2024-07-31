@@ -21,13 +21,13 @@ public class AccountController(ILogger<AccountController> logger, IdentityServic
     {
         if (ModelState.IsValid)
         {
-            var token = await _identityServiceClient.GetToken(new LoginDto
+            var gtResponse = await _identityServiceClient.GetToken(new LoginDto
             {
                 RegistrationId = model.RegistrationId,
                 Password = model.Password,
             });
-            _logger.LogInformation("Identity service response is '{Response}'", token);
-            if (string.IsNullOrEmpty(token))
+            _logger.LogInformation("Identity service response is '{Response}'", gtResponse);
+            if (string.IsNullOrEmpty(gtResponse.Token))
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
@@ -35,10 +35,12 @@ public class AccountController(ILogger<AccountController> logger, IdentityServic
             {
                 _logger.LogInformation("Saving token to session");
 
-                HttpContext.Session.SetString("JWToken", token);
+                HttpContext.Session.SetString("JWToken", gtResponse.Token);
                 HttpContext.Session.SetString("EmployeeId", model.RegistrationId);
+                HttpContext.Session.SetString("EmployeeTitle", gtResponse.EmployeeTitle);
+                HttpContext.Session.SetString("EmployeeFullname", gtResponse.EmployeeFullname);
 
-                TempData["JWToken"] = token;
+                TempData["JWToken"] = gtResponse.Token;
                 TempData["EmployeeId"] = model.RegistrationId;
 
                 return RedirectToAction("Index", "Home");

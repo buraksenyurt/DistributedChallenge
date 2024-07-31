@@ -86,10 +86,13 @@ app.MapPost("/api/login", async (LoginDto login, IEmployeeDataRepository reposit
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var jwtToken = tokenHandler.WriteToken(token);
 
+        logger.LogWarning("Employee {Fullname},{Title}", employee.Fullname, employee.Title);
+
         return Results.Ok(new
         {
-            //TODO@buraksenyurt Return more employee information for using UI
-            Token = jwtToken
+            Token = jwtToken,
+            EmployeeFullname = employee.Fullname,
+            EmployeeTitle = employee.Title
         });
     }
     return Results.Unauthorized();

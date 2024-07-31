@@ -16,6 +16,8 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
     {
         var token = HttpContext.Session.GetString("JWToken");
         var employeeId = HttpContext.Session.GetString("EmployeeId");
+        var title = HttpContext.Session.GetString("EmployeeTitle");
+        var fullName = HttpContext.Session.GetString("EmployeeFullname");
 
         ViewBag.JWToken = TempData["JWToken"];
         ViewBag.EmployeeId = TempData["EmployeeId"];
@@ -29,7 +31,9 @@ public class HomeController(ILogger<HomeController> logger, MessengerServiceClie
         {
             Owner = new OwnerModel
             {
-                EmployeeId = employeeId
+                EmployeeId = employeeId,
+                Title = title,
+                FullName = fullName
             }
         };
 
