@@ -23,6 +23,10 @@ public class EmployeeTokenDataRepository(ISecretStoreService secretStoreService,
             expire_time = EXCLUDED.expire_time;
     ";
 
+    const string selectToken = @"
+        SELECT token FROM employee_tokens WHERE registration_id = @RegistrationId
+    ";
+
     private async Task<NpgsqlConnection> GetOpenConnectionAsync()
     {
         var connStr = await _secretStoreService.GetSecretAsync("GamersWorldDbConnStr");
@@ -51,5 +55,13 @@ public class EmployeeTokenDataRepository(ISecretStoreService secretStoreService,
         }
 
         return affected;
+    }
+
+    public async Task<string> ReadToken(string registrationId)
+    {
+        await using var dbConnection = await GetOpenConnectionAsync();
+        var token = await dbConnection.QueryFirstOrDefaultAsync<string>(selectToken, new { RegistrationId = registrationId });
+
+        return token ?? string.Empty;
     }
 }

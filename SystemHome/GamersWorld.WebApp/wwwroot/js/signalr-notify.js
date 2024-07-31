@@ -8,14 +8,14 @@
     console.log('Token information: ' + token);
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/notifyHub", {
+        .withUrl(`/notifyHub?employeeId=${employeeId}`, {
             accessTokenFactory: () => token
         })
         .build();
 
     connection.on("ReadNotification", function (data) {
         const notification = JSON.parse(data);
-        console.log(notification);
+        console.log(notification + ' , data received');
         const popupElement = document.getElementById("notificationPopup");
         const lnkReportsElement = document.getElementById("lnkReports");
 
