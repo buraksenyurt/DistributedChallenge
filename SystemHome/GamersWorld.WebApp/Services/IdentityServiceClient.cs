@@ -11,8 +11,11 @@ public class IdentityServiceClient(HttpClient httpClient, ILogger<IdentityServic
     {
         var response = await _httpClient.PostAsJsonAsync("/api/login/", loginDto);
         _logger.LogInformation("Login response status code {StatusCode}", response.StatusCode);
+        if (!response.IsSuccessStatusCode)
+        {
+            return null; //TODO@buraksenyurt It dosen't make sense. Use strongly return type.
+        }
         var gtResponse = await response.Content.ReadFromJsonAsync<GetTokenResponse>();
-        _logger.LogWarning("Login response is {Response}", gtResponse);
         return gtResponse;
     }
 }

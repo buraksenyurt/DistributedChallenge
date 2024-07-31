@@ -26,8 +26,7 @@ public class AccountController(ILogger<AccountController> logger, IdentityServic
                 RegistrationId = model.RegistrationId,
                 Password = model.Password,
             });
-            _logger.LogInformation("Identity service response is '{Response}'", gtResponse);
-            if (string.IsNullOrEmpty(gtResponse.Token))
+            if (gtResponse == null)
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }

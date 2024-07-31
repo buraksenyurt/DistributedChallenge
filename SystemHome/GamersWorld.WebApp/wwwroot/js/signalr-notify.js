@@ -15,7 +15,6 @@
 
     connection.on("ReadNotification", function (data) {
         const notification = JSON.parse(data);
-        console.log(notification + ' , data received');
         const popupElement = document.getElementById("notificationPopup");
         const lnkReportsElement = document.getElementById("lnkReports");
 
