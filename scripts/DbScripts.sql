@@ -25,3 +25,11 @@ CREATE TABLE employee (
 	registration_id VARCHAR(10) NOT NULL,
     password_hash VARCHAR(60) NOT NULL
 );
+
+CREATE TABLE employee_tokens (
+    registration_id VARCHAR(10) NOT NULL,
+    token VARCHAR(2048) NOT NULL,
+    insert_time TIMESTAMP,
+    expire_time TIMESTAMP,
+    CONSTRAINT employee_tokens_registration_id_unique UNIQUE (registration_id)
+);

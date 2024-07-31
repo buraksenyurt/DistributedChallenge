@@ -49,7 +49,7 @@ app.MapPost("/api/register", async (EmployeeDto employeeDto, IEmployeeDataReposi
     return Results.Ok("Employee registered successfully!");
 });
 
-app.MapPost("/api/login", async (LoginDto login, IEmployeeDataRepository repository, ISecretStoreService secretService, ILogger<Program> logger) =>
+app.MapPost("/api/login", async (LoginDto login, IEmployeeDataRepository repository, IEmployeeTokenDataRepository tokenRepository, ISecretStoreService secretService, ILogger<Program> logger) =>
 {
     var employee = await repository.Get(login.RegistrationId);
     if (employee == null)
@@ -69,6 +69,7 @@ app.MapPost("/api/login", async (LoginDto login, IEmployeeDataRepository reposit
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(jwtKey);
+        var expireTime = DateTime.Now.AddMinutes(Convert.ToDouble(jwtExpiryMinutes));
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(
@@ -78,7 +79,7 @@ app.MapPost("/api/login", async (LoginDto login, IEmployeeDataRepository reposit
                 new Claim(JwtRegisteredClaimNames.Email, employee.Email),
                 new Claim("id", login.RegistrationId)
             ]),
-            Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtExpiryMinutes)),
+            Expires = expireTime,
             Issuer = jwtIssuer,
             Audience = jwtAudience,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -87,6 +88,14 @@ app.MapPost("/api/login", async (LoginDto login, IEmployeeDataRepository reposit
         var jwtToken = tokenHandler.WriteToken(token);
 
         logger.LogWarning("Employee {Fullname},{Title}", employee.Fullname, employee.Title);
+
+        await tokenRepository.UpsertAsync(new EmployeeToken
+        {
+            RegistrationId = login.RegistrationId,
+            Token = jwtToken,
+            InsertTime = DateTime.Now,
+            ExpireTime = expireTime,
+        });
 
         return Results.Ok(new
         {

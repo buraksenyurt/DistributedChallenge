@@ -10,6 +10,7 @@ public static class DependencyInjection
         services.AddTransient<IReportDataRepository, ReportDataRepository>();
         services.AddTransient<IReportDocumentDataRepository, ReportDocumentDataRepository>();
         services.AddTransient<IEmployeeDataRepository, EmployeeDataRepository>();
+        services.AddTransient<IEmployeeTokenDataRepository, EmployeeTokenDataRepository>();
         return services;
     }
 }
