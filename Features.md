@@ -6,10 +6,11 @@ Köklü değişikliğe sebep olabilecek özellikler veaya araştırmalar ile ilg
   - [System HAL Servisinin Ayrıştırılması](#system-hal-servisinin-ayrıştırılması)
     - [Plan](#plan)
     - [Uygulama](#uygulama)
+  - [SignalR Tarafında JWT Bazlı Doğrulama](#signalr-tarafında-jwt-bazlı-doğrulama)
 
 ## System HAL Servisinin Ayrıştırılması
 
-**Branch -> pocDockerizeAuditApi**
+Bu feature için kullanılan branch adı; **pocDockerizeAuditApi** şeklindedir.
 
 System HAL içerisinde yer alan Audit servisinin DistributedChallenges solution'ı dışına çıkartılması ve Dockerize edilerek işletilmesi için başlatılan çalışmadır. Audit servis temsilen arayüzden gelen bir rapor talebindeki ifadeyi denetlemek için kullanılan REST tabanlı bir .Net servisidir. Bu servisin bazı paket bağımlılıkları bulunuyor.
 
@@ -146,3 +147,13 @@ volumes:
   postgres_data:
   ftp_data:
 ```
+
+## SignalR Tarafında JWT Bazlı Doğrulama
+
+Söz konusu feature için **pocJwtWithSignalR** isimli branch kullanılıyor.
+
+Bu çalışmada talep edilen raporların hazır olması, rapor ifadesinin doğrulama kontrolüne takılması, önceden hazırlanmış bir raporun arşive gönderilmesi gibi işlemlerde web ara yüzünde popup bildirimleri yapmaktayız. Burada sadece giriş yapan çalışanlara bildirim göstermek içinde employeeId gibi bir değerden yararlanıyor ve localhost:5037/notifyHub adresine gelirken bunu parametre olarak gönderiyoruz. Bu doğru görünsede ortada güvenlik riski olduğu da aşikar. Herhangibir kanaldan employeeId değerini bildiğimiz takdirde web socket'e mesaj gönderimi mümkün olabilir. Çözüm olarak belki bir otoriteden kullanıcıyı doğrulatıp geçerli bir JWT token ürettirerek SignalR iletişimini bu token ile belli süre boyunca *(token ömrü boyunca)* yetkiye bağlayabiliriz. Bunu çok basit bir şekilde ele alıyoruz. IdentityServer, Klerk vb parçalardan önce kendi kolay kullanıcı doğrulama ve JWT üretme servisimizi ele alıyoruz.
+
+![JWT with SignalR](/images/jwt_signalr_00.png)
+
+Kullanıcı bilgilerini, encrpyt edilmiş şifreleri ile birlikte veri tabanında bir tabloda tutmaktayız. En büyük sorunlardan birisi web uygulaması ile push notification işlemini gerçekleştiren event business nesnelerinin ayrı process'lerde işlemesi. Web uygulamasından login olunduğunda elde edilen token, event business'lar tarafından da SignalR tarafına yapılan push notification işleminde gerekli. Örneğin yeni bir rapor talebinde bulunulduğunda, login olan kullanıcı için üretilen ve SignalR tarafındaki yetki *(Authority)* için kullanılan token bilgisi, System Middle Earth veya System Audit tarafından gelen aksiyonlar sonrası oluşan Rabbit MQ olaylarının ele alındığı business nesneler için de gerekli. Arada geçen süre belirsiz. Dolayısıyla token bilgisini belli bir süre kayıt altında tutmak gerekebilir. En azından daha iyi bir çözüm bulana kadar bu şekilde ilerlenebilir. Yani token bilgisini employeeId(RegistrationId) ile ilişkilendirip yaşam süreleri boyunca saklayıp event dönüşlerinde push notification için de kullanabiliriz. Bu elbette başka bir sorunu daha gündeme getirecektir. Token süreleri dolduğunda depolanan token'ların da düşürülmesi için bir aksiyon alınmalıdır.
