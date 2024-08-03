@@ -5,14 +5,13 @@
     }
 
     const token = sessionStorage.getItem('JWToken');
-    console.log('Token information: ' + token);
 
     const connection = new signalR.HubConnectionBuilder()
         .withUrl(`/notifyHub?employeeId=${employeeId}`, {
             accessTokenFactory: () => token
         })
         .build();
-
+        
     connection.on("ReadNotification", function (data) {
         const notification = JSON.parse(data);
         const popupElement = document.getElementById("notificationPopup");

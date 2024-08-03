@@ -25,7 +25,7 @@ public class SignalrNotificationService(ISecretStoreService secretStoreService, 
     {
         var hubAddress = await _secretStoreService.GetSecretAsync("HomeWebAppHubAddress");
         var token = await _repository.ReadToken(userId);
-        _logger.LogWarning("Using token {Token}", token);
+
         var hubConnection = new HubConnectionBuilder()
             .WithUrl($"http://{hubAddress}", options =>
             {

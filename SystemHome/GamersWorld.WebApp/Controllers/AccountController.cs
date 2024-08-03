@@ -49,7 +49,7 @@ public class AccountController(ILogger<AccountController> logger, IdentityServic
         return View(model);
     }
 
-    [HttpPost]
+    [HttpGet]
     public IActionResult Logout()
     {
         HttpContext.Session.Clear();
