@@ -1,19 +1,32 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Resistance.Configuration;
 using System.Net;
 
 namespace Resistance.Outage;
 
-public class OutageBehavior(RequestDelegate next, ILogger<OutageBehavior> logger, OutagePeriod outagePeriod)
+public class OutageBehavior(
+    RequestDelegate next
+    , ILogger<OutageBehavior> logger
+    , IOptionsMonitor<ResistanceFlags> optionsMonitor
+    , OutagePeriod outagePeriod)
 {
     private readonly RequestDelegate _next = next;
     private static bool _serviceOutage = false;
     private static DateTime _outageEndTime;
     private readonly OutagePeriod _outagePeriod = outagePeriod;
     private readonly ILogger<OutageBehavior> _logger = logger;
+    private readonly IOptionsMonitor<ResistanceFlags> _optionsMonitor = optionsMonitor;
 
     public async Task InvokeAsync(HttpContext context)
     {
+        if (!_optionsMonitor.CurrentValue.OutageIsActive)
+        {
+            await _next(context);
+            return;
+        }
+
         if (_serviceOutage && DateTime.Now < _outageEndTime)
         {
             _logger.LogWarning("Simulated service outage");

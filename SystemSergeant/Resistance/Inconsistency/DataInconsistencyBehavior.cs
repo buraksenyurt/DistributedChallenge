@@ -2,17 +2,30 @@
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text;
+using Microsoft.Extensions.Options;
+using Resistance.Configuration;
 
 namespace Resistance.Inconsistency;
-public class DataInconsistencyBehavior(RequestDelegate next, DataInconsistencyProbability inconsistencyProbability, ILogger<DataInconsistencyBehavior> logger)
+public class DataInconsistencyBehavior(
+    RequestDelegate next
+    , DataInconsistencyProbability inconsistencyProbability
+    , IOptionsMonitor<ResistanceFlags> optionsMonitor
+    , ILogger<DataInconsistencyBehavior> logger)
 {
     private readonly RequestDelegate _next = next;
     private readonly Random _random = new();
     private readonly DataInconsistencyProbability _inconsistencyProbability = inconsistencyProbability;
     private readonly ILogger<DataInconsistencyBehavior> _logger = logger;
+    private readonly IOptionsMonitor<ResistanceFlags> _optionsMonitor = optionsMonitor;
 
     public async Task InvokeAsync(HttpContext context)
     {
+        if (!_optionsMonitor.CurrentValue.DataInconsistencyIsActive)
+        {
+            await _next(context);
+            return;
+        }
+
         bool isInconsistent = _random.Next(1, 101) <= (int)_inconsistencyProbability;
         context.Response.Headers["Data-Inconsistency"] = isInconsistent ? "true" : "false";
 

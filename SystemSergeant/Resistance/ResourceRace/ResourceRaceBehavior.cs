@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Resistance.Configuration;
 using System.Net;
 
 namespace Resistance.ResourceRace;
@@ -8,16 +10,24 @@ public class ResourceRaceBehavior
     private readonly RequestDelegate _next;
     private static SemaphoreSlim _semaphore = new(2);
     private readonly ILogger<ResourceRaceBehavior> _logger;
+    private readonly IOptionsMonitor<ResistanceFlags> _optionsMonitor;
 
-    public ResourceRaceBehavior(RequestDelegate next, ILogger<ResourceRaceBehavior> logger, ushort upperLimit)
+    public ResourceRaceBehavior(RequestDelegate next, IOptionsMonitor<ResistanceFlags> optionsMonitor, ILogger<ResourceRaceBehavior> logger, ushort upperLimit)
     {
         _next = next;
         _semaphore = new SemaphoreSlim(upperLimit);
         _logger = logger;
+        _optionsMonitor = optionsMonitor;
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
+        if (!_optionsMonitor.CurrentValue.ResourceRaceIsActive)
+        {
+            await _next(context);
+            return;
+        }
+
         if (!await _semaphore.WaitAsync(0))
         {
             _logger.LogWarning("Simulated TooManyRequest(HTTP 429)");
