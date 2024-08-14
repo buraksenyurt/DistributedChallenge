@@ -5,15 +5,16 @@ using JudgeMiddleware;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
-//using Resistance;
-//using Resistance.Inconsistency;
-//using Resistance.Latency;
-//using Resistance.NetworkFailure;
-//using Resistance.Outage;
+using Resistance;
+using Resistance.Inconsistency;
+using Resistance.Latency;
+using Resistance.NetworkFailure;
+using Resistance.Outage;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using Resistance.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IExpressionValidator, ExpressionValidator>();
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 builder.Services.AddServiceDiscovery(o => o.UseConsul());
+builder.Services.Configure<ResistanceFlags>(builder.Configuration.GetSection("ResistanceFlags"));
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -57,47 +59,42 @@ app.AddJudgeMiddleware(new Options
 });
 
 // Latency 500 millisecdons - 2500 milliseconds
-//app.UseResistance(new ResistanceOptions
-//{
-//    LatencyIsActive = true,
-//    LatencyPeriod = new LatencyPeriod
-//    {
-//        MinDelayMs = TimeSpan.FromMilliseconds(500),
-//        MaxDelayMs = TimeSpan.FromMilliseconds(2500)
-//    }
-//});
+app.UseResistance(new ResistanceOptions
+{
+    LatencyPeriod = new LatencyPeriod
+    {
+        MinDelayMs = TimeSpan.FromMilliseconds(500),
+        MaxDelayMs = TimeSpan.FromMilliseconds(2500)
+    }
+});
 
-//// Network Failure (HTTP 500 Internal Service Error with %25 probility)
-//app.UseResistance(new ResistanceOptions
-//{
-//    NetworkFailureIsActive = true,
-//    NetworkFailureProbability = NetworkFailureProbability.Percent25
-//});
+// Network Failure (HTTP 500 Internal Service Error with %25 probility)
+app.UseResistance(new ResistanceOptions
+{
+    NetworkFailureProbability = NetworkFailureProbability.Percent25
+});
 
-//// Produce HTTP 429 Too Many Request scenario with 3 concurrent request
-//app.UseResistance(new ResistanceOptions
-//{
-//    ResourceRaceIsActive = true,
-//    ResourceRaceUpperLimit = 3
-//});
+// Produce HTTP 429 Too Many Request scenario with 3 concurrent request
+app.UseResistance(new ResistanceOptions
+{
+    ResourceRaceUpperLimit = 3
+});
 
-//// Manipulating response data with %50 probability (MUST BE TESTED AGAIN)
-//app.UseResistance(new ResistanceOptions
-//{
-//    DataInconsistencyIsActive = true,
-//    DataInconsistencyProbability = DataInconsistencyProbability.Percent20
-//});
+// Manipulating response data with %50 probability
+app.UseResistance(new ResistanceOptions
+{
+    DataInconsistencyProbability = DataInconsistencyProbability.Percent20
+});
 
-//// Produce HTTP 503 Service Unavailable 10 seconds per minute
-//app.UseResistance(new ResistanceOptions
-//{
-//    OutageIsActive = true,
-//    OutagePeriod = new OutagePeriod
-//    {
-//        Duration = TimeSpan.FromSeconds(10),
-//        Frequency = TimeSpan.FromMinutes(1)
-//    }
-//});
+// Produce HTTP 503 Service Unavailable 10 seconds per minute
+app.UseResistance(new ResistanceOptions
+{
+    OutagePeriod = new OutagePeriod
+    {
+        Duration = TimeSpan.FromSeconds(10),
+        Frequency = TimeSpan.FromMinutes(1)
+    }
+});
 
 if (app.Environment.IsDevelopment())
 {

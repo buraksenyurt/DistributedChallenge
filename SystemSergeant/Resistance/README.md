@@ -89,7 +89,7 @@ Normal şartlarda tüm simülasyon reçeteleri pasiftir. Etkinleştirmek için a
     "LatencyIsActive": false,
     "ResourceRaceIsActive": false,
     "OutageIsActive": false,
-    "DataInconsistencyIsActive": false,
+    "DataInconsistencyIsActive": false
   }
 }
 ```
