@@ -128,7 +128,7 @@ services:
       - dc-network
 
   audit-web-api:
-    image: systemhome/evalapi
+    image: systemhal/evalapi
     container_name: dc-audit-web-api
     ports:
       - "5147:8080"

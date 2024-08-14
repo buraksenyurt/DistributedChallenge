@@ -33,13 +33,15 @@ Yukarıda bahsedilen maddeler plan dahilinde çözümlenmesi gereken meselelerdi
 
 *Not : Bu sorun windows sistemlerde yaşanıyor nitekim Linux tabanlı sistemlerde host.docker.internal şeklinde bir kavram bulunmuyor. Doğrudan localhost kullanılabilir.*
 
+Aşağıdaki komutları çalıştırırken Restore işleminde hata alınmamsı için Baget servisinin aktif ve ilgili paketleri içerir olduğundan emin olalım.
+
 ```bash
 # Docker imajını oluşturmak için root klasördeyken aşağıdaki komutu çalıştırmak yeterli (Windows için)
-docker build -t systemhome/evalapi -f Eval.AuditApi/Dockerfile .
+docker build -t systemhal/evalapi -f Eval.AuditApi/Dockerfile .
 
 # Linux sistemde çalışırken host.docker.internal adresi geçerli olmayacaktır
 # Bu nedenle aşağıdaki komut ile ilerlemek gerekecektir.
-sudo docker build --network host -t systemhome/evalapi -f Eval.AuditApi/Dockerfile .
+sudo docker build --network host -t systemhal/evalapi -f Eval.AuditApi/Dockerfile .
 ```
 
 **PRB02(Windows Sistemler için Geçerli)** kodlu problemin çözümü için programın Consule hizmetine ait konfigurasyon ayarları aşağıdaki gibi değiştirildi.
