@@ -24,6 +24,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Github Actions ve Local Nuget Repo Problemi](#github-actions-ve-local-nuget-repo-problemi)
     - [Servisler için HealthCheck Uygulaması](#servisler-için-healthcheck-uygulaması)
     - [Resiliency Deneyleri](#resiliency-deneyleri)
+      - [AuditApi için Resiliency Kullanımı](#auditapi-için-resiliency-kullanımı)
     - [Service Discovery ve Hashicorp Consul Entegrasonu](#service-discovery-ve-hashicorp-consul-entegrasonu)
     - [Ftp Entegrasyonu ile Arşivleme Stratejisi](#ftp-entegrasyonu-ile-arşivleme-stratejisi)
     - [Planlı İşler (Scheduled Jobs)](#planlı-i̇şler-scheduled-jobs)
@@ -540,7 +541,28 @@ Dağıtık sistemlerini dayanıklılığını(Resiliency) artırmak için servis
 - **Resource Contention:** HTTP 429 Too Many Request durumunun oluşturulması
 - **Data Inconsistency:** Veri tutarsızlığı durumunun oluşturulması
 
-Pek tabii bu manuel operasyonar haricinde [Shopify Toxiproxy](https://github.com/Shopify/toxiproxy) hazır paketler de kullanılabilir. Ben hafifsiklet bir çözüm ile ilerlemeyi düşünüyorum.
+Pek tabii bu manuel operasyonar haricinde [Shopify Toxiproxy](https://github.com/Shopify/toxiproxy) hazır paketler de kullanılabilir. Ben hafifsiklet bir çözüm ile ilerledim.
+
+#### AuditApi için Resiliency Kullanımı
+
+SystemHAL içerisinde yer alan ve talep edilen rapordaki ifadeyi sözüm ona denetleyen bir REST Api hizmetimiz var. Bu hizmette yukarıda bahsi geçen vakaları simüle edebilebiliriz. Bunun için Resistance isimli Nuget paketini kullanıyoruz. İlgili simülasyonları etkinleştirmek içinse appsettings.json dosyası içeriğindeki ResistenceFlags sekmesini kullanabiliriz.
+
+```json
+"ResistanceFlags": {
+  "NetworkFailureIsActive": true,
+  "LatencyIsActive": false,
+  "ResourceRaceIsActive": false,
+  "OutageIsActive": false,
+  "DataInconsistencyIsActive": false
+}
+```
+
+Örneğin yukarıdaki versiyona göre Network Failure simülasyonu aktif. Buna göre servisimiz arada bir HTTP 500 Internal Server Error dönecek. İşte bu tam da istediğimiz türden bir simülasyonun başlangıcı olabilir. Bu durumun diğer sistemler tarafındaki ele alınış biçimi, .Net'in yeni sürümleri ile gelen Resiliency özelliklerinin denenmesi ve hatta Event mesajlaşma yapsının buna göre nasıl tasarlayabileceğimizi keşfetmek açısından iyi bir zemin oluşmakta. Peki çalışma zamanındaki bu özellikleri nasıl değiştirebiliriz. AuditApi servisimizi bildiğiniz üzere bir Docker imajı haline getirmiş ve docker-compose üzerinden Container olarak etkinleştirmiştik. Dolayısıyla container içerisindeki app klasöründe yer alan appsettings.json dosyasını değiştirmek yeterli olacaktır. Ben genellikle appsettings.json dosyasını Container dışında yani host işletim sisteminde değiştirip aşağıdaki komut ile Container içerisien kopyalıyorum. Dosya değiştiği için servis anlık kesintiye uğrayıp tekrardan ayağa kalkacağı için gönderilen yeni ResistanceFlags ayarları ile işletilecektir.
+
+```bash
+# Burada 5cca benim sistemimdeki Container'ın ID değeri idi. Sizde farklı bir değer olabilir.
+sudo docker cp ./appsettings.json 5cca:/app/appsettings.json
+```
 
 ### Service Discovery ve Hashicorp Consul Entegrasonu
 
@@ -592,7 +614,7 @@ Sonuç olarak önyüzden arşivleme işlemi başlatıldığında bir başka even
 
 ### Planlı İşler (Scheduled Jobs)
 
-Pek çok büyük sistemde belli periyotlarda tekrarlanan işler söz konusudur. Örneğin bizim uygulamamızda tüm raporların için kullanıclar tarafından belirlenen yaşam süreleri var. 10 dakika, Yarım saat, 1 Saat, 1 gün gibi. Bu süreler dolduğunda ilgili kaynaklardaki _(veri tabanı, ftp sunucusu vb)_ içeriklerin temizlenmesi planlı işlerden birisi olabilir. Bu tip bir iş örneğin 10 dakikada bir çalışacak şekilde planlanabilir. .Net tarafında basit bir timer mekanizması ile ilerlenebileceği gibi [Quartz](https://www.nuget.org/packages/Quartz)   veya **Hangfire** gibi paketlerden de yararlanılabilir. Örneğimizde **GamersWorld.JobHost** isimli terminal uygulamasını [Hangfire](https://www.nuget.org/packages/Hangfire/) ile çalışacak şekilde genişlettik. Planlı işler bazı durumlarda sistemde beklenmedik sorunlara da neden olabiliyor. Özellikle dağıtık sistemlerde entegre oldukları noktalar açısından düşünülünce bu önemli bir detay olabiliyor. Kurumsal ölçekteki sistemlerde n sayıda planlanmış ve oldukça karmaşık süreçler koşturan planlı işler *(Scheduled Jobs)* sistemleri inanılaz derecede yorabiliyorlar. Bizim örneğimizde şimdilik tek bir iş var. Süresi dolan rapoları veri tabanı ve ftp'den silmek. Peki işlemler sırasında veritabanı bağlantısı yoksa ya da ftp'ye ulaşılamıyorsa sistemin genelinin vereceği tepki ne olmalı? Bu vakayı da dayanıklılık senaryolarımıza dahil edebiliriz.
+Pek çok büyük sistemde belli periyotlarda tekrarlanan işler söz konusudur. Örneğin bizim uygulamamızda tüm raporların için kullanıclar tarafından belirlenen yaşam süreleri var. 10 dakika, Yarım saat, 1 Saat, 1 gün gibi. Bu süreler dolduğunda ilgili kaynaklardaki _(veri tabanı, ftp sunucusu vb)_ içeriklerin temizlenmesi planlı işlerden birisi olabilir. Bu tip bir iş örneğin 10 dakikada bir çalışacak şekilde planlanabilir. .Net tarafında basit bir timer mekanizması ile ilerlenebileceği gibi [Quartz](https://www.nuget.org/packages/Quartz)   veya **Hangfire** gibi paketlerden de yararlanılabilir. Örneğimizde **GamersWorld.JobHost** isimli terminal uygulamasını [Hangfire](https://www.nuget.org/packages/Hangfire/) ile çalışacak şekilde genişlettik. Planlı işler bazı durumlarda sistemde beklenmedik sorunlara da neden olabiliyor. Özellikle dağıtık sistemlerde entegre oldukları noktalar açısından düşünülünce bu önemli bir detay olabiliyor. Kurumsal ölçekteki sistemlerde n sayıda planlanmış ve oldukça karmaşık süreçler koşturan planlı işler _(Scheduled Jobs)_ sistemleri inanılaz derecede yorabiliyorlar. Bizim örneğimizde şimdilik tek bir iş var. Süresi dolan rapoları veri tabanı ve ftp'den silmek. Peki işlemler sırasında veritabanı bağlantısı yoksa ya da ftp'ye ulaşılamıyorsa sistemin genelinin vereceği tepki ne olmalı? Bu vakayı da dayanıklılık senaryolarımıza dahil edebiliriz.
 
 Aşağıdaki ekran görüntülerinde arşivlenen ve süresi dolan raporların hem veri tabanından hem de ftp sunucusundan silinmesi ile ilgili çalışma zamanı görüntüleri yer alıyor.
 
@@ -715,7 +737,7 @@ Host uygulama, Prometheus ve Grafana arasındaki iletişimi aşağıdaki grafikl
 
 ![Prometheus Diagram](/images/prometheus_00.png)
 
-Grafana üzerine aldığımız metriklere ait örnek bir Dashboard'u aşağıda görebilirsiniz. Burada Archiver işinin çalışma sürelerini görüntülemekteyiz. 
+Grafana üzerine aldığımız metriklere ait örnek bir Dashboard'u aşağıda görebilirsiniz. Burada Archiver işinin çalışma sürelerini görüntülemekteyiz.
 
 ![Grafana Rapor](/images/prometheus_01.png)
 
@@ -748,4 +770,5 @@ Kodlar üzerinde ilerledikçe çözüm gittikçe büyümeye ve karmaşıklaşmay
 - [.Net 8 ile Distributed Systems Challenge - 04 - Güncel Durum Değerlendirmesi](https://youtu.be/LvZOCmnqujE)
 - [.Net 8 ile Distributed Systems Challenge - 05 - Health Checks](https://youtu.be/dtiTMet4qFM)
 - [.Net 8 ile Distributed Systems Challenge - 06 - SignalR ile Push Notification](https://youtu.be/P2IUqybwIKA)
+- [.Net 8 ile Distributed Systems Challenge - 07 - SignalR ile JWT Kullanımı](https://youtu.be/29yi32GuPqU)
 - ...
