@@ -771,4 +771,5 @@ Kodlar üzerinde ilerledikçe çözüm gittikçe büyümeye ve karmaşıklaşmay
 - [.Net 8 ile Distributed Systems Challenge - 05 - Health Checks](https://youtu.be/dtiTMet4qFM)
 - [.Net 8 ile Distributed Systems Challenge - 06 - SignalR ile Push Notification](https://youtu.be/P2IUqybwIKA)
 - [.Net 8 ile Distributed Systems Challenge - 07 - SignalR ile JWT Kullanımı](https://youtu.be/29yi32GuPqU)
+- [.Net 8 ile Distributed Systems Challenge - 08 - Resiliency Simulation Setup](https://youtu.be/Ihx5MYY4WDE)
 - ...
