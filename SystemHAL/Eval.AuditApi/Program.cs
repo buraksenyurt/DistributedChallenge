@@ -58,9 +58,21 @@ app.AddJudgeMiddleware(new Options
     ]
 });
 
-// Latency 500 millisecdons - 2500 milliseconds
 app.UseResistance(new ResistanceOptions
 {
+    // Network Failure (HTTP 500 Internal Service Error with %25 probility)
+    NetworkFailureProbability = NetworkFailureProbability.Percent25,
+    // Produce HTTP 429 Too Many Request scenario with 3 concurrent request
+    ResourceRaceUpperLimit = 3,
+    // Manipulating response data with %50 probability
+    DataInconsistencyProbability = DataInconsistencyProbability.Percent20,
+    // Produce HTTP 503 Service Unavailable 10 seconds per minute
+    OutagePeriod = new OutagePeriod
+    {
+        Duration = TimeSpan.FromSeconds(10),
+        Frequency = TimeSpan.FromMinutes(1)
+    },
+    // Latency 500 millisecdons - 2500 milliseconds
     LatencyPeriod = new LatencyPeriod
     {
         MinDelayMs = TimeSpan.FromMilliseconds(500),
@@ -68,33 +80,6 @@ app.UseResistance(new ResistanceOptions
     }
 });
 
-// Network Failure (HTTP 500 Internal Service Error with %25 probility)
-app.UseResistance(new ResistanceOptions
-{
-    NetworkFailureProbability = NetworkFailureProbability.Percent25
-});
-
-// Produce HTTP 429 Too Many Request scenario with 3 concurrent request
-app.UseResistance(new ResistanceOptions
-{
-    ResourceRaceUpperLimit = 3
-});
-
-// Manipulating response data with %50 probability
-app.UseResistance(new ResistanceOptions
-{
-    DataInconsistencyProbability = DataInconsistencyProbability.Percent20
-});
-
-// Produce HTTP 503 Service Unavailable 10 seconds per minute
-app.UseResistance(new ResistanceOptions
-{
-    OutagePeriod = new OutagePeriod
-    {
-        Duration = TimeSpan.FromSeconds(10),
-        Frequency = TimeSpan.FromMinutes(1)
-    }
-});
 
 if (app.Environment.IsDevelopment())
 {
