@@ -42,7 +42,7 @@ public class DataInconsistencyBehavior(
 
         if (isInconsistent && context.Response.ContentType == "application/json")
         {
-            _logger.LogWarning("Simulating Data Inconsistency");
+            _logger.LogError("Simulating Data Inconsistency");
             responseBody = AddSomething(responseBody);
         }
 

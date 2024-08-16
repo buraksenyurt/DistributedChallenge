@@ -27,7 +27,7 @@ public class NetworkFailureBehavior(
 
         if (_random.Next(1, 101) <= _failureProbability)
         {
-            _logger.LogWarning("Simulated newtwork failure with HTTP 500 code.");
+            _logger.LogError("Simulated newtwork failure with HTTP 500 code.");
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             await context.Response.WriteAsync("Simulated network failure.");
         }

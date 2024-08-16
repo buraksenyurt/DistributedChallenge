@@ -29,7 +29,7 @@ public class OutageBehavior(
 
         if (_serviceOutage && DateTime.Now < _outageEndTime)
         {
-            _logger.LogWarning("Simulated service outage");
+            _logger.LogError("Simulated service outage");
             context.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
             await context.Response.WriteAsync("Simulated service outage.");
             return;

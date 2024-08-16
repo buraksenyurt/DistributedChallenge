@@ -10,7 +10,7 @@
     <PackageId>Resistance</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>resilience;webApi;distributedSystems;simulation;middleware;aspNet;dotNetCore</PackageTags>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <Authors>Burak Selim Senyurt</Authors>
     <Company>Maybe Later Mefrüşat, Hırdavat, Yazılım Geliştirme</Company>
     <Description>A few Middleware functionality for Asp.Net Web Api Projects to simulate Resiliance problems</Description>

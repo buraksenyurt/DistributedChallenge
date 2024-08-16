@@ -21,7 +21,7 @@ public class LatencyBehavior(RequestDelegate next, LatencyPeriod period, ILogger
             return;
         }
 
-        _logger.LogWarning("Latency simulation applied");
+        _logger.LogError("Latency simulation applied");
 
         var minDelayMs = (int)_period.MinDelayMs.TotalMilliseconds;
         var maxDelayMs = (int)_period.MaxDelayMs.TotalMilliseconds;
