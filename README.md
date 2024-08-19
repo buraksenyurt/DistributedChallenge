@@ -444,6 +444,9 @@ Bu komutla oluşan .nupkg uzantılı dosya Nuget paketimizdir. Bu ve diğer olas
 
 ```bash
 dotnet nuget push -s http://localhost:5000/v3/index.json *.nupkg
+
+# Eğer local nuget reposundan paket silmek istersek aşağıdaki gibi bir komut kullanabiliriz.
+dotnet nuget delete -s http://localhost:5000/v3/index.json Resistance 1.0.5
 ```
 
 ![Nuget Server 01](/images/local_nuget_01.png)
