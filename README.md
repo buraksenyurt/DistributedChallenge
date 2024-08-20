@@ -25,6 +25,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Servisler için HealthCheck Uygulaması](#servisler-için-healthcheck-uygulaması)
     - [Resiliency Deneyleri](#resiliency-deneyleri)
       - [AuditApi için Resiliency Kullanımı](#auditapi-için-resiliency-kullanımı)
+      - [AuditApi Resiliency Test Koşumları](#auditapi-resiliency-test-koşumları) 
     - [Service Discovery ve Hashicorp Consul Entegrasonu](#service-discovery-ve-hashicorp-consul-entegrasonu)
     - [Ftp Entegrasyonu ile Arşivleme Stratejisi](#ftp-entegrasyonu-ile-arşivleme-stratejisi)
     - [Planlı İşler (Scheduled Jobs)](#planlı-i̇şler-scheduled-jobs)
@@ -566,6 +567,20 @@ SystemHAL içerisinde yer alan ve talep edilen rapordaki ifadeyi sözüm ona den
 # Burada 5cca benim sistemimdeki Container'ın ID değeri idi. Sizde farklı bir değer olabilir.
 sudo docker cp ./appsettings.json 5cca:/app/appsettings.json
 ```
+
+### AuditApi Resiliency Test Koşumları
+
+Senaryoların işletilmesi ve sonuçların irdelenmesi için aşağıdaki gibi basit bir çizelge kullanılabilir.
+
+| **Vaka**            	| **Senaryo**                                                                      	| **Üretim** 	| **Metrik**                          	| **Sistem Tepkisi** 	|
+|---------------------	|----------------------------------------------------------------------------------	|------------	|-------------------------------------	|--------------------	|
+| **Latency**         	| Servis Response üretiminde 1000 ile 3000 milisaniye süreyle geciktirme yapılması 	| n/a        	| MinDelayMs = 1000 MaxDelayMs = 3000 	|                    	|
+| **Outage**          	| Dakika başına 10 saniye boyunca hizmet kesintisi yapılması                       	| HTTP 503   	| Duration = 10 Sec Frequency = 1 Min 	|                    	|
+|                     	| 5 Dakika başına 30 saniye boyunca hizmet kesintisi yapılması                     	| HTTP 503   	| Duration = 30 Sec Frequency = 5 Min 	|                    	|
+| **Inconsistency**   	| Response içeriğine %50 olasılıkla haricen veri segmenti eklenmesi                	| n/a        	| DataInconsistencyProbability = 50%  	|                    	|
+|                     	| Response içeriğine %20 olasılıkla haricen veri segmenti eklenmesi                	| n/a        	| DataInconsistencyProbability = 20%  	|                    	|
+| **Resource Race**   	| Eş zamanlı 3 istekte yük oluşması                                                	| HTTP 429   	| ResourceRaceUpperLimit = 3          	|                    	|
+| **Network Failure** 	| %25 olasılıkla servis hatası oluşması                                            	| HTTP 500   	| NetworkFailureProbability = 25%     	|                    	|
 
 ### Service Discovery ve Hashicorp Consul Entegrasonu
 
