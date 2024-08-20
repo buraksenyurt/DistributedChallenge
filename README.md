@@ -572,8 +572,8 @@ sudo docker cp ./appsettings.json 5cca:/app/appsettings.json
 
 Senaryoların işletilmesi ve sonuçların irdelenmesi için aşağıdaki gibi basit bir çizelge kullanılabilir.
 
-|       **Vaka**      	|                                    **Senaryo**                                   	| **Üretim** 	|              **Metrik**             	| **Sistem Tepkisi** 	|
-|:-------------------:	|:--------------------------------------------------------------------------------:	|:----------:	|:-----------------------------------:	|:------------------:	|
+| **Vaka**            	| **Senaryo**                                                                      	| **Üretim** 	| **Metrik**                          	| **Sistem Tepkisi** 	|
+|---------------------	|----------------------------------------------------------------------------------	|------------	|-------------------------------------	|--------------------	|
 | **Latency**         	| Servis Response üretiminde 1000 ile 3000 milisaniye süreyle geciktirme yapılması 	| n/a        	| MinDelayMs = 1000 MaxDelayMs = 3000 	|                    	|
 | **Outage**          	| Dakika başına 10 saniye boyunca hizmet kesintisi yapılması                       	| HTTP 503   	| Duration = 10 Sec Frequency = 1 Min 	|                    	|
 |                     	| 5 Dakika başına 30 saniye boyunca hizmet kesintisi yapılması                     	| HTTP 503   	| Duration = 30 Sec Frequency = 5 Min 	|                    	|
