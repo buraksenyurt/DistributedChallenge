@@ -537,6 +537,8 @@ Diğer sistem servislerini ekledikten sonraki duruma da bir bakalım. Aşağıda
 
 ### Resiliency Deneyleri
 
+**ÖNEMLİ NOT!: Resistance isimli paket ayrıca [Global Nuget Reposuna](https://www.nuget.org/packages/Resistance/) taşınmıştır.**
+
 Dağıtık sistemlerini dayanıklılığını(Resiliency) artırmak için servislerin, ağın, fiziki kapasitelerin belli koşullar altında kalarak hatalara sebebiyet vermesi ve bu durumda sistemin nasıl davranış sergileyeceğinin gözlemlenmesi önemli. Bu tip testler ile sistemin dayanıklılığını artıracak ve baş ağrıtan hataların önüne geçecek şekilde tedbirler alınabilir. Bu amaçla sistemlerdeki servislerde bazı deneylerin başlatılması için SystemSergeant altına yeni bir NuGet paketi açıldı. Resistance isimli bu pakette Api çalışm zamanı hattına monte edilecek farklı türde Middleware nesneleri var. Bu paket sayesinde aşağıdaki durumları simüle edebiliriz.
 
 - **Network Failure:** 500 Internal Server Error ile Network Failure durumunun oluşturulması
@@ -572,15 +574,15 @@ sudo docker cp ./appsettings.json 5cca:/app/appsettings.json
 
 Senaryoların işletilmesi ve sonuçların irdelenmesi için aşağıdaki gibi basit bir çizelge kullanılabilir.
 
-| **Vaka**            	| **Senaryo**                                                                      	| **Üretim** 	| **Metrik**                          	| **Sistem Tepkisi** 	|
-|---------------------	|----------------------------------------------------------------------------------	|------------	|-------------------------------------	|--------------------	|
-| **Latency**         	| Servis Response üretiminde 1000 ile 3000 milisaniye süreyle geciktirme yapılması 	| n/a        	| MinDelayMs = 1000 MaxDelayMs = 3000 	|                    	|
-| **Outage**          	| Dakika başına 10 saniye boyunca hizmet kesintisi yapılması                       	| HTTP 503   	| Duration = 10 Sec Frequency = 1 Min 	|                    	|
-|                     	| 5 Dakika başına 30 saniye boyunca hizmet kesintisi yapılması                     	| HTTP 503   	| Duration = 30 Sec Frequency = 5 Min 	|                    	|
-| **Inconsistency**   	| Response içeriğine %50 olasılıkla haricen veri segmenti eklenmesi                	| n/a        	| DataInconsistencyProbability = 50%  	|                    	|
-|                     	| Response içeriğine %20 olasılıkla haricen veri segmenti eklenmesi                	| n/a        	| DataInconsistencyProbability = 20%  	|                    	|
-| **Resource Race**   	| Eş zamanlı 3 istekte yük oluşması                                                	| HTTP 429   	| ResourceRaceUpperLimit = 3          	|                    	|
-| **Network Failure** 	| %25 olasılıkla servis hatası oluşması                                            	| HTTP 500   	| NetworkFailureProbability = 25%     	|                    	|
+| **Vaka**            	| **Senaryo**                                                                      	| **Üretim** 	| **Metrik**                          	          | **Sistem Tepkisi** 	|
+|---------------------	|----------------------------------------------------------------------------------	|------------	|-------------------------------------------------|--------------------	|
+| **Latency**         	| Servis Response üretiminde 1000 ile 3000 milisaniye süreyle geciktirme yapılması 	| n/a        	| MinDelayMs = 1000, MaxDelayMs = 3000 	          |                    	|
+| **Outage**          	| Dakika başına 10 saniye boyunca hizmet kesintisi yapılması                       	| HTTP 503   	| Duration = 10 Sec, Frequency = 1 Min 	          |                    	|
+|                     	| 5 Dakika başına 30 saniye boyunca hizmet kesintisi yapılması                     	| HTTP 503   	| Duration = 30 Sec, Frequency = 5 Min 	          |                    	|
+| **Inconsistency**   	| Response içeriğine %50 olasılıkla haricen veri segmenti eklenmesi                	| n/a        	| DataInconsistencyProbability = 50%  	          |                    	|
+|                     	| Response içeriğine %20 olasılıkla haricen veri segmenti eklenmesi                	| n/a        	| DataInconsistencyProbability = 20%  	          |                    	|
+| **Resource Race**   	| Eş zamanlı istekler için hata oluşması                                           	| HTTP 429   	| DueTime = 5, Period = 5 sec, RequestLimit = 5   |                    	|
+| **Network Failure** 	| %25 olasılıkla servis hatası oluşması                                            	| HTTP 500   	| NetworkFailureProbability = 25%     	          |                    	|
 
 ### Service Discovery ve Hashicorp Consul Entegrasonu
 
