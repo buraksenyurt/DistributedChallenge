@@ -25,7 +25,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Servisler için HealthCheck Uygulaması](#servisler-için-healthcheck-uygulaması)
     - [Resiliency Deneyleri](#resiliency-deneyleri)
       - [AuditApi için Resiliency Kullanımı](#auditapi-için-resiliency-kullanımı)
-      - [AuditApi Resiliency Test Koşumları](#auditapi-resiliency-test-koşumları) 
+    - [AuditApi Resiliency Test Koşumları](#auditapi-resiliency-test-koşumları)
     - [Service Discovery ve Hashicorp Consul Entegrasonu](#service-discovery-ve-hashicorp-consul-entegrasonu)
     - [Ftp Entegrasyonu ile Arşivleme Stratejisi](#ftp-entegrasyonu-ile-arşivleme-stratejisi)
     - [Planlı İşler (Scheduled Jobs)](#planlı-i̇şler-scheduled-jobs)
@@ -792,4 +792,5 @@ Kodlar üzerinde ilerledikçe çözüm gittikçe büyümeye ve karmaşıklaşmay
 - [.Net 8 ile Distributed Systems Challenge - 06 - SignalR ile Push Notification](https://youtu.be/P2IUqybwIKA)
 - [.Net 8 ile Distributed Systems Challenge - 07 - SignalR ile JWT Kullanımı](https://youtu.be/29yi32GuPqU)
 - [.Net 8 ile Distributed Systems Challenge - 08 - Resiliency Simulation Setup](https://youtu.be/Ihx5MYY4WDE)
+- [.Net 8 ile Distributed Systems Challenge - 09 - Resiliency - Retry Mekanizması ile Güçlendirme](https://youtu.be/PDJ4GDNyWlQ)
 - ...
