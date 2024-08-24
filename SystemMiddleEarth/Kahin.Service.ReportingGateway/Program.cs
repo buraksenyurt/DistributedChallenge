@@ -13,8 +13,9 @@ using Steeltoe.Discovery.Consul;
 using System.ComponentModel.DataAnnotations;
 
 var builder = WebApplication.CreateBuilder(args);
+var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
 
-builder.Services.AddDependencies();
+builder.Services.AddDependencies(logger);
 builder.Services.AddServiceDiscovery(o => o.UseConsul());
 
 var systemName = "KahinReportingService";

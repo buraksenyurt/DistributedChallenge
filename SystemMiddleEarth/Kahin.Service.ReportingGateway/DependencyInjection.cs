@@ -9,7 +9,7 @@ namespace Kahin.Service.ReportingGateway;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddDependencies(this IServiceCollection services)
+    public static IServiceCollection AddDependencies(this IServiceCollection services, ILogger logger)
     {
         services.AddSingleton<ISecretStoreService, SecretStoreService>();
         services.AddEndpointsApiExplorer();
@@ -21,7 +21,21 @@ public static class DependencyInjection
             client.BaseAddress = new Uri("http://hal-audit-service");
         })
         .AddServiceDiscovery()
-        .AddRoundRobinLoadBalancer();
+        .AddRoundRobinLoadBalancer()
+        .AddStandardResilienceHandler(options =>
+        {
+            // options.Retry.Delay = TimeSpan.FromSeconds(3);
+            // options.Retry.MaxRetryAttempts = 5;
+            options.Retry.OnRetry = async args =>
+            {
+                logger.LogWarning("Retry attempt #{AttemptNumber} due to: {Reason}",
+                    args.AttemptNumber,
+                    args.Outcome.Exception?.Message ?? args.Outcome.Result?.StatusCode.ToString());
+
+                await ValueTask.CompletedTask;
+            };
+        });
+
         services.AddSingleton<IRedisService, RedisService>();
 
         return services;

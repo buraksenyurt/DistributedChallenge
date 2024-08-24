@@ -61,8 +61,8 @@ app.AddJudgeMiddleware(new Options
 
 app.UseResistance(new ResistanceOptions
 {
-    // Network Failure (HTTP 500 Internal Service Error with %25 probility)
-    NetworkFailureProbability = NetworkFailureProbability.Percent25,
+    // Network Failure (HTTP 500 Internal Service Error with %50 probility)
+    NetworkFailureProbability = NetworkFailureProbability.Percent50,
     // For 5 requests coming from the same IP every 10 seconds, the HTTP 429 Too Many Requests scenario is generated.
     ResourceRacePeriod = new ResourceRacePeriod
     {
