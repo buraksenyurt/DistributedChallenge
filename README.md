@@ -11,11 +11,6 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
   - [Yapılacaklar Listesi _(ToDo List)_](#yapılacaklar-listesi-todo-list)
   - [Sistemin Çalıştırılması](#sistemin-çalıştırılması)
   - [Docker Unsurları](#docker-unsurları)
-  - [Sistem Çıktıları](#sistem-çıktıları)
-    - [İlk Zaman Kapısı (29 Mayıs 2024, 21:00 suları)](#i̇lk-zaman-kapısı-29-mayıs-2024-2100-suları)
-    - [İkinci Zaman Kapısı (30 Mayıs 2024, 22:00 suları)](#i̇kinci-zaman-kapısı-30-mayıs-2024-2200-suları)
-    - [Üçüncü Zaman Kapısı (7 Temmuz 2024, 17:30 Suları)](#üçüncü-zaman-kapısı-7-temmuz-2024-1730-suları)
-    - [Dördüncü Zaman Kapısı (13 Temmuz 2024, 00:10 Suları)](#dördüncü-zaman-kapısı-13-temmuz-2024-0010-suları)
   - [Dış Sistem Entegrasyonları](#dış-sistem-entegrasyonları)
     - [Redis Stream Entgrasyonu ile Event Takibi](#redis-stream-entgrasyonu-ile-event-takibi)
     - [SonarQube ile Kod Kalite Ölçümü](#sonarqube-ile-kod-kalite-ölçümü)
@@ -25,7 +20,7 @@ Bu repoda asenkron mesaj kuyruklarını hedef alan bir dağıtık sistem problem
     - [Servisler için HealthCheck Uygulaması](#servisler-için-healthcheck-uygulaması)
     - [Resiliency Deneyleri](#resiliency-deneyleri)
       - [AuditApi için Resiliency Kullanımı](#auditapi-için-resiliency-kullanımı)
-    - [AuditApi Resiliency Test Koşumları](#auditapi-resiliency-test-koşumları)
+      - [AuditApi Resiliency Test Koşumları](#auditapi-resiliency-test-koşumları)
     - [Service Discovery ve Hashicorp Consul Entegrasonu](#service-discovery-ve-hashicorp-consul-entegrasonu)
     - [Ftp Entegrasyonu ile Arşivleme Stratejisi](#ftp-entegrasyonu-ile-arşivleme-stratejisi)
     - [Planlı İşler (Scheduled Jobs)](#planlı-i̇şler-scheduled-jobs)
@@ -131,6 +126,19 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 ![inventory](./images/current_inventory.png)
 
 ## Baş Ağrıtacak Dayanıklılık Senaryoları
+
+Dağıtık sistemlerin davranışları göz önüne alındığında bazı yanılgılar söz konusudur. Bunlar ilk kez [Peter Deutsch](https://en.wikipedia.org/wiki/Fallacies_of_distributed_computing) tarafından ele alınmış ve aşağıdaki maddeler ile özetlenmiştir. Yani bir dağıtık sistemde aşağıdakilerin sorunsuz olarak işleyeceği düşünülemez.
+
+- Ağ güvenilirdir _(Relability)_
+- Gecikme sıfırdır _(Latency)_
+- Bant genişliği sonsuzdur _(Infinite bandwith)_
+- Ağ güvenlidir _(Secure Network)_
+- Topoloji değişmez
+- Tek bir yönetici _(Administrator)_ vardır
+- Taşıma maliyeti sıfırdır _(Transport Cost)_
+- Ağ homojendir
+
+Dolayısıyla tasarladığımız dağıtık sistemin tüm bunları sorunsuz şekilde karşılamadığını baştan kabul etmekte yarar var.
 
 Envanterimize göre sistemin genel dayanıklılığını test edebileceğimiz ve Resilience taktiklerini ele alabileceğimiz senaryoları aşağıdaki listeye ekleyebiliriz. [Netflix'in Chaos Monkey'si](https://netflix.github.io/chaosmonkey/) tadında sistemde bu tip sorunları çıkartabilecek bazı uygulamalar üzerinde de çalışılabilir.
 
@@ -242,90 +250,6 @@ Bu büyük çaplı çalışmada birçok servis docker-compose aracılığıyla a
 | Prometheus, sistem izleme ve uyarı işlevi görür. | prometheus   | localhost:9090   |
 | Grafana, metriklerin ve logların görselleştirilmesi için kullanılır. | grafana      | localhost:3000   |
 | Sonarqube, statik kod tarama aracı. | sonarqube | localhost:9000  |
-
-## Sistem Çıktıları
-
-Belli dönemlere ait çalışma zamanı sonuçları aşağıdaki yer almaktadır.
-
-### İlk Zaman Kapısı (29 Mayıs 2024, 21:00 suları)
-
-**NOT : Solution içerisindeki Docs klasöründe Thunder Client aracına ait REST test çıktıları yer almaktadır. Bunları VS Code ortamınıza import ederek kullanabilirsiniz.**
-
-Sistemde RabbitMq'yu ayağa kaldırdıktan sonra **GamersWorld.EventHost** uygulamasını başlattım. İlk mesaj gönderimini test etmek için **localhost:15672** portundan ulaştığım **RabbitMQ** client arabirimini kullandım. Burada **Queues** and **Streams** kısmında **report_events_queue** otomatik olarak oluştu. **Publish Message** kısmında type özelliğine ReportRequestedEvent değerini verip örnek bir Payload hazırladım.
-
-```json
-{
-  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
-  "Title": "Popular Game Sales Reports",
-  "Expression": "SELECT * FROM Reports WHERE CategoryId=1 ORDER BY Id Desc"
-}
-```
-
-Mesajı Publish ettikten sonra host uygulama tarafından otomatik olarak yakalandığını düşen loglardan anlamayı başardım.
-
-![First Test](/images/first_test.png)
-
-### İkinci Zaman Kapısı (30 Mayıs 2024, 22:00 suları)
-
-SystemHome'te SystemMiddleEarth'nin bilgilendirme amaçlı olarak kullanacağı _(Rapor hazır, rapor ifadesinde hata var vb durumlar için)_ **GateWayProxy** isimli bir **Web Api** yer alıyor. Bu serviste kendisine gelen mesajlara göre ReportReadyEvent veya InvalidExpressionEvent gibi olayları üretiyor. Dolayısıyla rabbit mq kuyruğunu kullanan bir servis söz konusu. Bu servise aşağıdaki gibi örnek talepler gönderebildim.
-
-Rapor hazır taklidi yapan bir mesaj.
-
-```json
-{
-  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
-  "DocumentId": "200-10-edd4e07d-2391-47c1-bf6f-96a96c447585",
-  "StatusCode": 200,
-  "StatusMessage": "Report is ready and live for 60 minutes",
-  "Detail": ""
-}
-```
-
-Rapordaki ifadede ihlal var taklidi yapan bir mesaj.
-
-```json
-{
-  "TraceId": "edd4e07d-2391-47c1-bf6f-96a96c447585",
-  "DocumentId": "",
-  "StatusCode": 400,
-  "StatusMessage": "ExpressionNotValid",
-  "Detail": "There is a suspicious activities in expression."
-}
-```
-
-Örnek çalışma zamanı görüntüsü ise şöyle oluştu...
-
-![Second Test](/images/second_test.png)
-
-### Üçüncü Zaman Kapısı (7 Temmuz 2024, 17:30 Suları)
-
-Buraya kadar çözüm üzerinde çok fazla sayıda geliştirme yapıldı. Çözümün daha gerçekçi olması için önyüz tarafında da düzenlemeler yapıldı. Örneğin bir rapor hazır olduğunda event mekanizması SignalR kullanarak login olan kullanıcı ekranına bir popup çıkarmakta. Henüz bir Identity entegrasyonu olmasa da sadece rapor talep eden kişiler için Popup çıkartılması mümkün. Bu amaçla web uygulama tarafında aşağıdaki gibi ekran değişiklikleri oldu.
-
-![SignalR Runtime 01](/images/runtime_07.png)
-
-![SignalR Runtime 02](/images/runtime_08.png)
-
-ve bir rapor hazır olduğunda sadece bu istemci uygulama ekranlarına gelen popup bildirimi.
-
-![SignalR Runtime 03](/images/runtime_09.png)
-
-System Home tarafında Postgres veritabanında tutulan raporlar tek ekrandan da görülebiliyor.
-
-![SignalR Runtime 04](/images/runtime_10.png)
-
-### Dördüncü Zaman Kapısı (13 Temmuz 2024, 00:10 Suları)
-
-Kullanıcı arayüz tarafının biraz daha işe yarar hale gelmesi için çalışmalar yapıldı. Örneğinde Audit servisinde rastgele zar atarak döndüğümüz içerik ihlalleri için yine SignalR üzerinden push notification ile istemcinin bilgilendirilmesi sağlandı.
-
-![Runtime 11](/images/runtime_11.png)
-
-Diğer yandan rapor görüntüleme ekranına silme fonksiyonelliği de kazandırıldı.
-
-![Runtime 12](/images/runtime_12.png)
-
-![Runtime 13](/images/runtime_13.png)
-
-Dikkat edileceği üzere artık System Home tarafına inen rapor dokümanları için zaman aşımı entegrasyonuna başlandı. Yaşan süresi _(Expire Time)_ dolan rapor dokümanlarını kalıcı ortamlarından silecek takvimlendirilmiş _(Scheduled)_ bir mekanizma üzerinde geliştirme yapılacak. Background Worker türünden bir host uygulamanın iş göreceğini düşünüyorum.
 
 ## Dış Sistem Entegrasyonları
 
@@ -570,19 +494,19 @@ SystemHAL içerisinde yer alan ve talep edilen rapordaki ifadeyi sözüm ona den
 sudo docker cp ./appsettings.json 5cca:/app/appsettings.json
 ```
 
-### AuditApi Resiliency Test Koşumları
+#### AuditApi Resiliency Test Koşumları
 
 Senaryoların işletilmesi ve sonuçların irdelenmesi için aşağıdaki gibi basit bir çizelge kullanılabilir.
 
-| **Vaka**            	| **Senaryo**                                                                      	| **Üretim** 	| **Metrik**                          	          | **Sistem Tepkisi** 	|
-|---------------------	|----------------------------------------------------------------------------------	|------------	|-------------------------------------------------|--------------------	|
-| **Latency**         	| Servis Response üretiminde 1000 ile 3000 milisaniye süreyle geciktirme yapılması 	| n/a        	| MinDelayMs = 1000, MaxDelayMs = 3000 	          |                    	|
-| **Outage**          	| Dakika başına 10 saniye boyunca hizmet kesintisi yapılması                       	| HTTP 503   	| Duration = 10 Sec, Frequency = 1 Min 	          |                    	|
-|                     	| 5 Dakika başına 30 saniye boyunca hizmet kesintisi yapılması                     	| HTTP 503   	| Duration = 30 Sec, Frequency = 5 Min 	          |                    	|
-| **Inconsistency**   	| Response içeriğine %50 olasılıkla haricen veri segmenti eklenmesi                	| n/a        	| DataInconsistencyProbability = 50%  	          |                    	|
-|                     	| Response içeriğine %20 olasılıkla haricen veri segmenti eklenmesi                	| n/a        	| DataInconsistencyProbability = 20%  	          |                    	|
-| **Resource Race**   	| Eş zamanlı istekler için hata oluşması                                           	| HTTP 429   	| DueTime = 5, Period = 5 sec, RequestLimit = 5   |                    	|
-| **Network Failure** 	| %25 olasılıkla servis hatası oluşması                                            	| HTTP 500   	| NetworkFailureProbability = 25%     	          |                    	|
+| **Vaka**             | **Senaryo**                                                                      | **Üretim** | **Metrik**                                    | **Sistem Tepkisi** |
+|---------------------|----------------------------------------------------------------------------------|------------|-------------------------------------------------|--------------------|
+| **Latency**         | Servis Response üretiminde 1000 ile 3000 milisaniye süreyle geciktirme yapılması | n/a        | MinDelayMs = 1000, MaxDelayMs = 3000           |                    |
+| **Outage**          | Dakika başına 10 saniye boyunca hizmet kesintisi yapılması                       | HTTP 503   | Duration = 10 Sec, Frequency = 1 Min           |                    |
+|                     | 5 Dakika başına 30 saniye boyunca hizmet kesintisi yapılması                     | HTTP 503   | Duration = 30 Sec, Frequency = 5 Min           |                    |
+| **Inconsistency**   | Response içeriğine %50 olasılıkla haricen veri segmenti eklenmesi                | n/a        | DataInconsistencyProbability = 50%            |                    |
+|                     | Response içeriğine %20 olasılıkla haricen veri segmenti eklenmesi                | n/a        | DataInconsistencyProbability = 20%            |                    |
+| **Resource Race**   | Eş zamanlı istekler için hata oluşması                                           | HTTP 429   | DueTime = 5, Period = 5 sec, RequestLimit = 5   |                    |
+| **Network Failure** | %25 olasılıkla servis hatası oluşması                                            | HTTP 500   | NetworkFailureProbability = 25%               |                    |
 
 ### Service Discovery ve Hashicorp Consul Entegrasonu
 
@@ -590,7 +514,7 @@ Sistemlerimizde birçok servis yer alıyor. Aslında bu servisler ayağa kalkark
 
 Tabii consul ürününün çok fazla meziyeti var. Ben şimdilik sadece Service Discovery noktasında ele almak istiyorum. [Daha fazla bilgi için buraya bakabilirsiniz](https://developer.hashicorp.com/consul).
 
-Ürünü deneyimlemek için her zaman olduğu gibi bir docker-compose üzerinden bir kurgu kullanıyoruz. 
+Ürünü deneyimlemek için her zaman olduğu gibi bir docker-compose üzerinden bir kurgu kullanıyoruz.
 
 ```yml
   consul:
@@ -634,7 +558,7 @@ Sonuç olarak önyüzden arşivleme işlemi başlatıldığında bir başka even
 
 ### Planlı İşler (Scheduled Jobs)
 
-Pek çok büyük sistemde belli periyotlarda tekrarlanan işler söz konusudur. Örneğin bizim uygulamamızda tüm raporların için kullanıclar tarafından belirlenen yaşam süreleri var. 10 dakika, Yarım saat, 1 Saat, 1 gün gibi. Bu süreler dolduğunda ilgili kaynaklardaki _(veri tabanı, ftp sunucusu vb)_ içeriklerin temizlenmesi planlı işlerden birisi olabilir. Bu tip bir iş örneğin 10 dakikada bir çalışacak şekilde planlanabilir. .Net tarafında basit bir timer mekanizması ile ilerlenebileceği gibi [Quartz](https://www.nuget.org/packages/Quartz)   veya **Hangfire** gibi paketlerden de yararlanılabilir. Örneğimizde **GamersWorld.JobHost** isimli terminal uygulamasını [Hangfire](https://www.nuget.org/packages/Hangfire/) ile çalışacak şekilde genişlettik. Planlı işler bazı durumlarda sistemde beklenmedik sorunlara da neden olabiliyor. Özellikle dağıtık sistemlerde entegre oldukları noktalar açısından düşünülünce bu önemli bir detay olabiliyor. Kurumsal ölçekteki sistemlerde n sayıda planlanmış ve oldukça karmaşık süreçler koşturan planlı işler _(Scheduled Jobs)_ sistemleri inanılaz derecede yorabiliyorlar. Bizim örneğimizde şimdilik tek bir iş var. Süresi dolan rapoları veri tabanı ve ftp'den silmek. Peki işlemler sırasında veritabanı bağlantısı yoksa ya da ftp'ye ulaşılamıyorsa sistemin genelinin vereceği tepki ne olmalı? Bu vakayı da dayanıklılık senaryolarımıza dahil edebiliriz.
+Pek çok büyük sistemde belli periyotlarda tekrarlanan işler söz konusudur. Örneğin bizim uygulamamızda tüm raporların için kullanıclar tarafından belirlenen yaşam süreleri var. 10 dakika, Yarım saat, 1 Saat, 1 gün gibi. Bu süreler dolduğunda ilgili kaynaklardaki _(veri tabanı, ftp sunucusu vb)_ içeriklerin temizlenmesi planlı işlerden birisi olabilir. Bu tip bir iş örneğin 10 dakikada bir çalışacak şekilde planlanabilir. .Net tarafında basit bir timer mekanizması ile ilerlenebileceği gibi [Quartz](https://www.nuget.org/packages/Quartz) veya **Hangfire** gibi paketlerden de yararlanılabilir. Örneğimizde **GamersWorld.JobHost** isimli terminal uygulamasını [Hangfire](https://www.nuget.org/packages/Hangfire/) ile çalışacak şekilde genişlettik. Planlı işler bazı durumlarda sistemde beklenmedik sorunlara da neden olabiliyor. Özellikle dağıtık sistemlerde entegre oldukları noktalar açısından düşünülünce bu önemli bir detay olabiliyor. Kurumsal ölçekteki sistemlerde n sayıda planlanmış ve oldukça karmaşık süreçler koşturan planlı işler _(Scheduled Jobs)_ sistemleri inanılaz derecede yorabiliyorlar. Bizim örneğimizde şimdilik tek bir iş var. Süresi dolan rapoları veri tabanı ve ftp'den silmek. Peki işlemler sırasında veritabanı bağlantısı yoksa ya da ftp'ye ulaşılamıyorsa sistemin genelinin vereceği tepki ne olmalı? Bu vakayı da dayanıklılık senaryolarımıza dahil edebiliriz.
 
 Aşağıdaki ekran görüntülerinde arşivlenen ve süresi dolan raporların hem veri tabanından hem de ftp sunucusundan silinmesi ile ilgili çalışma zamanı görüntüleri yer alıyor.
 
@@ -648,9 +572,9 @@ Tabii burada açıkta kalan bir nokta daha var. Arşivlenmediği halde süresi d
 
 ### Elasticsearch ve Kibana Entegrasyonu ile Log Takibi
 
-Sistemlerin ürettiği **log**ları uygulamaların terminal pencereleri yerine Kibana gibi araçlar üzerinden monitör etmek dağıtık sistemler için önemli bir ihtiyaç. Farklı uygulamalardan akan log sayısı arttıkça bunları pencerelerden takip etmek zorlaştığı gibi loglar üzerinde sorgulama yapmak da neredeyse imkansız hale geliyor. Yüksek log üretimini ve bu küme üzerinde hızlı arama operasyonunu **Elasticsearch** gibi bir çözümle giderebiliriz. Nitelik **Elasitcsearch**'e akan logları görsel olarak takip ederken de bir araca ihtiyacımız var. Bu noktada **Kibana** sık kullanılan çözümlerin başında gelmekte. 
+Sistemlerin ürettiği **log**ları uygulamaların terminal pencereleri yerine Kibana gibi araçlar üzerinden monitör etmek dağıtık sistemler için önemli bir ihtiyaç. Farklı uygulamalardan akan log sayısı arttıkça bunları pencerelerden takip etmek zorlaştığı gibi loglar üzerinde sorgulama yapmak da neredeyse imkansız hale geliyor. Yüksek log üretimini ve bu küme üzerinde hızlı arama operasyonunu **Elasticsearch** gibi bir çözümle giderebiliriz. Nitelik **Elasitcsearch**'e akan logları görsel olarak takip ederken de bir araca ihtiyacımız var. Bu noktada **Kibana** sık kullanılan çözümlerin başında gelmekte.
 
-Bu çözümde **Elasticsearch** ve **Kibana** implemantasyonu için yine **docker-compose** kompozisyonundan yararlanıyoruz. Geliştirme ortamı baz alınarak hareket ettiğimizi ifade edebilirim. İlk implementasyonumuzu **AuditApi** servisi üstünde gerçekleştirdik. **Kibana** ile **Elasticsearch** arasındaki entegrasyonda halletmem gereken bazı sorunlar oluştu. Logları **Discover** arabiriminde göremedikten sonra biraz araştırma yaparak gerekli veri akışını *(Data Stream)* elle eklemeye karar verdim. Bunun için **Kibana Dev Tools** arabiriminden yararlanabiliriz. Bu arabirim bir servis API desteği sunarak bazı yönetsel işleri yapabilmemizi sağlamakta.
+Bu çözümde **Elasticsearch** ve **Kibana** implemantasyonu için yine **docker-compose** kompozisyonundan yararlanıyoruz. Geliştirme ortamı baz alınarak hareket ettiğimizi ifade edebilirim. İlk implementasyonumuzu **AuditApi** servisi üstünde gerçekleştirdik. **Kibana** ile **Elasticsearch** arasındaki entegrasyonda halletmem gereken bazı sorunlar oluştu. Logları **Discover** arabiriminde göremedikten sonra biraz araştırma yaparak gerekli veri akışını _(Data Stream)_ elle eklemeye karar verdim. Bunun için **Kibana Dev Tools** arabiriminden yararlanabiliriz. Bu arabirim bir servis API desteği sunarak bazı yönetsel işleri yapabilmemizi sağlamakta.
 
 Takip eden ilk komut ile bir index şablonu oluşturmaktayız. **index_patterns** kısmında geçen ifade aynı zamanda **AuditApi** kodu içerisinde belirttiğimiz log desenini işaret ediyor.
 
