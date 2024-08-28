@@ -129,14 +129,14 @@ Güncel olarak çözüm içerisinde yer alan ve bir runtime'a sahip olan uygulam
 
 Dağıtık sistemlerin davranışları göz önüne alındığında bazı yanılgılar söz konusudur. Bunlar ilk kez [Peter Deutsch](https://en.wikipedia.org/wiki/Fallacies_of_distributed_computing) tarafından ele alınmış ve aşağıdaki maddeler ile özetlenmiştir. Yani bir dağıtık sistemde aşağıdakilerin sorunsuz olarak işleyeceği düşünülemez.
 
-- Ağ güvenilirdir _(Relability)_
-- Gecikme sıfırdır _(Latency)_
-- Bant genişliği sonsuzdur _(Infinite bandwith)_
-- Ağ güvenlidir _(Secure Network)_
-- Topoloji değişmez
-- Tek bir yönetici _(Administrator)_ vardır
-- Taşıma maliyeti sıfırdır _(Transport Cost)_
-- Ağ homojendir
+- **Ağ güvenilirdir _(Relability)_**: Ağ üzerindeki paketlerin kaybolabileceği, hasar görebileceği ya da bozulabileceği gerçeğinin atlanmasıdır.
+- **Gecikme sıfırdır _(Latency)_ :** Birden fazla servisin iletişimde olduğu durumlarda ağ genelinde cevap verebilirlik sürelerinin yine de sıfır gecikme sürelerine yakın gerçekleşeceği yanılgısına düşmektir.
+- **Bant genişliği sonsuzdur _(Infinite bandwith)_ :** Ağ genişliğinin servisler arası çok yüksek boyutlarda verileri taşırken bile sorun yaşamayacağını düşünmektir.
+- **Ağ güvenlidir _(Secure Network)_ :** Ağın yetkisiz erişimlere, güvenlik tehditlerine, siber saldırılara _(Man in the Middle gibi)_ açık olmadığını düşünmektir.
+- **Topoloji değişmez :** Ağ topolojisinde yer alan IP adreslerinin değişmeyeceğini, servislerin taşınmayacağını, yeni node'ların eklenip çıkartılmayacağını zannetmektir.
+- **Tek bir yönetici _(Administrator)_ vardır :** Ağı yönetmek için birden fazla kişi ve hatta takım olduğunuda, aralarındaki iletişimde yanlış anlaşılmalar olabileceğini göz ardı etmektir.
+- **Taşıma maliyeti sıfırdır _(Transport Cost)_ :** Ağ üzerine taşınan verinin bandwidth harcamadığını, gecikmelere maruz kalmadığını ve genel performansa etki edecek bir maliyetinin olmadığını düşünmektir.
+- **Ağ homojendir :** Ağın tek bir protokol ile çalıştığını, bu protokollerin farklı performanslar sunmadığını ve farklı segmentler için farklı konfigürasyonlara sahip olamayacağını düşünmektir.
 
 Dolayısıyla tasarladığımız dağıtık sistemin tüm bunları sorunsuz şekilde karşılamadığını baştan kabul etmekte yarar var.
 
