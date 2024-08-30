@@ -39,6 +39,7 @@ public class InputOutputBehavior(RequestDelegate next, ILogger<InputOutputBehavi
         await body.ReadAsync(buffer);
         var bodyAsText = Encoding.UTF8.GetString(buffer);
         request.Body.Seek(0, SeekOrigin.Begin);
+
         return $"{request.Scheme} {request.Host}{request.Path} {request.QueryString} {bodyAsText}";
     }
 
@@ -47,6 +48,7 @@ public class InputOutputBehavior(RequestDelegate next, ILogger<InputOutputBehavi
         response.Body.Seek(0, SeekOrigin.Begin);
         var text = await new StreamReader(response.Body).ReadToEndAsync();
         response.Body.Seek(0, SeekOrigin.Begin);
+
         return $"StatusCode: {response.StatusCode}, Body: {text}";
     }
 }

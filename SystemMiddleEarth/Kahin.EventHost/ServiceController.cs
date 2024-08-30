@@ -8,6 +8,7 @@ public static class ServiceController
     {
         logger.LogInformation("Health check for {Address}", client.BaseAddress);
         var response = await client.GetAsync("/health");
+
         return response.IsSuccessStatusCode;
     }
 }

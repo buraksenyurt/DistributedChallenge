@@ -34,6 +34,7 @@ public class RedisService : IRedisService
         {
             var jsonPayload = entries[0].Values[0].Value;
             var payload = JsonSerializer.Deserialize<RedisPayload>(jsonPayload);
+
             return payload ?? RedisPayload.Default();
         }
 
@@ -49,6 +50,7 @@ public class RedisService : IRedisService
             await _db.StreamDeleteAsync(streamName, [entries[0].Id]);
 
             var payload = JsonSerializer.Deserialize<RedisPayload>(jsonPayload);
+
             return payload ?? RedisPayload.Default();
         }
 

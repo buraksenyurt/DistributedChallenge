@@ -7,10 +7,10 @@ using System.Net;
 namespace Resistance.Outage;
 
 public class OutageBehavior(
-    RequestDelegate next
-    , ILogger<OutageBehavior> logger
-    , IOptionsMonitor<ResistanceFlags> optionsMonitor
-    , OutagePeriod outagePeriod)
+    RequestDelegate next,
+    ILogger<OutageBehavior> logger,
+    IOptionsMonitor<ResistanceFlags> optionsMonitor,
+    OutagePeriod outagePeriod)
 {
     private readonly RequestDelegate _next = next;
     private static bool _serviceOutage = false;
