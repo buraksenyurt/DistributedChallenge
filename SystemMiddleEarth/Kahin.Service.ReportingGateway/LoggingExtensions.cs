@@ -6,8 +6,7 @@ namespace Kahin.Service.ReportingGateway;
 public static class LoggingExtensions
 {
     public static LoggerConfiguration UseElasticsearch(this LoggerConfiguration loggerConfiguration, string systemName, string environmentName)
-    {
-        return loggerConfiguration
+        => loggerConfiguration
             .Enrich.FromLogContext()
             .Enrich.WithProperty("System", systemName)
             .Enrich.WithProperty("Environment", environmentName)
@@ -20,5 +19,4 @@ public static class LoggingExtensions
                 BatchAction = ElasticOpType.Create,
                 ModifyConnectionSettings = x => x.ServerCertificateValidationCallback((sender, cert, chain, errors) => true)
             });
-    }
 }

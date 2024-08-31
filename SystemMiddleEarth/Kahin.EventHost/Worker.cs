@@ -9,10 +9,9 @@ using Microsoft.Extensions.Logging;
 namespace Kahin.EventHost;
 
 public class Worker(
-    IRedisService redisService
-        , HomeGatewayServiceClient httpGatewayClient
-        , ILogger<Worker> logger)
-        : BackgroundService
+          IRedisService redisService,
+          HomeGatewayServiceClient httpGatewayClient,
+          ILogger<Worker> logger) : BackgroundService
 {
     private readonly IRedisService _redisService = redisService;
     private readonly HomeGatewayServiceClient _httpGatewayClient = httpGatewayClient;

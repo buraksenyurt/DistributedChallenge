@@ -13,10 +13,8 @@ public class RedisPayload
     public EventType EventType { get; set; }
     public TimeSpan ReportExpireTime { get; set; }
 
-    override public string ToString()
-    {
-        return string.Format($"TraceId: {TraceId},EventType: {EventType}, ReferenceDocumentId: {DocumentId}");
-    }
+    public override string ToString() 
+        => string.Format($"TraceId: {TraceId},EventType: {EventType}, ReferenceDocumentId: {DocumentId}");
 
     public static RedisPayload Default() => new()
     {
