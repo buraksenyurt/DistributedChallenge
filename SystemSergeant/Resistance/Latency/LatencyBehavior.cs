@@ -5,7 +5,11 @@ using Resistance.Configuration;
 
 namespace Resistance.Latency;
 
-public class LatencyBehavior(RequestDelegate next, LatencyPeriod period, ILogger<LatencyBehavior> logger, IOptionsMonitor<ResistanceFlags> optionsMonitor)
+public class LatencyBehavior(
+    RequestDelegate next,
+    LatencyPeriod period,
+    ILogger<LatencyBehavior> logger,
+    IOptionsMonitor<ResistanceFlags> optionsMonitor)
 {
     private readonly RequestDelegate _next = next;
     private readonly Random _random = new();

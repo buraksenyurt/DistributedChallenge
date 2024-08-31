@@ -7,10 +7,10 @@ using Resistance.Configuration;
 
 namespace Resistance.Inconsistency;
 public class DataInconsistencyBehavior(
-    RequestDelegate next
-    , DataInconsistencyProbability inconsistencyProbability
-    , IOptionsMonitor<ResistanceFlags> optionsMonitor
-    , ILogger<DataInconsistencyBehavior> logger)
+      RequestDelegate next,
+      DataInconsistencyProbability inconsistencyProbability,
+      IOptionsMonitor<ResistanceFlags> optionsMonitor,
+      ILogger<DataInconsistencyBehavior> logger)
 {
     private readonly RequestDelegate _next = next;
     private readonly Random _random = new();
@@ -75,6 +75,7 @@ public class DataInconsistencyBehavior(
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error while adding extra json data.");
+
             return originalData;
         }
     }

@@ -5,10 +5,7 @@ public struct ReferenceDocumentId
     public int Head { get; set; }
     public int Source { get; set; }
     public Guid Stamp { get; set; }
-    public override readonly string ToString()
-    {
-        return $"{Head}-{Source}-{Stamp}";
-    }
+    public override readonly string ToString() => $"{Head}-{Source}-{Stamp}";
     public static ReferenceDocumentId Parse(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
